@@ -1,0 +1,1998 @@
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.timer_tc_isr,"ax",%progbits
+  20              		.align	2
+  21              		.global	timer_tc_isr
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	timer_tc_isr, %function
+  25              	timer_tc_isr:
+  26              	.LFB64:
+  27              		.file 1 "main.c"
+   1:main.c        **** /* ========================================
+   2:main.c        ****  *
+   3:main.c        ****  * Copyright YOUR COMPANY, THE YEAR
+   4:main.c        ****  * All Rights Reserved
+   5:main.c        ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:main.c        ****  *
+   7:main.c        ****  * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8:main.c        ****  * WHICH IS THE PROPERTY OF your company.
+   9:main.c        ****  *
+  10:main.c        ****  * ========================================
+  11:main.c        **** */
+  12:main.c        **** #include "project.h"
+  13:main.c        **** #include <stdio.h>
+  14:main.c        **** #include <stdlib.h>
+  15:main.c        **** #include "IDAC_1.h"
+  16:main.c        **** #include "UART_1.h"
+  17:main.c        **** 
+  18:main.c        **** #define BUFFER_SIZE 6312
+  19:main.c        **** 
+  20:main.c        **** uint8_t rxBuffer1[BUFFER_SIZE];
+  21:main.c        **** uint8_t rxBuffer2[BUFFER_SIZE];
+  22:main.c        **** uint8_t* currentRxBuffer;
+  23:main.c        **** uint8_t* plotBuffer;
+  24:main.c        **** volatile uint8_t receivedData;
+  25:main.c        **** volatile int bufferFilled = 0; // Flag to indicate buffer is completely filled
+  26:main.c        **** volatile uint32_t tc_count = 0;
+  27:main.c        **** uint32_t count;
+  28:main.c        **** uint8_t OneToSend = 0x01;
+  29:main.c        **** char string[128];
+  30:main.c        **** 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 2
+
+
+  31:main.c        **** CY_ISR(timer_tc_isr) {
+  28              		.loc 1 31 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 3, -8
+  35              		.cfi_offset 14, -4
+  32:main.c        ****     Timer_1_ReadStatusRegister();
+  36              		.loc 1 32 0
+  37 0002 FFF7FEFF 		bl	Timer_1_ReadStatusRegister
+  38              	.LVL0:
+  33:main.c        ****     tc_count++;
+  39              		.loc 1 33 0
+  40 0006 024A     		ldr	r2, .L3
+  41 0008 1368     		ldr	r3, [r2]
+  42 000a 0133     		adds	r3, r3, #1
+  43 000c 1360     		str	r3, [r2]
+  44 000e 08BD     		pop	{r3, pc}
+  45              	.L4:
+  46              		.align	2
+  47              	.L3:
+  48 0010 00000000 		.word	.LANCHOR0
+  49              		.cfi_endproc
+  50              	.LFE64:
+  51              		.size	timer_tc_isr, .-timer_tc_isr
+  52              		.section	.text.UART_Rx_Handler,"ax",%progbits
+  53              		.align	2
+  54              		.global	UART_Rx_Handler
+  55              		.thumb
+  56              		.thumb_func
+  57              		.type	UART_Rx_Handler, %function
+  58              	UART_Rx_Handler:
+  59              	.LFB68:
+  34:main.c        **** }
+  35:main.c        **** 
+  36:main.c        **** void start_measure(void) {
+  37:main.c        ****     Timer_1_Stop();
+  38:main.c        ****     Timer_1_ReadStatusRegister();
+  39:main.c        ****     Timer_1_WriteCounter(0);
+  40:main.c        ****     isr_timer_ClearPending();
+  41:main.c        ****     tc_count = 0;
+  42:main.c        ****     Timer_1_Start();
+  43:main.c        **** }
+  44:main.c        **** 
+  45:main.c        **** uint32_t stop_measure(void) {
+  46:main.c        ****     Timer_1_Stop();
+  47:main.c        ****     count = Timer_1_ReadPeriod() - Timer_1_ReadCounter();
+  48:main.c        ****     if (tc_count) {
+  49:main.c        ****         count += tc_count * Timer_1_ReadPeriod();
+  50:main.c        ****     }
+  51:main.c        ****     return (count);
+  52:main.c        **** }
+  53:main.c        **** 
+  54:main.c        **** void initializeComponents(void) {
+  55:main.c        ****     CyGlobalIntEnable; /* Enable global interrupts. */
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 3
+
+
+  56:main.c        ****     isr_timer_ClearPending();
+  57:main.c        ****     isr_timer_StartEx(timer_tc_isr);
+  58:main.c        **** 
+  59:main.c        ****     Timer_1_Start();
+  60:main.c        ****     UART_1_Start();    // Start UART communication
+  61:main.c        ****     IDAC_1_Start();    // Start DAC component
+  62:main.c        ****     PGA_Inv_1_Start();
+  63:main.c        ****     TIA_1_Start();
+  64:main.c        ****     Opamp_1_Start();
+  65:main.c        ****     UART_1_ClearRxBuffer(); // Clear UART receive buffer
+  66:main.c        ****     UART_1_ClearTxBuffer(); // Clear UART transmit buffer
+  67:main.c        ****     currentRxBuffer = rxBuffer1;
+  68:main.c        ****     plotBuffer = rxBuffer2;
+  69:main.c        ****     //UART_1_PutChar(OneToSend); // Initial request for data
+  70:main.c        **** }
+  71:main.c        **** 
+  72:main.c        **** // ISR Handler for UART RX
+  73:main.c        **** CY_ISR(UART_Rx_Handler) {
+  60              		.loc 1 73 0
+  61              		.cfi_startproc
+  62              		@ args = 0, pretend = 0, frame = 0
+  63              		@ frame_needed = 0, uses_anonymous_args = 0
+  64 0000 10B5     		push	{r4, lr}
+  65              		.cfi_def_cfa_offset 8
+  66              		.cfi_offset 4, -8
+  67              		.cfi_offset 14, -4
+  74:main.c        ****     static int index = 0;
+  75:main.c        ****     isr_1_ClearPending();
+  68              		.loc 1 75 0
+  69 0002 FFF7FEFF 		bl	isr_1_ClearPending
+  70              	.LVL1:
+  76:main.c        **** 
+  77:main.c        ****     if (bufferFilled == 0) { // Only receive new data if the buffer is not yet filled
+  71              		.loc 1 77 0
+  72 0006 0E4B     		ldr	r3, .L11
+  73 0008 5B68     		ldr	r3, [r3, #4]
+  74 000a A3B1     		cbz	r3, .L8
+  75 000c 10BD     		pop	{r4, pc}
+  76              	.L9:
+  78:main.c        ****         while (UART_1_GetRxBufferSize() > 0) {
+  79:main.c        ****             receivedData = UART_1_ReadRxData(); /* Read received data */
+  77              		.loc 1 79 0
+  78 000e FFF7FEFF 		bl	UART_1_ReadRxData
+  79              	.LVL2:
+  80 0012 0C49     		ldr	r1, .L11+4
+  81 0014 0870     		strb	r0, [r1]
+  80:main.c        ****             currentRxBuffer[index++] = receivedData; /* Store received data in buffer */
+  82              		.loc 1 80 0
+  83 0016 0C4B     		ldr	r3, .L11+8
+  84 0018 1C68     		ldr	r4, [r3]
+  85 001a 0948     		ldr	r0, .L11
+  86 001c 8268     		ldr	r2, [r0, #8]
+  87 001e 531C     		adds	r3, r2, #1
+  88 0020 8360     		str	r3, [r0, #8]
+  89 0022 0978     		ldrb	r1, [r1]	@ zero_extendqisi2
+  90 0024 A154     		strb	r1, [r4, r2]
+  81:main.c        ****             //sprintf(string, "%d\t", (int)currentRxBuffer[index-1]);
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 4
+
+
+  82:main.c        ****             //UART_1_PutString(string);
+  83:main.c        ****            
+  84:main.c        ****             if (index >= BUFFER_SIZE) {
+  91              		.loc 1 84 0
+  92 0026 41F6A702 		movw	r2, #6311
+  93 002a 9342     		cmp	r3, r2
+  94 002c 03DD     		ble	.L8
+  85:main.c        ****                 bufferFilled = 1; // Set flag to indicate buffer is full
+  95              		.loc 1 85 0
+  96 002e 0122     		movs	r2, #1
+  97 0030 4260     		str	r2, [r0, #4]
+  86:main.c        ****                 index = 0; // Reset index for next reception
+  98              		.loc 1 86 0
+  99 0032 0022     		movs	r2, #0
+ 100 0034 8260     		str	r2, [r0, #8]
+ 101              	.L8:
+  78:main.c        ****             receivedData = UART_1_ReadRxData(); /* Read received data */
+ 102              		.loc 1 78 0
+ 103 0036 FFF7FEFF 		bl	UART_1_GetRxBufferSize
+ 104              	.LVL3:
+ 105 003a 0028     		cmp	r0, #0
+ 106 003c E7D1     		bne	.L9
+ 107 003e 10BD     		pop	{r4, pc}
+ 108              	.L12:
+ 109              		.align	2
+ 110              	.L11:
+ 111 0040 00000000 		.word	.LANCHOR0
+ 112 0044 00000000 		.word	receivedData
+ 113 0048 00000000 		.word	currentRxBuffer
+ 114              		.cfi_endproc
+ 115              	.LFE68:
+ 116              		.size	UART_Rx_Handler, .-UART_Rx_Handler
+ 117              		.section	.text.start_measure,"ax",%progbits
+ 118              		.align	2
+ 119              		.global	start_measure
+ 120              		.thumb
+ 121              		.thumb_func
+ 122              		.type	start_measure, %function
+ 123              	start_measure:
+ 124              	.LFB65:
+  36:main.c        ****     Timer_1_Stop();
+ 125              		.loc 1 36 0
+ 126              		.cfi_startproc
+ 127              		@ args = 0, pretend = 0, frame = 0
+ 128              		@ frame_needed = 0, uses_anonymous_args = 0
+ 129 0000 08B5     		push	{r3, lr}
+ 130              		.cfi_def_cfa_offset 8
+ 131              		.cfi_offset 3, -8
+ 132              		.cfi_offset 14, -4
+  37:main.c        ****     Timer_1_ReadStatusRegister();
+ 133              		.loc 1 37 0
+ 134 0002 FFF7FEFF 		bl	Timer_1_Stop
+ 135              	.LVL4:
+  38:main.c        ****     Timer_1_WriteCounter(0);
+ 136              		.loc 1 38 0
+ 137 0006 FFF7FEFF 		bl	Timer_1_ReadStatusRegister
+ 138              	.LVL5:
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 5
+
+
+  39:main.c        ****     isr_timer_ClearPending();
+ 139              		.loc 1 39 0
+ 140 000a 0020     		movs	r0, #0
+ 141 000c FFF7FEFF 		bl	Timer_1_WriteCounter
+ 142              	.LVL6:
+  40:main.c        ****     tc_count = 0;
+ 143              		.loc 1 40 0
+ 144 0010 FFF7FEFF 		bl	isr_timer_ClearPending
+ 145              	.LVL7:
+  41:main.c        ****     Timer_1_Start();
+ 146              		.loc 1 41 0
+ 147 0014 0022     		movs	r2, #0
+ 148 0016 024B     		ldr	r3, .L15
+ 149 0018 1A60     		str	r2, [r3]
+  42:main.c        **** }
+ 150              		.loc 1 42 0
+ 151 001a FFF7FEFF 		bl	Timer_1_Start
+ 152              	.LVL8:
+ 153 001e 08BD     		pop	{r3, pc}
+ 154              	.L16:
+ 155              		.align	2
+ 156              	.L15:
+ 157 0020 00000000 		.word	.LANCHOR0
+ 158              		.cfi_endproc
+ 159              	.LFE65:
+ 160              		.size	start_measure, .-start_measure
+ 161              		.section	.text.stop_measure,"ax",%progbits
+ 162              		.align	2
+ 163              		.global	stop_measure
+ 164              		.thumb
+ 165              		.thumb_func
+ 166              		.type	stop_measure, %function
+ 167              	stop_measure:
+ 168              	.LFB66:
+  45:main.c        ****     Timer_1_Stop();
+ 169              		.loc 1 45 0
+ 170              		.cfi_startproc
+ 171              		@ args = 0, pretend = 0, frame = 0
+ 172              		@ frame_needed = 0, uses_anonymous_args = 0
+ 173 0000 10B5     		push	{r4, lr}
+ 174              		.cfi_def_cfa_offset 8
+ 175              		.cfi_offset 4, -8
+ 176              		.cfi_offset 14, -4
+  46:main.c        ****     count = Timer_1_ReadPeriod() - Timer_1_ReadCounter();
+ 177              		.loc 1 46 0
+ 178 0002 FFF7FEFF 		bl	Timer_1_Stop
+ 179              	.LVL9:
+  47:main.c        ****     if (tc_count) {
+ 180              		.loc 1 47 0
+ 181 0006 FFF7FEFF 		bl	Timer_1_ReadPeriod
+ 182              	.LVL10:
+ 183 000a 0446     		mov	r4, r0
+ 184 000c FFF7FEFF 		bl	Timer_1_ReadCounter
+ 185              	.LVL11:
+ 186 0010 201A     		subs	r0, r4, r0
+ 187 0012 084B     		ldr	r3, .L20
+ 188 0014 1860     		str	r0, [r3]
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 6
+
+
+  48:main.c        ****         count += tc_count * Timer_1_ReadPeriod();
+ 189              		.loc 1 48 0
+ 190 0016 084B     		ldr	r3, .L20+4
+ 191 0018 1B68     		ldr	r3, [r3]
+ 192 001a 43B1     		cbz	r3, .L18
+  49:main.c        ****     }
+ 193              		.loc 1 49 0
+ 194 001c FFF7FEFF 		bl	Timer_1_ReadPeriod
+ 195              	.LVL12:
+ 196 0020 054B     		ldr	r3, .L20+4
+ 197 0022 1B68     		ldr	r3, [r3]
+ 198 0024 034A     		ldr	r2, .L20
+ 199 0026 1168     		ldr	r1, [r2]
+ 200 0028 03FB0010 		mla	r0, r3, r0, r1
+ 201 002c 1060     		str	r0, [r2]
+ 202              	.L18:
+  52:main.c        **** 
+ 203              		.loc 1 52 0
+ 204 002e 014B     		ldr	r3, .L20
+ 205 0030 1868     		ldr	r0, [r3]
+ 206 0032 10BD     		pop	{r4, pc}
+ 207              	.L21:
+ 208              		.align	2
+ 209              	.L20:
+ 210 0034 00000000 		.word	count
+ 211 0038 00000000 		.word	.LANCHOR0
+ 212              		.cfi_endproc
+ 213              	.LFE66:
+ 214              		.size	stop_measure, .-stop_measure
+ 215              		.section	.text.initializeComponents,"ax",%progbits
+ 216              		.align	2
+ 217              		.global	initializeComponents
+ 218              		.thumb
+ 219              		.thumb_func
+ 220              		.type	initializeComponents, %function
+ 221              	initializeComponents:
+ 222              	.LFB67:
+  54:main.c        ****     CyGlobalIntEnable; /* Enable global interrupts. */
+ 223              		.loc 1 54 0
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 0
+ 226              		@ frame_needed = 0, uses_anonymous_args = 0
+ 227 0000 08B5     		push	{r3, lr}
+ 228              		.cfi_def_cfa_offset 8
+ 229              		.cfi_offset 3, -8
+ 230              		.cfi_offset 14, -4
+  55:main.c        ****     isr_timer_ClearPending();
+ 231              		.loc 1 55 0
+ 232              		.syntax unified
+ 233              	@ 55 "main.c" 1
+ 234 0002 62B6     		CPSIE   i
+ 235              	@ 0 "" 2
+  56:main.c        ****     isr_timer_StartEx(timer_tc_isr);
+ 236              		.loc 1 56 0
+ 237              		.thumb
+ 238              		.syntax unified
+ 239 0004 FFF7FEFF 		bl	isr_timer_ClearPending
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 7
+
+
+ 240              	.LVL13:
+  57:main.c        **** 
+ 241              		.loc 1 57 0
+ 242 0008 0C48     		ldr	r0, .L24
+ 243 000a FFF7FEFF 		bl	isr_timer_StartEx
+ 244              	.LVL14:
+  59:main.c        ****     UART_1_Start();    // Start UART communication
+ 245              		.loc 1 59 0
+ 246 000e FFF7FEFF 		bl	Timer_1_Start
+ 247              	.LVL15:
+  60:main.c        ****     IDAC_1_Start();    // Start DAC component
+ 248              		.loc 1 60 0
+ 249 0012 FFF7FEFF 		bl	UART_1_Start
+ 250              	.LVL16:
+  61:main.c        ****     PGA_Inv_1_Start();
+ 251              		.loc 1 61 0
+ 252 0016 FFF7FEFF 		bl	IDAC_1_Start
+ 253              	.LVL17:
+  62:main.c        ****     TIA_1_Start();
+ 254              		.loc 1 62 0
+ 255 001a FFF7FEFF 		bl	PGA_Inv_1_Start
+ 256              	.LVL18:
+  63:main.c        ****     Opamp_1_Start();
+ 257              		.loc 1 63 0
+ 258 001e FFF7FEFF 		bl	TIA_1_Start
+ 259              	.LVL19:
+  64:main.c        ****     UART_1_ClearRxBuffer(); // Clear UART receive buffer
+ 260              		.loc 1 64 0
+ 261 0022 FFF7FEFF 		bl	Opamp_1_Start
+ 262              	.LVL20:
+  65:main.c        ****     UART_1_ClearTxBuffer(); // Clear UART transmit buffer
+ 263              		.loc 1 65 0
+ 264 0026 FFF7FEFF 		bl	UART_1_ClearRxBuffer
+ 265              	.LVL21:
+  66:main.c        ****     currentRxBuffer = rxBuffer1;
+ 266              		.loc 1 66 0
+ 267 002a FFF7FEFF 		bl	UART_1_ClearTxBuffer
+ 268              	.LVL22:
+  67:main.c        ****     plotBuffer = rxBuffer2;
+ 269              		.loc 1 67 0
+ 270 002e 044A     		ldr	r2, .L24+4
+ 271 0030 044B     		ldr	r3, .L24+8
+ 272 0032 1A60     		str	r2, [r3]
+  68:main.c        ****     //UART_1_PutChar(OneToSend); // Initial request for data
+ 273              		.loc 1 68 0
+ 274 0034 044A     		ldr	r2, .L24+12
+ 275 0036 054B     		ldr	r3, .L24+16
+ 276 0038 1A60     		str	r2, [r3]
+ 277 003a 08BD     		pop	{r3, pc}
+ 278              	.L25:
+ 279              		.align	2
+ 280              	.L24:
+ 281 003c 00000000 		.word	timer_tc_isr
+ 282 0040 00000000 		.word	rxBuffer1
+ 283 0044 00000000 		.word	currentRxBuffer
+ 284 0048 00000000 		.word	rxBuffer2
+ 285 004c 00000000 		.word	plotBuffer
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 8
+
+
+ 286              		.cfi_endproc
+ 287              	.LFE67:
+ 288              		.size	initializeComponents, .-initializeComponents
+ 289              		.section	.text.plotData,"ax",%progbits
+ 290              		.align	2
+ 291              		.global	plotData
+ 292              		.thumb
+ 293              		.thumb_func
+ 294              		.type	plotData, %function
+ 295              	plotData:
+ 296              	.LFB69:
+  87:main.c        ****                
+  88:main.c        ****                 /*uint8_t* temp = plotBuffer;
+  89:main.c        ****                 plotBuffer = currentRxBuffer;
+  90:main.c        ****                 currentRxBuffer = temp;*/
+  91:main.c        ****             }
+  92:main.c        ****         }
+  93:main.c        ****     }
+  94:main.c        **** }
+  95:main.c        **** 
+  96:main.c        **** void plotData(void) {
+ 297              		.loc 1 96 0
+ 298              		.cfi_startproc
+ 299              		@ args = 0, pretend = 0, frame = 0
+ 300              		@ frame_needed = 0, uses_anonymous_args = 0
+ 301 0000 10B5     		push	{r4, lr}
+ 302              		.cfi_def_cfa_offset 8
+ 303              		.cfi_offset 4, -8
+ 304              		.cfi_offset 14, -4
+ 305              	.LVL23:
+ 306              	.LBB2:
+  97:main.c        ****     for (int i = 0; i < BUFFER_SIZE; i++) {
+ 307              		.loc 1 97 0
+ 308 0002 0024     		movs	r4, #0
+ 309 0004 09E0     		b	.L27
+ 310              	.LVL24:
+ 311              	.L28:
+  98:main.c        ****         IDAC_1_SetValue(plotBuffer[i]); // Set IDAC value
+ 312              		.loc 1 98 0 discriminator 3
+ 313 0006 074B     		ldr	r3, .L30
+ 314 0008 1B68     		ldr	r3, [r3]
+ 315 000a 185D     		ldrb	r0, [r3, r4]	@ zero_extendqisi2
+ 316 000c FFF7FEFF 		bl	IDAC_1_SetValue
+ 317              	.LVL25:
+  99:main.c        ****         CyDelayUs(2777);                     // 2 ms delay between points
+ 318              		.loc 1 99 0 discriminator 3
+ 319 0010 40F6D920 		movw	r0, #2777
+ 320 0014 FFF7FEFF 		bl	CyDelayUs
+ 321              	.LVL26:
+  97:main.c        ****     for (int i = 0; i < BUFFER_SIZE; i++) {
+ 322              		.loc 1 97 0 discriminator 3
+ 323 0018 0134     		adds	r4, r4, #1
+ 324              	.LVL27:
+ 325              	.L27:
+  97:main.c        ****     for (int i = 0; i < BUFFER_SIZE; i++) {
+ 326              		.loc 1 97 0 is_stmt 0 discriminator 1
+ 327 001a 41F6A703 		movw	r3, #6311
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 9
+
+
+ 328 001e 9C42     		cmp	r4, r3
+ 329 0020 F1DD     		ble	.L28
+ 330              	.LBE2:
+ 100:main.c        ****     }
+ 101:main.c        **** }
+ 331              		.loc 1 101 0 is_stmt 1
+ 332 0022 10BD     		pop	{r4, pc}
+ 333              	.LVL28:
+ 334              	.L31:
+ 335              		.align	2
+ 336              	.L30:
+ 337 0024 00000000 		.word	plotBuffer
+ 338              		.cfi_endproc
+ 339              	.LFE69:
+ 340              		.size	plotData, .-plotData
+ 341              		.section	.text.main,"ax",%progbits
+ 342              		.align	2
+ 343              		.global	main
+ 344              		.thumb
+ 345              		.thumb_func
+ 346              		.type	main, %function
+ 347              	main:
+ 348              	.LFB70:
+ 102:main.c        **** 
+ 103:main.c        **** int main(void) {
+ 349              		.loc 1 103 0
+ 350              		.cfi_startproc
+ 351              		@ args = 0, pretend = 0, frame = 0
+ 352              		@ frame_needed = 0, uses_anonymous_args = 0
+ 353 0000 08B5     		push	{r3, lr}
+ 354              		.cfi_def_cfa_offset 8
+ 355              		.cfi_offset 3, -8
+ 356              		.cfi_offset 14, -4
+ 104:main.c        ****     initializeComponents();
+ 357              		.loc 1 104 0
+ 358 0002 FFF7FEFF 		bl	initializeComponents
+ 359              	.LVL29:
+ 105:main.c        ****     isr_1_StartEx(UART_Rx_Handler); // Start UART RX ISR
+ 360              		.loc 1 105 0
+ 361 0006 0C48     		ldr	r0, .L36
+ 362 0008 FFF7FEFF 		bl	isr_1_StartEx
+ 363              	.LVL30:
+ 364              	.L34:
+ 106:main.c        ****    
+ 107:main.c        ****     while (1) {
+ 108:main.c        ****         if (bufferFilled) { // Plot data only if buffer is filled
+ 365              		.loc 1 108 0
+ 366 000c 0B4B     		ldr	r3, .L36+4
+ 367 000e 5B68     		ldr	r3, [r3, #4]
+ 368 0010 3BB1     		cbz	r3, .L33
+ 369              	.LBB3:
+ 109:main.c        ****             // Critical section start
+ 110:main.c        ****             CyGlobalIntDisable; // Disable interrupts to avoid race condition
+ 370              		.loc 1 110 0
+ 371              		.syntax unified
+ 372              	@ 110 "main.c" 1
+ 373 0012 72B6     		CPSID   i
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 10
+
+
+ 374              	@ 0 "" 2
+ 111:main.c        ****            
+ 112:main.c        ****             // Swap buffers before plotting so that new data can be received while plotting
+ 113:main.c        ****             uint8_t* temp = plotBuffer;
+ 375              		.loc 1 113 0
+ 376              		.thumb
+ 377              		.syntax unified
+ 378 0014 0A4A     		ldr	r2, .L36+8
+ 379 0016 1168     		ldr	r1, [r2]
+ 380              	.LVL31:
+ 114:main.c        ****             plotBuffer = currentRxBuffer;
+ 381              		.loc 1 114 0
+ 382 0018 0A4B     		ldr	r3, .L36+12
+ 383 001a 1868     		ldr	r0, [r3]
+ 384 001c 1060     		str	r0, [r2]
+ 115:main.c        ****             currentRxBuffer = temp;
+ 385              		.loc 1 115 0
+ 386 001e 1960     		str	r1, [r3]
+ 116:main.c        ****            
+ 117:main.c        ****             CyGlobalIntEnable; // Re-enable interrupts
+ 387              		.loc 1 117 0
+ 388              		.syntax unified
+ 389              	@ 117 "main.c" 1
+ 390 0020 62B6     		CPSIE   i
+ 391              	@ 0 "" 2
+ 392              	.LVL32:
+ 393              		.thumb
+ 394              		.syntax unified
+ 395              	.L33:
+ 396              	.LBE3:
+ 118:main.c        ****             // Critical section end
+ 119:main.c        ****         }
+ 120:main.c        ****        
+ 121:main.c        ****         bufferFilled = 0; // Reset the flag to allow new data reception
+ 397              		.loc 1 121 0
+ 398 0022 0022     		movs	r2, #0
+ 399 0024 054B     		ldr	r3, .L36+4
+ 400 0026 5A60     		str	r2, [r3, #4]
+ 122:main.c        ****        
+ 123:main.c        ****         UART_1_WriteTxData(OneToSend); // Transmit 1 byte to request the next chunk of data
+ 401              		.loc 1 123 0
+ 402 0028 074B     		ldr	r3, .L36+16
+ 403 002a 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 404 002c FFF7FEFF 		bl	UART_1_WriteTxData
+ 405              	.LVL33:
+ 124:main.c        ****         //CyDelay(1);
+ 125:main.c        ****        
+ 126:main.c        ****         plotData(); // Plot data from the plotBuffer
+ 406              		.loc 1 126 0
+ 407 0030 FFF7FEFF 		bl	plotData
+ 408              	.LVL34:
+ 127:main.c        ****        
+ 128:main.c        ****         //bufferFilled = 0; // Reset the flag to allow new data reception
+ 129:main.c        ****        
+ 130:main.c        ****        
+ 131:main.c        ****     }
+ 409              		.loc 1 131 0
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 11
+
+
+ 410 0034 EAE7     		b	.L34
+ 411              	.L37:
+ 412 0036 00BF     		.align	2
+ 413              	.L36:
+ 414 0038 00000000 		.word	UART_Rx_Handler
+ 415 003c 00000000 		.word	.LANCHOR0
+ 416 0040 00000000 		.word	plotBuffer
+ 417 0044 00000000 		.word	currentRxBuffer
+ 418 0048 00000000 		.word	.LANCHOR1
+ 419              		.cfi_endproc
+ 420              	.LFE70:
+ 421              		.size	main, .-main
+ 422              		.comm	string,128,4
+ 423              		.global	OneToSend
+ 424              		.comm	count,4,4
+ 425              		.global	tc_count
+ 426              		.global	bufferFilled
+ 427              		.comm	receivedData,1,1
+ 428              		.comm	plotBuffer,4,4
+ 429              		.comm	currentRxBuffer,4,4
+ 430              		.comm	rxBuffer2,6312,4
+ 431              		.comm	rxBuffer1,6312,4
+ 432              		.data
+ 433              		.set	.LANCHOR1,. + 0
+ 434              		.type	OneToSend, %object
+ 435              		.size	OneToSend, 1
+ 436              	OneToSend:
+ 437 0000 01       		.byte	1
+ 438              		.bss
+ 439              		.align	2
+ 440              		.set	.LANCHOR0,. + 0
+ 441              		.type	tc_count, %object
+ 442              		.size	tc_count, 4
+ 443              	tc_count:
+ 444 0000 00000000 		.space	4
+ 445              		.type	bufferFilled, %object
+ 446              		.size	bufferFilled, 4
+ 447              	bufferFilled:
+ 448 0004 00000000 		.space	4
+ 449              		.type	index.7107, %object
+ 450              		.size	index.7107, 4
+ 451              	index.7107:
+ 452 0008 00000000 		.space	4
+ 453              		.text
+ 454              	.Letext0:
+ 455              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 456              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 457              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+ 458              		.file 5 "Generated_Source\\PSoC5/Timer_1.h"
+ 459              		.file 6 "Generated_Source\\PSoC5/isr_1.h"
+ 460              		.file 7 "Generated_Source\\PSoC5/UART_1.h"
+ 461              		.file 8 "Generated_Source\\PSoC5/isr_timer.h"
+ 462              		.file 9 "Generated_Source\\PSoC5/IDAC_1.h"
+ 463              		.file 10 "Generated_Source\\PSoC5/PGA_Inv_1.h"
+ 464              		.file 11 "Generated_Source\\PSoC5/TIA_1.h"
+ 465              		.file 12 "Generated_Source\\PSoC5/Opamp_1.h"
+ 466              		.file 13 "Generated_Source\\PSoC5/CyLib.h"
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 12
+
+
+ 467              		.section	.debug_info,"",%progbits
+ 468              	.Ldebug_info0:
+ 469 0000 CA040000 		.4byte	0x4ca
+ 470 0004 0400     		.2byte	0x4
+ 471 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 472 000a 04       		.byte	0x4
+ 473 000b 01       		.uleb128 0x1
+ 474 000c 9F030000 		.4byte	.LASF60
+ 475 0010 0C       		.byte	0xc
+ 476 0011 CF020000 		.4byte	.LASF61
+ 477 0015 F1010000 		.4byte	.LASF62
+ 478 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 479 001d 00000000 		.4byte	0
+ 480 0021 00000000 		.4byte	.Ldebug_line0
+ 481 0025 02       		.uleb128 0x2
+ 482 0026 01       		.byte	0x1
+ 483 0027 06       		.byte	0x6
+ 484 0028 96010000 		.4byte	.LASF0
+ 485 002c 03       		.uleb128 0x3
+ 486 002d 08010000 		.4byte	.LASF4
+ 487 0031 02       		.byte	0x2
+ 488 0032 1D       		.byte	0x1d
+ 489 0033 37000000 		.4byte	0x37
+ 490 0037 02       		.uleb128 0x2
+ 491 0038 01       		.byte	0x1
+ 492 0039 08       		.byte	0x8
+ 493 003a 6B010000 		.4byte	.LASF1
+ 494 003e 02       		.uleb128 0x2
+ 495 003f 02       		.byte	0x2
+ 496 0040 05       		.byte	0x5
+ 497 0041 2A000000 		.4byte	.LASF2
+ 498 0045 02       		.uleb128 0x2
+ 499 0046 02       		.byte	0x2
+ 500 0047 07       		.byte	0x7
+ 501 0048 54020000 		.4byte	.LASF3
+ 502 004c 03       		.uleb128 0x3
+ 503 004d 4C030000 		.4byte	.LASF5
+ 504 0051 02       		.byte	0x2
+ 505 0052 3F       		.byte	0x3f
+ 506 0053 57000000 		.4byte	0x57
+ 507 0057 02       		.uleb128 0x2
+ 508 0058 04       		.byte	0x4
+ 509 0059 05       		.byte	0x5
+ 510 005a F8000000 		.4byte	.LASF6
+ 511 005e 03       		.uleb128 0x3
+ 512 005f 61000000 		.4byte	.LASF7
+ 513 0063 02       		.byte	0x2
+ 514 0064 41       		.byte	0x41
+ 515 0065 69000000 		.4byte	0x69
+ 516 0069 02       		.uleb128 0x2
+ 517 006a 04       		.byte	0x4
+ 518 006b 07       		.byte	0x7
+ 519 006c D6020000 		.4byte	.LASF8
+ 520 0070 02       		.uleb128 0x2
+ 521 0071 08       		.byte	0x8
+ 522 0072 05       		.byte	0x5
+ 523 0073 D5000000 		.4byte	.LASF9
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 13
+
+
+ 524 0077 02       		.uleb128 0x2
+ 525 0078 08       		.byte	0x8
+ 526 0079 07       		.byte	0x7
+ 527 007a B2010000 		.4byte	.LASF10
+ 528 007e 04       		.uleb128 0x4
+ 529 007f 04       		.byte	0x4
+ 530 0080 05       		.byte	0x5
+ 531 0081 696E7400 		.ascii	"int\000"
+ 532 0085 02       		.uleb128 0x2
+ 533 0086 04       		.byte	0x4
+ 534 0087 07       		.byte	0x7
+ 535 0088 D2010000 		.4byte	.LASF11
+ 536 008c 03       		.uleb128 0x3
+ 537 008d 56030000 		.4byte	.LASF12
+ 538 0091 03       		.byte	0x3
+ 539 0092 18       		.byte	0x18
+ 540 0093 2C000000 		.4byte	0x2c
+ 541 0097 03       		.uleb128 0x3
+ 542 0098 78020000 		.4byte	.LASF13
+ 543 009c 03       		.byte	0x3
+ 544 009d 2C       		.byte	0x2c
+ 545 009e 4C000000 		.4byte	0x4c
+ 546 00a2 03       		.uleb128 0x3
+ 547 00a3 C9010000 		.4byte	.LASF14
+ 548 00a7 03       		.byte	0x3
+ 549 00a8 30       		.byte	0x30
+ 550 00a9 5E000000 		.4byte	0x5e
+ 551 00ad 02       		.uleb128 0x2
+ 552 00ae 04       		.byte	0x4
+ 553 00af 04       		.byte	0x4
+ 554 00b0 C2000000 		.4byte	.LASF15
+ 555 00b4 02       		.uleb128 0x2
+ 556 00b5 08       		.byte	0x8
+ 557 00b6 04       		.byte	0x4
+ 558 00b7 FF020000 		.4byte	.LASF16
+ 559 00bb 02       		.uleb128 0x2
+ 560 00bc 01       		.byte	0x1
+ 561 00bd 08       		.byte	0x8
+ 562 00be 73020000 		.4byte	.LASF17
+ 563 00c2 02       		.uleb128 0x2
+ 564 00c3 08       		.byte	0x8
+ 565 00c4 04       		.byte	0x4
+ 566 00c5 55010000 		.4byte	.LASF18
+ 567 00c9 02       		.uleb128 0x2
+ 568 00ca 04       		.byte	0x4
+ 569 00cb 07       		.byte	0x7
+ 570 00cc 49000000 		.4byte	.LASF19
+ 571 00d0 05       		.uleb128 0x5
+ 572 00d1 A2000000 		.4byte	0xa2
+ 573 00d5 05       		.uleb128 0x5
+ 574 00d6 8C000000 		.4byte	0x8c
+ 575 00da 06       		.uleb128 0x6
+ 576 00db 9D000000 		.4byte	.LASF20
+ 577 00df 01       		.byte	0x1
+ 578 00e0 1F       		.byte	0x1f
+ 579 00e1 00000000 		.4byte	.LFB64
+ 580 00e5 14000000 		.4byte	.LFE64-.LFB64
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 14
+
+
+ 581 00e9 01       		.uleb128 0x1
+ 582 00ea 9C       		.byte	0x9c
+ 583 00eb F9000000 		.4byte	0xf9
+ 584 00ef 07       		.uleb128 0x7
+ 585 00f0 06000000 		.4byte	.LVL0
+ 586 00f4 DB030000 		.4byte	0x3db
+ 587 00f8 00       		.byte	0
+ 588 00f9 06       		.uleb128 0x6
+ 589 00fa 06030000 		.4byte	.LASF21
+ 590 00fe 01       		.byte	0x1
+ 591 00ff 49       		.byte	0x49
+ 592 0100 00000000 		.4byte	.LFB68
+ 593 0104 4C000000 		.4byte	.LFE68-.LFB68
+ 594 0108 01       		.uleb128 0x1
+ 595 0109 9C       		.byte	0x9c
+ 596 010a 3B010000 		.4byte	0x13b
+ 597 010e 08       		.uleb128 0x8
+ 598 010f 97000000 		.4byte	.LASF25
+ 599 0113 01       		.byte	0x1
+ 600 0114 4A       		.byte	0x4a
+ 601 0115 7E000000 		.4byte	0x7e
+ 602 0119 05       		.uleb128 0x5
+ 603 011a 03       		.byte	0x3
+ 604 011b 08000000 		.4byte	index.7107
+ 605 011f 07       		.uleb128 0x7
+ 606 0120 06000000 		.4byte	.LVL1
+ 607 0124 E6030000 		.4byte	0x3e6
+ 608 0128 07       		.uleb128 0x7
+ 609 0129 12000000 		.4byte	.LVL2
+ 610 012d F1030000 		.4byte	0x3f1
+ 611 0131 07       		.uleb128 0x7
+ 612 0132 3A000000 		.4byte	.LVL3
+ 613 0136 FC030000 		.4byte	0x3fc
+ 614 013a 00       		.byte	0
+ 615 013b 06       		.uleb128 0x6
+ 616 013c 17000000 		.4byte	.LASF22
+ 617 0140 01       		.byte	0x1
+ 618 0141 24       		.byte	0x24
+ 619 0142 00000000 		.4byte	.LFB65
+ 620 0146 24000000 		.4byte	.LFE65-.LFB65
+ 621 014a 01       		.uleb128 0x1
+ 622 014b 9C       		.byte	0x9c
+ 623 014c 88010000 		.4byte	0x188
+ 624 0150 07       		.uleb128 0x7
+ 625 0151 06000000 		.4byte	.LVL4
+ 626 0155 07040000 		.4byte	0x407
+ 627 0159 07       		.uleb128 0x7
+ 628 015a 0A000000 		.4byte	.LVL5
+ 629 015e DB030000 		.4byte	0x3db
+ 630 0162 09       		.uleb128 0x9
+ 631 0163 10000000 		.4byte	.LVL6
+ 632 0167 12040000 		.4byte	0x412
+ 633 016b 75010000 		.4byte	0x175
+ 634 016f 0A       		.uleb128 0xa
+ 635 0170 01       		.uleb128 0x1
+ 636 0171 50       		.byte	0x50
+ 637 0172 01       		.uleb128 0x1
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 15
+
+
+ 638 0173 30       		.byte	0x30
+ 639 0174 00       		.byte	0
+ 640 0175 07       		.uleb128 0x7
+ 641 0176 14000000 		.4byte	.LVL7
+ 642 017a 1D040000 		.4byte	0x41d
+ 643 017e 07       		.uleb128 0x7
+ 644 017f 1E000000 		.4byte	.LVL8
+ 645 0183 28040000 		.4byte	0x428
+ 646 0187 00       		.byte	0
+ 647 0188 0B       		.uleb128 0xb
+ 648 0189 C8000000 		.4byte	.LASF63
+ 649 018d 01       		.byte	0x1
+ 650 018e 2D       		.byte	0x2d
+ 651 018f A2000000 		.4byte	0xa2
+ 652 0193 00000000 		.4byte	.LFB66
+ 653 0197 3C000000 		.4byte	.LFE66-.LFB66
+ 654 019b 01       		.uleb128 0x1
+ 655 019c 9C       		.byte	0x9c
+ 656 019d C6010000 		.4byte	0x1c6
+ 657 01a1 07       		.uleb128 0x7
+ 658 01a2 06000000 		.4byte	.LVL9
+ 659 01a6 07040000 		.4byte	0x407
+ 660 01aa 07       		.uleb128 0x7
+ 661 01ab 0A000000 		.4byte	.LVL10
+ 662 01af 33040000 		.4byte	0x433
+ 663 01b3 07       		.uleb128 0x7
+ 664 01b4 10000000 		.4byte	.LVL11
+ 665 01b8 3E040000 		.4byte	0x43e
+ 666 01bc 07       		.uleb128 0x7
+ 667 01bd 20000000 		.4byte	.LVL12
+ 668 01c1 33040000 		.4byte	0x433
+ 669 01c5 00       		.byte	0
+ 670 01c6 06       		.uleb128 0x6
+ 671 01c7 34000000 		.4byte	.LASF23
+ 672 01cb 01       		.byte	0x1
+ 673 01cc 36       		.byte	0x36
+ 674 01cd 00000000 		.4byte	.LFB67
+ 675 01d1 50000000 		.4byte	.LFE67-.LFB67
+ 676 01d5 01       		.uleb128 0x1
+ 677 01d6 9C       		.byte	0x9c
+ 678 01d7 44020000 		.4byte	0x244
+ 679 01db 07       		.uleb128 0x7
+ 680 01dc 08000000 		.4byte	.LVL13
+ 681 01e0 1D040000 		.4byte	0x41d
+ 682 01e4 09       		.uleb128 0x9
+ 683 01e5 0E000000 		.4byte	.LVL14
+ 684 01e9 49040000 		.4byte	0x449
+ 685 01ed FB010000 		.4byte	0x1fb
+ 686 01f1 0A       		.uleb128 0xa
+ 687 01f2 01       		.uleb128 0x1
+ 688 01f3 50       		.byte	0x50
+ 689 01f4 05       		.uleb128 0x5
+ 690 01f5 03       		.byte	0x3
+ 691 01f6 00000000 		.4byte	timer_tc_isr
+ 692 01fa 00       		.byte	0
+ 693 01fb 07       		.uleb128 0x7
+ 694 01fc 12000000 		.4byte	.LVL15
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 16
+
+
+ 695 0200 28040000 		.4byte	0x428
+ 696 0204 07       		.uleb128 0x7
+ 697 0205 16000000 		.4byte	.LVL16
+ 698 0209 54040000 		.4byte	0x454
+ 699 020d 07       		.uleb128 0x7
+ 700 020e 1A000000 		.4byte	.LVL17
+ 701 0212 5F040000 		.4byte	0x45f
+ 702 0216 07       		.uleb128 0x7
+ 703 0217 1E000000 		.4byte	.LVL18
+ 704 021b 6A040000 		.4byte	0x46a
+ 705 021f 07       		.uleb128 0x7
+ 706 0220 22000000 		.4byte	.LVL19
+ 707 0224 75040000 		.4byte	0x475
+ 708 0228 07       		.uleb128 0x7
+ 709 0229 26000000 		.4byte	.LVL20
+ 710 022d 80040000 		.4byte	0x480
+ 711 0231 07       		.uleb128 0x7
+ 712 0232 2A000000 		.4byte	.LVL21
+ 713 0236 8B040000 		.4byte	0x48b
+ 714 023a 07       		.uleb128 0x7
+ 715 023b 2E000000 		.4byte	.LVL22
+ 716 023f 96040000 		.4byte	0x496
+ 717 0243 00       		.byte	0
+ 718 0244 06       		.uleb128 0x6
+ 719 0245 89030000 		.4byte	.LASF24
+ 720 0249 01       		.byte	0x1
+ 721 024a 60       		.byte	0x60
+ 722 024b 00000000 		.4byte	.LFB69
+ 723 024f 28000000 		.4byte	.LFE69-.LFB69
+ 724 0253 01       		.uleb128 0x1
+ 725 0254 9C       		.byte	0x9c
+ 726 0255 8B020000 		.4byte	0x28b
+ 727 0259 0C       		.uleb128 0xc
+ 728 025a 02000000 		.4byte	.LBB2
+ 729 025e 20000000 		.4byte	.LBE2-.LBB2
+ 730 0262 0D       		.uleb128 0xd
+ 731 0263 6900     		.ascii	"i\000"
+ 732 0265 01       		.byte	0x1
+ 733 0266 61       		.byte	0x61
+ 734 0267 7E000000 		.4byte	0x7e
+ 735 026b 00000000 		.4byte	.LLST0
+ 736 026f 07       		.uleb128 0x7
+ 737 0270 10000000 		.4byte	.LVL25
+ 738 0274 A1040000 		.4byte	0x4a1
+ 739 0278 0E       		.uleb128 0xe
+ 740 0279 18000000 		.4byte	.LVL26
+ 741 027d AC040000 		.4byte	0x4ac
+ 742 0281 0A       		.uleb128 0xa
+ 743 0282 01       		.uleb128 0x1
+ 744 0283 50       		.byte	0x50
+ 745 0284 03       		.uleb128 0x3
+ 746 0285 0A       		.byte	0xa
+ 747 0286 D90A     		.2byte	0xad9
+ 748 0288 00       		.byte	0
+ 749 0289 00       		.byte	0
+ 750 028a 00       		.byte	0
+ 751 028b 0F       		.uleb128 0xf
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 17
+
+
+ 752 028c 5C000000 		.4byte	.LASF64
+ 753 0290 01       		.byte	0x1
+ 754 0291 67       		.byte	0x67
+ 755 0292 7E000000 		.4byte	0x7e
+ 756 0296 00000000 		.4byte	.LFB70
+ 757 029a 4C000000 		.4byte	.LFE70-.LFB70
+ 758 029e 01       		.uleb128 0x1
+ 759 029f 9C       		.byte	0x9c
+ 760 02a0 F4020000 		.4byte	0x2f4
+ 761 02a4 10       		.uleb128 0x10
+ 762 02a5 12000000 		.4byte	.LBB3
+ 763 02a9 10000000 		.4byte	.LBE3-.LBB3
+ 764 02ad C1020000 		.4byte	0x2c1
+ 765 02b1 11       		.uleb128 0x11
+ 766 02b2 25000000 		.4byte	.LASF26
+ 767 02b6 01       		.byte	0x1
+ 768 02b7 71       		.byte	0x71
+ 769 02b8 F4020000 		.4byte	0x2f4
+ 770 02bc 1F000000 		.4byte	.LLST1
+ 771 02c0 00       		.byte	0
+ 772 02c1 07       		.uleb128 0x7
+ 773 02c2 06000000 		.4byte	.LVL29
+ 774 02c6 C6010000 		.4byte	0x1c6
+ 775 02ca 09       		.uleb128 0x9
+ 776 02cb 0C000000 		.4byte	.LVL30
+ 777 02cf B7040000 		.4byte	0x4b7
+ 778 02d3 E1020000 		.4byte	0x2e1
+ 779 02d7 0A       		.uleb128 0xa
+ 780 02d8 01       		.uleb128 0x1
+ 781 02d9 50       		.byte	0x50
+ 782 02da 05       		.uleb128 0x5
+ 783 02db 03       		.byte	0x3
+ 784 02dc 00000000 		.4byte	UART_Rx_Handler
+ 785 02e0 00       		.byte	0
+ 786 02e1 07       		.uleb128 0x7
+ 787 02e2 30000000 		.4byte	.LVL33
+ 788 02e6 C2040000 		.4byte	0x4c2
+ 789 02ea 07       		.uleb128 0x7
+ 790 02eb 34000000 		.4byte	.LVL34
+ 791 02ef 44020000 		.4byte	0x244
+ 792 02f3 00       		.byte	0
+ 793 02f4 12       		.uleb128 0x12
+ 794 02f5 04       		.byte	0x4
+ 795 02f6 8C000000 		.4byte	0x8c
+ 796 02fa 13       		.uleb128 0x13
+ 797 02fb 92030000 		.4byte	.LASF27
+ 798 02ff 04       		.byte	0x4
+ 799 0300 1207     		.2byte	0x712
+ 800 0302 06030000 		.4byte	0x306
+ 801 0306 05       		.uleb128 0x5
+ 802 0307 97000000 		.4byte	0x97
+ 803 030b 14       		.uleb128 0x14
+ 804 030c 8C000000 		.4byte	0x8c
+ 805 0310 1C030000 		.4byte	0x31c
+ 806 0314 15       		.uleb128 0x15
+ 807 0315 C9000000 		.4byte	0xc9
+ 808 0319 A718     		.2byte	0x18a7
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 18
+
+
+ 809 031b 00       		.byte	0
+ 810 031c 16       		.uleb128 0x16
+ 811 031d 2D040000 		.4byte	.LASF28
+ 812 0321 01       		.byte	0x1
+ 813 0322 14       		.byte	0x14
+ 814 0323 0B030000 		.4byte	0x30b
+ 815 0327 05       		.uleb128 0x5
+ 816 0328 03       		.byte	0x3
+ 817 0329 00000000 		.4byte	rxBuffer1
+ 818 032d 16       		.uleb128 0x16
+ 819 032e 52000000 		.4byte	.LASF29
+ 820 0332 01       		.byte	0x1
+ 821 0333 15       		.byte	0x15
+ 822 0334 0B030000 		.4byte	0x30b
+ 823 0338 05       		.uleb128 0x5
+ 824 0339 03       		.byte	0x3
+ 825 033a 00000000 		.4byte	rxBuffer2
+ 826 033e 16       		.uleb128 0x16
+ 827 033f 29030000 		.4byte	.LASF30
+ 828 0343 01       		.byte	0x1
+ 829 0344 16       		.byte	0x16
+ 830 0345 F4020000 		.4byte	0x2f4
+ 831 0349 05       		.uleb128 0x5
+ 832 034a 03       		.byte	0x3
+ 833 034b 00000000 		.4byte	currentRxBuffer
+ 834 034f 16       		.uleb128 0x16
+ 835 0350 B7000000 		.4byte	.LASF31
+ 836 0354 01       		.byte	0x1
+ 837 0355 17       		.byte	0x17
+ 838 0356 F4020000 		.4byte	0x2f4
+ 839 035a 05       		.uleb128 0x5
+ 840 035b 03       		.byte	0x3
+ 841 035c 00000000 		.4byte	plotBuffer
+ 842 0360 16       		.uleb128 0x16
+ 843 0361 48010000 		.4byte	.LASF32
+ 844 0365 01       		.byte	0x1
+ 845 0366 18       		.byte	0x18
+ 846 0367 D5000000 		.4byte	0xd5
+ 847 036b 05       		.uleb128 0x5
+ 848 036c 03       		.byte	0x3
+ 849 036d 00000000 		.4byte	receivedData
+ 850 0371 16       		.uleb128 0x16
+ 851 0372 C2020000 		.4byte	.LASF33
+ 852 0376 01       		.byte	0x1
+ 853 0377 19       		.byte	0x19
+ 854 0378 82030000 		.4byte	0x382
+ 855 037c 05       		.uleb128 0x5
+ 856 037d 03       		.byte	0x3
+ 857 037e 00000000 		.4byte	bufferFilled
+ 858 0382 05       		.uleb128 0x5
+ 859 0383 7E000000 		.4byte	0x7e
+ 860 0387 16       		.uleb128 0x16
+ 861 0388 5E030000 		.4byte	.LASF34
+ 862 038c 01       		.byte	0x1
+ 863 038d 1A       		.byte	0x1a
+ 864 038e D0000000 		.4byte	0xd0
+ 865 0392 05       		.uleb128 0x5
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 19
+
+
+ 866 0393 03       		.byte	0x3
+ 867 0394 00000000 		.4byte	tc_count
+ 868 0398 16       		.uleb128 0x16
+ 869 0399 46030000 		.4byte	.LASF35
+ 870 039d 01       		.byte	0x1
+ 871 039e 1B       		.byte	0x1b
+ 872 039f A2000000 		.4byte	0xa2
+ 873 03a3 05       		.uleb128 0x5
+ 874 03a4 03       		.byte	0x3
+ 875 03a5 00000000 		.4byte	count
+ 876 03a9 16       		.uleb128 0x16
+ 877 03aa 79010000 		.4byte	.LASF36
+ 878 03ae 01       		.byte	0x1
+ 879 03af 1C       		.byte	0x1c
+ 880 03b0 8C000000 		.4byte	0x8c
+ 881 03b4 05       		.uleb128 0x5
+ 882 03b5 03       		.byte	0x3
+ 883 03b6 00000000 		.4byte	OneToSend
+ 884 03ba 14       		.uleb128 0x14
+ 885 03bb BB000000 		.4byte	0xbb
+ 886 03bf CA030000 		.4byte	0x3ca
+ 887 03c3 17       		.uleb128 0x17
+ 888 03c4 C9000000 		.4byte	0xc9
+ 889 03c8 7F       		.byte	0x7f
+ 890 03c9 00       		.byte	0
+ 891 03ca 16       		.uleb128 0x16
+ 892 03cb 01010000 		.4byte	.LASF37
+ 893 03cf 01       		.byte	0x1
+ 894 03d0 1D       		.byte	0x1d
+ 895 03d1 BA030000 		.4byte	0x3ba
+ 896 03d5 05       		.uleb128 0x5
+ 897 03d6 03       		.byte	0x3
+ 898 03d7 00000000 		.4byte	string
+ 899 03db 18       		.uleb128 0x18
+ 900 03dc 6C000000 		.4byte	.LASF38
+ 901 03e0 6C000000 		.4byte	.LASF38
+ 902 03e4 05       		.byte	0x5
+ 903 03e5 5E       		.byte	0x5e
+ 904 03e6 18       		.uleb128 0x18
+ 905 03e7 35010000 		.4byte	.LASF39
+ 906 03eb 35010000 		.4byte	.LASF39
+ 907 03ef 06       		.byte	0x6
+ 908 03f0 28       		.byte	0x28
+ 909 03f1 18       		.uleb128 0x18
+ 910 03f2 A2020000 		.4byte	.LASF40
+ 911 03f6 A2020000 		.4byte	.LASF40
+ 912 03fa 07       		.byte	0x7
+ 913 03fb 6F       		.byte	0x6f
+ 914 03fc 18       		.uleb128 0x18
+ 915 03fd E8020000 		.4byte	.LASF41
+ 916 0401 E8020000 		.4byte	.LASF41
+ 917 0405 07       		.byte	0x7
+ 918 0406 73       		.byte	0x73
+ 919 0407 18       		.uleb128 0x18
+ 920 0408 39030000 		.4byte	.LASF42
+ 921 040c 39030000 		.4byte	.LASF42
+ 922 0410 05       		.byte	0x5
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 20
+
+
+ 923 0411 5B       		.byte	0x5b
+ 924 0412 18       		.uleb128 0x18
+ 925 0413 12010000 		.4byte	.LASF43
+ 926 0417 12010000 		.4byte	.LASF43
+ 927 041b 05       		.byte	0x5
+ 928 041c 6A       		.byte	0x6a
+ 929 041d 18       		.uleb128 0x18
+ 930 041e 00000000 		.4byte	.LASF44
+ 931 0422 00000000 		.4byte	.LASF44
+ 932 0426 08       		.byte	0x8
+ 933 0427 28       		.byte	0x28
+ 934 0428 18       		.uleb128 0x18
+ 935 0429 B4020000 		.4byte	.LASF45
+ 936 042d B4020000 		.4byte	.LASF45
+ 937 0431 05       		.byte	0x5
+ 938 0432 5A       		.byte	0x5a
+ 939 0433 18       		.uleb128 0x18
+ 940 0434 83010000 		.4byte	.LASF46
+ 941 0438 83010000 		.4byte	.LASF46
+ 942 043c 05       		.byte	0x5
+ 943 043d 67       		.byte	0x67
+ 944 043e 18       		.uleb128 0x18
+ 945 043f 75030000 		.4byte	.LASF47
+ 946 0443 75030000 		.4byte	.LASF47
+ 947 0447 05       		.byte	0x5
+ 948 0448 69       		.byte	0x69
+ 949 0449 18       		.uleb128 0x18
+ 950 044a DF010000 		.4byte	.LASF48
+ 951 044e DF010000 		.4byte	.LASF48
+ 952 0452 08       		.byte	0x8
+ 953 0453 18       		.byte	0x18
+ 954 0454 18       		.uleb128 0x18
+ 955 0455 AA000000 		.4byte	.LASF49
+ 956 0459 AA000000 		.4byte	.LASF49
+ 957 045d 07       		.byte	0x7
+ 958 045e 54       		.byte	0x54
+ 959 045f 18       		.uleb128 0x18
+ 960 0460 80020000 		.4byte	.LASF50
+ 961 0464 80020000 		.4byte	.LASF50
+ 962 0468 09       		.byte	0x9
+ 963 0469 3C       		.byte	0x3c
+ 964 046a 18       		.uleb128 0x18
+ 965 046b 87000000 		.4byte	.LASF51
+ 966 046f 87000000 		.4byte	.LASF51
+ 967 0473 0A       		.byte	0xa
+ 968 0474 3F       		.byte	0x3f
+ 969 0475 18       		.uleb128 0x18
+ 970 0476 67020000 		.4byte	.LASF52
+ 971 047a 67020000 		.4byte	.LASF52
+ 972 047e 0B       		.byte	0xb
+ 973 047f 3D       		.byte	0x3d
+ 974 0480 18       		.uleb128 0x18
+ 975 0481 67030000 		.4byte	.LASF53
+ 976 0485 67030000 		.4byte	.LASF53
+ 977 0489 0C       		.byte	0xc
+ 978 048a 33       		.byte	0x33
+ 979 048b 18       		.uleb128 0x18
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 21
+
+
+ 980 048c 8D020000 		.4byte	.LASF54
+ 981 0490 8D020000 		.4byte	.LASF54
+ 982 0494 07       		.byte	0x7
+ 983 0495 75       		.byte	0x75
+ 984 0496 18       		.uleb128 0x18
+ 985 0497 E3000000 		.4byte	.LASF55
+ 986 049b E3000000 		.4byte	.LASF55
+ 987 049f 07       		.byte	0x7
+ 988 04a0 8F       		.byte	0x8f
+ 989 04a1 18       		.uleb128 0x18
+ 990 04a2 A2010000 		.4byte	.LASF56
+ 991 04a6 A2010000 		.4byte	.LASF56
+ 992 04aa 09       		.byte	0x9
+ 993 04ab 41       		.byte	0x41
+ 994 04ac 18       		.uleb128 0x18
+ 995 04ad 61010000 		.4byte	.LASF57
+ 996 04b1 61010000 		.4byte	.LASF57
+ 997 04b5 0D       		.byte	0xd
+ 998 04b6 77       		.byte	0x77
+ 999 04b7 18       		.uleb128 0x18
+ 1000 04b8 27010000 		.4byte	.LASF58
+ 1001 04bc 27010000 		.4byte	.LASF58
+ 1002 04c0 06       		.byte	0x6
+ 1003 04c1 18       		.byte	0x18
+ 1004 04c2 18       		.uleb128 0x18
+ 1005 04c3 16030000 		.4byte	.LASF59
+ 1006 04c7 16030000 		.4byte	.LASF59
+ 1007 04cb 07       		.byte	0x7
+ 1008 04cc 88       		.byte	0x88
+ 1009 04cd 00       		.byte	0
+ 1010              		.section	.debug_abbrev,"",%progbits
+ 1011              	.Ldebug_abbrev0:
+ 1012 0000 01       		.uleb128 0x1
+ 1013 0001 11       		.uleb128 0x11
+ 1014 0002 01       		.byte	0x1
+ 1015 0003 25       		.uleb128 0x25
+ 1016 0004 0E       		.uleb128 0xe
+ 1017 0005 13       		.uleb128 0x13
+ 1018 0006 0B       		.uleb128 0xb
+ 1019 0007 03       		.uleb128 0x3
+ 1020 0008 0E       		.uleb128 0xe
+ 1021 0009 1B       		.uleb128 0x1b
+ 1022 000a 0E       		.uleb128 0xe
+ 1023 000b 55       		.uleb128 0x55
+ 1024 000c 17       		.uleb128 0x17
+ 1025 000d 11       		.uleb128 0x11
+ 1026 000e 01       		.uleb128 0x1
+ 1027 000f 10       		.uleb128 0x10
+ 1028 0010 17       		.uleb128 0x17
+ 1029 0011 00       		.byte	0
+ 1030 0012 00       		.byte	0
+ 1031 0013 02       		.uleb128 0x2
+ 1032 0014 24       		.uleb128 0x24
+ 1033 0015 00       		.byte	0
+ 1034 0016 0B       		.uleb128 0xb
+ 1035 0017 0B       		.uleb128 0xb
+ 1036 0018 3E       		.uleb128 0x3e
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 22
+
+
+ 1037 0019 0B       		.uleb128 0xb
+ 1038 001a 03       		.uleb128 0x3
+ 1039 001b 0E       		.uleb128 0xe
+ 1040 001c 00       		.byte	0
+ 1041 001d 00       		.byte	0
+ 1042 001e 03       		.uleb128 0x3
+ 1043 001f 16       		.uleb128 0x16
+ 1044 0020 00       		.byte	0
+ 1045 0021 03       		.uleb128 0x3
+ 1046 0022 0E       		.uleb128 0xe
+ 1047 0023 3A       		.uleb128 0x3a
+ 1048 0024 0B       		.uleb128 0xb
+ 1049 0025 3B       		.uleb128 0x3b
+ 1050 0026 0B       		.uleb128 0xb
+ 1051 0027 49       		.uleb128 0x49
+ 1052 0028 13       		.uleb128 0x13
+ 1053 0029 00       		.byte	0
+ 1054 002a 00       		.byte	0
+ 1055 002b 04       		.uleb128 0x4
+ 1056 002c 24       		.uleb128 0x24
+ 1057 002d 00       		.byte	0
+ 1058 002e 0B       		.uleb128 0xb
+ 1059 002f 0B       		.uleb128 0xb
+ 1060 0030 3E       		.uleb128 0x3e
+ 1061 0031 0B       		.uleb128 0xb
+ 1062 0032 03       		.uleb128 0x3
+ 1063 0033 08       		.uleb128 0x8
+ 1064 0034 00       		.byte	0
+ 1065 0035 00       		.byte	0
+ 1066 0036 05       		.uleb128 0x5
+ 1067 0037 35       		.uleb128 0x35
+ 1068 0038 00       		.byte	0
+ 1069 0039 49       		.uleb128 0x49
+ 1070 003a 13       		.uleb128 0x13
+ 1071 003b 00       		.byte	0
+ 1072 003c 00       		.byte	0
+ 1073 003d 06       		.uleb128 0x6
+ 1074 003e 2E       		.uleb128 0x2e
+ 1075 003f 01       		.byte	0x1
+ 1076 0040 3F       		.uleb128 0x3f
+ 1077 0041 19       		.uleb128 0x19
+ 1078 0042 03       		.uleb128 0x3
+ 1079 0043 0E       		.uleb128 0xe
+ 1080 0044 3A       		.uleb128 0x3a
+ 1081 0045 0B       		.uleb128 0xb
+ 1082 0046 3B       		.uleb128 0x3b
+ 1083 0047 0B       		.uleb128 0xb
+ 1084 0048 27       		.uleb128 0x27
+ 1085 0049 19       		.uleb128 0x19
+ 1086 004a 11       		.uleb128 0x11
+ 1087 004b 01       		.uleb128 0x1
+ 1088 004c 12       		.uleb128 0x12
+ 1089 004d 06       		.uleb128 0x6
+ 1090 004e 40       		.uleb128 0x40
+ 1091 004f 18       		.uleb128 0x18
+ 1092 0050 9742     		.uleb128 0x2117
+ 1093 0052 19       		.uleb128 0x19
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 23
+
+
+ 1094 0053 01       		.uleb128 0x1
+ 1095 0054 13       		.uleb128 0x13
+ 1096 0055 00       		.byte	0
+ 1097 0056 00       		.byte	0
+ 1098 0057 07       		.uleb128 0x7
+ 1099 0058 898201   		.uleb128 0x4109
+ 1100 005b 00       		.byte	0
+ 1101 005c 11       		.uleb128 0x11
+ 1102 005d 01       		.uleb128 0x1
+ 1103 005e 31       		.uleb128 0x31
+ 1104 005f 13       		.uleb128 0x13
+ 1105 0060 00       		.byte	0
+ 1106 0061 00       		.byte	0
+ 1107 0062 08       		.uleb128 0x8
+ 1108 0063 34       		.uleb128 0x34
+ 1109 0064 00       		.byte	0
+ 1110 0065 03       		.uleb128 0x3
+ 1111 0066 0E       		.uleb128 0xe
+ 1112 0067 3A       		.uleb128 0x3a
+ 1113 0068 0B       		.uleb128 0xb
+ 1114 0069 3B       		.uleb128 0x3b
+ 1115 006a 0B       		.uleb128 0xb
+ 1116 006b 49       		.uleb128 0x49
+ 1117 006c 13       		.uleb128 0x13
+ 1118 006d 02       		.uleb128 0x2
+ 1119 006e 18       		.uleb128 0x18
+ 1120 006f 00       		.byte	0
+ 1121 0070 00       		.byte	0
+ 1122 0071 09       		.uleb128 0x9
+ 1123 0072 898201   		.uleb128 0x4109
+ 1124 0075 01       		.byte	0x1
+ 1125 0076 11       		.uleb128 0x11
+ 1126 0077 01       		.uleb128 0x1
+ 1127 0078 31       		.uleb128 0x31
+ 1128 0079 13       		.uleb128 0x13
+ 1129 007a 01       		.uleb128 0x1
+ 1130 007b 13       		.uleb128 0x13
+ 1131 007c 00       		.byte	0
+ 1132 007d 00       		.byte	0
+ 1133 007e 0A       		.uleb128 0xa
+ 1134 007f 8A8201   		.uleb128 0x410a
+ 1135 0082 00       		.byte	0
+ 1136 0083 02       		.uleb128 0x2
+ 1137 0084 18       		.uleb128 0x18
+ 1138 0085 9142     		.uleb128 0x2111
+ 1139 0087 18       		.uleb128 0x18
+ 1140 0088 00       		.byte	0
+ 1141 0089 00       		.byte	0
+ 1142 008a 0B       		.uleb128 0xb
+ 1143 008b 2E       		.uleb128 0x2e
+ 1144 008c 01       		.byte	0x1
+ 1145 008d 3F       		.uleb128 0x3f
+ 1146 008e 19       		.uleb128 0x19
+ 1147 008f 03       		.uleb128 0x3
+ 1148 0090 0E       		.uleb128 0xe
+ 1149 0091 3A       		.uleb128 0x3a
+ 1150 0092 0B       		.uleb128 0xb
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 24
+
+
+ 1151 0093 3B       		.uleb128 0x3b
+ 1152 0094 0B       		.uleb128 0xb
+ 1153 0095 27       		.uleb128 0x27
+ 1154 0096 19       		.uleb128 0x19
+ 1155 0097 49       		.uleb128 0x49
+ 1156 0098 13       		.uleb128 0x13
+ 1157 0099 11       		.uleb128 0x11
+ 1158 009a 01       		.uleb128 0x1
+ 1159 009b 12       		.uleb128 0x12
+ 1160 009c 06       		.uleb128 0x6
+ 1161 009d 40       		.uleb128 0x40
+ 1162 009e 18       		.uleb128 0x18
+ 1163 009f 9742     		.uleb128 0x2117
+ 1164 00a1 19       		.uleb128 0x19
+ 1165 00a2 01       		.uleb128 0x1
+ 1166 00a3 13       		.uleb128 0x13
+ 1167 00a4 00       		.byte	0
+ 1168 00a5 00       		.byte	0
+ 1169 00a6 0C       		.uleb128 0xc
+ 1170 00a7 0B       		.uleb128 0xb
+ 1171 00a8 01       		.byte	0x1
+ 1172 00a9 11       		.uleb128 0x11
+ 1173 00aa 01       		.uleb128 0x1
+ 1174 00ab 12       		.uleb128 0x12
+ 1175 00ac 06       		.uleb128 0x6
+ 1176 00ad 00       		.byte	0
+ 1177 00ae 00       		.byte	0
+ 1178 00af 0D       		.uleb128 0xd
+ 1179 00b0 34       		.uleb128 0x34
+ 1180 00b1 00       		.byte	0
+ 1181 00b2 03       		.uleb128 0x3
+ 1182 00b3 08       		.uleb128 0x8
+ 1183 00b4 3A       		.uleb128 0x3a
+ 1184 00b5 0B       		.uleb128 0xb
+ 1185 00b6 3B       		.uleb128 0x3b
+ 1186 00b7 0B       		.uleb128 0xb
+ 1187 00b8 49       		.uleb128 0x49
+ 1188 00b9 13       		.uleb128 0x13
+ 1189 00ba 02       		.uleb128 0x2
+ 1190 00bb 17       		.uleb128 0x17
+ 1191 00bc 00       		.byte	0
+ 1192 00bd 00       		.byte	0
+ 1193 00be 0E       		.uleb128 0xe
+ 1194 00bf 898201   		.uleb128 0x4109
+ 1195 00c2 01       		.byte	0x1
+ 1196 00c3 11       		.uleb128 0x11
+ 1197 00c4 01       		.uleb128 0x1
+ 1198 00c5 31       		.uleb128 0x31
+ 1199 00c6 13       		.uleb128 0x13
+ 1200 00c7 00       		.byte	0
+ 1201 00c8 00       		.byte	0
+ 1202 00c9 0F       		.uleb128 0xf
+ 1203 00ca 2E       		.uleb128 0x2e
+ 1204 00cb 01       		.byte	0x1
+ 1205 00cc 3F       		.uleb128 0x3f
+ 1206 00cd 19       		.uleb128 0x19
+ 1207 00ce 03       		.uleb128 0x3
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 25
+
+
+ 1208 00cf 0E       		.uleb128 0xe
+ 1209 00d0 3A       		.uleb128 0x3a
+ 1210 00d1 0B       		.uleb128 0xb
+ 1211 00d2 3B       		.uleb128 0x3b
+ 1212 00d3 0B       		.uleb128 0xb
+ 1213 00d4 27       		.uleb128 0x27
+ 1214 00d5 19       		.uleb128 0x19
+ 1215 00d6 49       		.uleb128 0x49
+ 1216 00d7 13       		.uleb128 0x13
+ 1217 00d8 8701     		.uleb128 0x87
+ 1218 00da 19       		.uleb128 0x19
+ 1219 00db 11       		.uleb128 0x11
+ 1220 00dc 01       		.uleb128 0x1
+ 1221 00dd 12       		.uleb128 0x12
+ 1222 00de 06       		.uleb128 0x6
+ 1223 00df 40       		.uleb128 0x40
+ 1224 00e0 18       		.uleb128 0x18
+ 1225 00e1 9742     		.uleb128 0x2117
+ 1226 00e3 19       		.uleb128 0x19
+ 1227 00e4 01       		.uleb128 0x1
+ 1228 00e5 13       		.uleb128 0x13
+ 1229 00e6 00       		.byte	0
+ 1230 00e7 00       		.byte	0
+ 1231 00e8 10       		.uleb128 0x10
+ 1232 00e9 0B       		.uleb128 0xb
+ 1233 00ea 01       		.byte	0x1
+ 1234 00eb 11       		.uleb128 0x11
+ 1235 00ec 01       		.uleb128 0x1
+ 1236 00ed 12       		.uleb128 0x12
+ 1237 00ee 06       		.uleb128 0x6
+ 1238 00ef 01       		.uleb128 0x1
+ 1239 00f0 13       		.uleb128 0x13
+ 1240 00f1 00       		.byte	0
+ 1241 00f2 00       		.byte	0
+ 1242 00f3 11       		.uleb128 0x11
+ 1243 00f4 34       		.uleb128 0x34
+ 1244 00f5 00       		.byte	0
+ 1245 00f6 03       		.uleb128 0x3
+ 1246 00f7 0E       		.uleb128 0xe
+ 1247 00f8 3A       		.uleb128 0x3a
+ 1248 00f9 0B       		.uleb128 0xb
+ 1249 00fa 3B       		.uleb128 0x3b
+ 1250 00fb 0B       		.uleb128 0xb
+ 1251 00fc 49       		.uleb128 0x49
+ 1252 00fd 13       		.uleb128 0x13
+ 1253 00fe 02       		.uleb128 0x2
+ 1254 00ff 17       		.uleb128 0x17
+ 1255 0100 00       		.byte	0
+ 1256 0101 00       		.byte	0
+ 1257 0102 12       		.uleb128 0x12
+ 1258 0103 0F       		.uleb128 0xf
+ 1259 0104 00       		.byte	0
+ 1260 0105 0B       		.uleb128 0xb
+ 1261 0106 0B       		.uleb128 0xb
+ 1262 0107 49       		.uleb128 0x49
+ 1263 0108 13       		.uleb128 0x13
+ 1264 0109 00       		.byte	0
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 26
+
+
+ 1265 010a 00       		.byte	0
+ 1266 010b 13       		.uleb128 0x13
+ 1267 010c 34       		.uleb128 0x34
+ 1268 010d 00       		.byte	0
+ 1269 010e 03       		.uleb128 0x3
+ 1270 010f 0E       		.uleb128 0xe
+ 1271 0110 3A       		.uleb128 0x3a
+ 1272 0111 0B       		.uleb128 0xb
+ 1273 0112 3B       		.uleb128 0x3b
+ 1274 0113 05       		.uleb128 0x5
+ 1275 0114 49       		.uleb128 0x49
+ 1276 0115 13       		.uleb128 0x13
+ 1277 0116 3F       		.uleb128 0x3f
+ 1278 0117 19       		.uleb128 0x19
+ 1279 0118 3C       		.uleb128 0x3c
+ 1280 0119 19       		.uleb128 0x19
+ 1281 011a 00       		.byte	0
+ 1282 011b 00       		.byte	0
+ 1283 011c 14       		.uleb128 0x14
+ 1284 011d 01       		.uleb128 0x1
+ 1285 011e 01       		.byte	0x1
+ 1286 011f 49       		.uleb128 0x49
+ 1287 0120 13       		.uleb128 0x13
+ 1288 0121 01       		.uleb128 0x1
+ 1289 0122 13       		.uleb128 0x13
+ 1290 0123 00       		.byte	0
+ 1291 0124 00       		.byte	0
+ 1292 0125 15       		.uleb128 0x15
+ 1293 0126 21       		.uleb128 0x21
+ 1294 0127 00       		.byte	0
+ 1295 0128 49       		.uleb128 0x49
+ 1296 0129 13       		.uleb128 0x13
+ 1297 012a 2F       		.uleb128 0x2f
+ 1298 012b 05       		.uleb128 0x5
+ 1299 012c 00       		.byte	0
+ 1300 012d 00       		.byte	0
+ 1301 012e 16       		.uleb128 0x16
+ 1302 012f 34       		.uleb128 0x34
+ 1303 0130 00       		.byte	0
+ 1304 0131 03       		.uleb128 0x3
+ 1305 0132 0E       		.uleb128 0xe
+ 1306 0133 3A       		.uleb128 0x3a
+ 1307 0134 0B       		.uleb128 0xb
+ 1308 0135 3B       		.uleb128 0x3b
+ 1309 0136 0B       		.uleb128 0xb
+ 1310 0137 49       		.uleb128 0x49
+ 1311 0138 13       		.uleb128 0x13
+ 1312 0139 3F       		.uleb128 0x3f
+ 1313 013a 19       		.uleb128 0x19
+ 1314 013b 02       		.uleb128 0x2
+ 1315 013c 18       		.uleb128 0x18
+ 1316 013d 00       		.byte	0
+ 1317 013e 00       		.byte	0
+ 1318 013f 17       		.uleb128 0x17
+ 1319 0140 21       		.uleb128 0x21
+ 1320 0141 00       		.byte	0
+ 1321 0142 49       		.uleb128 0x49
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 27
+
+
+ 1322 0143 13       		.uleb128 0x13
+ 1323 0144 2F       		.uleb128 0x2f
+ 1324 0145 0B       		.uleb128 0xb
+ 1325 0146 00       		.byte	0
+ 1326 0147 00       		.byte	0
+ 1327 0148 18       		.uleb128 0x18
+ 1328 0149 2E       		.uleb128 0x2e
+ 1329 014a 00       		.byte	0
+ 1330 014b 3F       		.uleb128 0x3f
+ 1331 014c 19       		.uleb128 0x19
+ 1332 014d 3C       		.uleb128 0x3c
+ 1333 014e 19       		.uleb128 0x19
+ 1334 014f 6E       		.uleb128 0x6e
+ 1335 0150 0E       		.uleb128 0xe
+ 1336 0151 03       		.uleb128 0x3
+ 1337 0152 0E       		.uleb128 0xe
+ 1338 0153 3A       		.uleb128 0x3a
+ 1339 0154 0B       		.uleb128 0xb
+ 1340 0155 3B       		.uleb128 0x3b
+ 1341 0156 0B       		.uleb128 0xb
+ 1342 0157 00       		.byte	0
+ 1343 0158 00       		.byte	0
+ 1344 0159 00       		.byte	0
+ 1345              		.section	.debug_loc,"",%progbits
+ 1346              	.Ldebug_loc0:
+ 1347              	.LLST0:
+ 1348 0000 02000000 		.4byte	.LVL23
+ 1349 0004 06000000 		.4byte	.LVL24
+ 1350 0008 0200     		.2byte	0x2
+ 1351 000a 30       		.byte	0x30
+ 1352 000b 9F       		.byte	0x9f
+ 1353 000c 06000000 		.4byte	.LVL24
+ 1354 0010 24000000 		.4byte	.LVL28
+ 1355 0014 0100     		.2byte	0x1
+ 1356 0016 54       		.byte	0x54
+ 1357 0017 00000000 		.4byte	0
+ 1358 001b 00000000 		.4byte	0
+ 1359              	.LLST1:
+ 1360 001f 18000000 		.4byte	.LVL31
+ 1361 0023 22000000 		.4byte	.LVL32
+ 1362 0027 0100     		.2byte	0x1
+ 1363 0029 51       		.byte	0x51
+ 1364 002a 00000000 		.4byte	0
+ 1365 002e 00000000 		.4byte	0
+ 1366              		.section	.debug_aranges,"",%progbits
+ 1367 0000 4C000000 		.4byte	0x4c
+ 1368 0004 0200     		.2byte	0x2
+ 1369 0006 00000000 		.4byte	.Ldebug_info0
+ 1370 000a 04       		.byte	0x4
+ 1371 000b 00       		.byte	0
+ 1372 000c 0000     		.2byte	0
+ 1373 000e 0000     		.2byte	0
+ 1374 0010 00000000 		.4byte	.LFB64
+ 1375 0014 14000000 		.4byte	.LFE64-.LFB64
+ 1376 0018 00000000 		.4byte	.LFB68
+ 1377 001c 4C000000 		.4byte	.LFE68-.LFB68
+ 1378 0020 00000000 		.4byte	.LFB65
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 28
+
+
+ 1379 0024 24000000 		.4byte	.LFE65-.LFB65
+ 1380 0028 00000000 		.4byte	.LFB66
+ 1381 002c 3C000000 		.4byte	.LFE66-.LFB66
+ 1382 0030 00000000 		.4byte	.LFB67
+ 1383 0034 50000000 		.4byte	.LFE67-.LFB67
+ 1384 0038 00000000 		.4byte	.LFB69
+ 1385 003c 28000000 		.4byte	.LFE69-.LFB69
+ 1386 0040 00000000 		.4byte	.LFB70
+ 1387 0044 4C000000 		.4byte	.LFE70-.LFB70
+ 1388 0048 00000000 		.4byte	0
+ 1389 004c 00000000 		.4byte	0
+ 1390              		.section	.debug_ranges,"",%progbits
+ 1391              	.Ldebug_ranges0:
+ 1392 0000 00000000 		.4byte	.LFB64
+ 1393 0004 14000000 		.4byte	.LFE64
+ 1394 0008 00000000 		.4byte	.LFB68
+ 1395 000c 4C000000 		.4byte	.LFE68
+ 1396 0010 00000000 		.4byte	.LFB65
+ 1397 0014 24000000 		.4byte	.LFE65
+ 1398 0018 00000000 		.4byte	.LFB66
+ 1399 001c 3C000000 		.4byte	.LFE66
+ 1400 0020 00000000 		.4byte	.LFB67
+ 1401 0024 50000000 		.4byte	.LFE67
+ 1402 0028 00000000 		.4byte	.LFB69
+ 1403 002c 28000000 		.4byte	.LFE69
+ 1404 0030 00000000 		.4byte	.LFB70
+ 1405 0034 4C000000 		.4byte	.LFE70
+ 1406 0038 00000000 		.4byte	0
+ 1407 003c 00000000 		.4byte	0
+ 1408              		.section	.debug_line,"",%progbits
+ 1409              	.Ldebug_line0:
+ 1410 0000 6A020000 		.section	.debug_str,"MS",%progbits,1
+ 1410      0200B001 
+ 1410      00000201 
+ 1410      FB0E0D00 
+ 1410      01010101 
+ 1411              	.LASF44:
+ 1412 0000 6973725F 		.ascii	"isr_timer_ClearPending\000"
+ 1412      74696D65 
+ 1412      725F436C 
+ 1412      65617250 
+ 1412      656E6469 
+ 1413              	.LASF22:
+ 1414 0017 73746172 		.ascii	"start_measure\000"
+ 1414      745F6D65 
+ 1414      61737572 
+ 1414      6500
+ 1415              	.LASF26:
+ 1416 0025 74656D70 		.ascii	"temp\000"
+ 1416      00
+ 1417              	.LASF2:
+ 1418 002a 73686F72 		.ascii	"short int\000"
+ 1418      7420696E 
+ 1418      7400
+ 1419              	.LASF23:
+ 1420 0034 696E6974 		.ascii	"initializeComponents\000"
+ 1420      69616C69 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 29
+
+
+ 1420      7A65436F 
+ 1420      6D706F6E 
+ 1420      656E7473 
+ 1421              	.LASF19:
+ 1422 0049 73697A65 		.ascii	"sizetype\000"
+ 1422      74797065 
+ 1422      00
+ 1423              	.LASF29:
+ 1424 0052 72784275 		.ascii	"rxBuffer2\000"
+ 1424      66666572 
+ 1424      3200
+ 1425              	.LASF64:
+ 1426 005c 6D61696E 		.ascii	"main\000"
+ 1426      00
+ 1427              	.LASF7:
+ 1428 0061 5F5F7569 		.ascii	"__uint32_t\000"
+ 1428      6E743332 
+ 1428      5F7400
+ 1429              	.LASF38:
+ 1430 006c 54696D65 		.ascii	"Timer_1_ReadStatusRegister\000"
+ 1430      725F315F 
+ 1430      52656164 
+ 1430      53746174 
+ 1430      75735265 
+ 1431              	.LASF51:
+ 1432 0087 5047415F 		.ascii	"PGA_Inv_1_Start\000"
+ 1432      496E765F 
+ 1432      315F5374 
+ 1432      61727400 
+ 1433              	.LASF25:
+ 1434 0097 696E6465 		.ascii	"index\000"
+ 1434      7800
+ 1435              	.LASF20:
+ 1436 009d 74696D65 		.ascii	"timer_tc_isr\000"
+ 1436      725F7463 
+ 1436      5F697372 
+ 1436      00
+ 1437              	.LASF49:
+ 1438 00aa 55415254 		.ascii	"UART_1_Start\000"
+ 1438      5F315F53 
+ 1438      74617274 
+ 1438      00
+ 1439              	.LASF31:
+ 1440 00b7 706C6F74 		.ascii	"plotBuffer\000"
+ 1440      42756666 
+ 1440      657200
+ 1441              	.LASF15:
+ 1442 00c2 666C6F61 		.ascii	"float\000"
+ 1442      7400
+ 1443              	.LASF63:
+ 1444 00c8 73746F70 		.ascii	"stop_measure\000"
+ 1444      5F6D6561 
+ 1444      73757265 
+ 1444      00
+ 1445              	.LASF9:
+ 1446 00d5 6C6F6E67 		.ascii	"long long int\000"
+ 1446      206C6F6E 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 30
+
+
+ 1446      6720696E 
+ 1446      7400
+ 1447              	.LASF55:
+ 1448 00e3 55415254 		.ascii	"UART_1_ClearTxBuffer\000"
+ 1448      5F315F43 
+ 1448      6C656172 
+ 1448      54784275 
+ 1448      66666572 
+ 1449              	.LASF6:
+ 1450 00f8 6C6F6E67 		.ascii	"long int\000"
+ 1450      20696E74 
+ 1450      00
+ 1451              	.LASF37:
+ 1452 0101 73747269 		.ascii	"string\000"
+ 1452      6E6700
+ 1453              	.LASF4:
+ 1454 0108 5F5F7569 		.ascii	"__uint8_t\000"
+ 1454      6E74385F 
+ 1454      7400
+ 1455              	.LASF43:
+ 1456 0112 54696D65 		.ascii	"Timer_1_WriteCounter\000"
+ 1456      725F315F 
+ 1456      57726974 
+ 1456      65436F75 
+ 1456      6E746572 
+ 1457              	.LASF58:
+ 1458 0127 6973725F 		.ascii	"isr_1_StartEx\000"
+ 1458      315F5374 
+ 1458      61727445 
+ 1458      7800
+ 1459              	.LASF39:
+ 1460 0135 6973725F 		.ascii	"isr_1_ClearPending\000"
+ 1460      315F436C 
+ 1460      65617250 
+ 1460      656E6469 
+ 1460      6E6700
+ 1461              	.LASF32:
+ 1462 0148 72656365 		.ascii	"receivedData\000"
+ 1462      69766564 
+ 1462      44617461 
+ 1462      00
+ 1463              	.LASF18:
+ 1464 0155 6C6F6E67 		.ascii	"long double\000"
+ 1464      20646F75 
+ 1464      626C6500 
+ 1465              	.LASF57:
+ 1466 0161 43794465 		.ascii	"CyDelayUs\000"
+ 1466      6C617955 
+ 1466      7300
+ 1467              	.LASF1:
+ 1468 016b 756E7369 		.ascii	"unsigned char\000"
+ 1468      676E6564 
+ 1468      20636861 
+ 1468      7200
+ 1469              	.LASF36:
+ 1470 0179 4F6E6554 		.ascii	"OneToSend\000"
+ 1470      6F53656E 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 31
+
+
+ 1470      6400
+ 1471              	.LASF46:
+ 1472 0183 54696D65 		.ascii	"Timer_1_ReadPeriod\000"
+ 1472      725F315F 
+ 1472      52656164 
+ 1472      50657269 
+ 1472      6F6400
+ 1473              	.LASF0:
+ 1474 0196 7369676E 		.ascii	"signed char\000"
+ 1474      65642063 
+ 1474      68617200 
+ 1475              	.LASF56:
+ 1476 01a2 49444143 		.ascii	"IDAC_1_SetValue\000"
+ 1476      5F315F53 
+ 1476      65745661 
+ 1476      6C756500 
+ 1477              	.LASF10:
+ 1478 01b2 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1478      206C6F6E 
+ 1478      6720756E 
+ 1478      7369676E 
+ 1478      65642069 
+ 1479              	.LASF14:
+ 1480 01c9 75696E74 		.ascii	"uint32_t\000"
+ 1480      33325F74 
+ 1480      00
+ 1481              	.LASF11:
+ 1482 01d2 756E7369 		.ascii	"unsigned int\000"
+ 1482      676E6564 
+ 1482      20696E74 
+ 1482      00
+ 1483              	.LASF48:
+ 1484 01df 6973725F 		.ascii	"isr_timer_StartEx\000"
+ 1484      74696D65 
+ 1484      725F5374 
+ 1484      61727445 
+ 1484      7800
+ 1485              	.LASF62:
+ 1486 01f1 433A5C55 		.ascii	"C:\\Users\\DELL\\OneDrive\\Documents\\PSoC Creator\\"
+ 1486      73657273 
+ 1486      5C44454C 
+ 1486      4C5C4F6E 
+ 1486      65447269 
+ 1487 021f 5369676E 		.ascii	"Signal-Generator_1\\Signal-Generator_1\\Design01.cy"
+ 1487      616C2D47 
+ 1487      656E6572 
+ 1487      61746F72 
+ 1487      5F315C53 
+ 1488 0250 64736E00 		.ascii	"dsn\000"
+ 1489              	.LASF3:
+ 1490 0254 73686F72 		.ascii	"short unsigned int\000"
+ 1490      7420756E 
+ 1490      7369676E 
+ 1490      65642069 
+ 1490      6E7400
+ 1491              	.LASF52:
+ 1492 0267 5449415F 		.ascii	"TIA_1_Start\000"
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 32
+
+
+ 1492      315F5374 
+ 1492      61727400 
+ 1493              	.LASF17:
+ 1494 0273 63686172 		.ascii	"char\000"
+ 1494      00
+ 1495              	.LASF13:
+ 1496 0278 696E7433 		.ascii	"int32_t\000"
+ 1496      325F7400 
+ 1497              	.LASF50:
+ 1498 0280 49444143 		.ascii	"IDAC_1_Start\000"
+ 1498      5F315F53 
+ 1498      74617274 
+ 1498      00
+ 1499              	.LASF54:
+ 1500 028d 55415254 		.ascii	"UART_1_ClearRxBuffer\000"
+ 1500      5F315F43 
+ 1500      6C656172 
+ 1500      52784275 
+ 1500      66666572 
+ 1501              	.LASF40:
+ 1502 02a2 55415254 		.ascii	"UART_1_ReadRxData\000"
+ 1502      5F315F52 
+ 1502      65616452 
+ 1502      78446174 
+ 1502      6100
+ 1503              	.LASF45:
+ 1504 02b4 54696D65 		.ascii	"Timer_1_Start\000"
+ 1504      725F315F 
+ 1504      53746172 
+ 1504      7400
+ 1505              	.LASF33:
+ 1506 02c2 62756666 		.ascii	"bufferFilled\000"
+ 1506      65724669 
+ 1506      6C6C6564 
+ 1506      00
+ 1507              	.LASF61:
+ 1508 02cf 6D61696E 		.ascii	"main.c\000"
+ 1508      2E6300
+ 1509              	.LASF8:
+ 1510 02d6 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1510      20756E73 
+ 1510      69676E65 
+ 1510      6420696E 
+ 1510      7400
+ 1511              	.LASF41:
+ 1512 02e8 55415254 		.ascii	"UART_1_GetRxBufferSize\000"
+ 1512      5F315F47 
+ 1512      65745278 
+ 1512      42756666 
+ 1512      65725369 
+ 1513              	.LASF16:
+ 1514 02ff 646F7562 		.ascii	"double\000"
+ 1514      6C6500
+ 1515              	.LASF21:
+ 1516 0306 55415254 		.ascii	"UART_Rx_Handler\000"
+ 1516      5F52785F 
+ 1516      48616E64 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 33
+
+
+ 1516      6C657200 
+ 1517              	.LASF59:
+ 1518 0316 55415254 		.ascii	"UART_1_WriteTxData\000"
+ 1518      5F315F57 
+ 1518      72697465 
+ 1518      54784461 
+ 1518      746100
+ 1519              	.LASF30:
+ 1520 0329 63757272 		.ascii	"currentRxBuffer\000"
+ 1520      656E7452 
+ 1520      78427566 
+ 1520      66657200 
+ 1521              	.LASF42:
+ 1522 0339 54696D65 		.ascii	"Timer_1_Stop\000"
+ 1522      725F315F 
+ 1522      53746F70 
+ 1522      00
+ 1523              	.LASF35:
+ 1524 0346 636F756E 		.ascii	"count\000"
+ 1524      7400
+ 1525              	.LASF5:
+ 1526 034c 5F5F696E 		.ascii	"__int32_t\000"
+ 1526      7433325F 
+ 1526      7400
+ 1527              	.LASF12:
+ 1528 0356 75696E74 		.ascii	"uint8_t\000"
+ 1528      385F7400 
+ 1529              	.LASF34:
+ 1530 035e 74635F63 		.ascii	"tc_count\000"
+ 1530      6F756E74 
+ 1530      00
+ 1531              	.LASF53:
+ 1532 0367 4F70616D 		.ascii	"Opamp_1_Start\000"
+ 1532      705F315F 
+ 1532      53746172 
+ 1532      7400
+ 1533              	.LASF47:
+ 1534 0375 54696D65 		.ascii	"Timer_1_ReadCounter\000"
+ 1534      725F315F 
+ 1534      52656164 
+ 1534      436F756E 
+ 1534      74657200 
+ 1535              	.LASF24:
+ 1536 0389 706C6F74 		.ascii	"plotData\000"
+ 1536      44617461 
+ 1536      00
+ 1537              	.LASF27:
+ 1538 0392 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1538      52784275 
+ 1538      66666572 
+ 1538      00
+ 1539              	.LASF60:
+ 1540 039f 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1540      43313120 
+ 1540      352E342E 
+ 1540      31203230 
+ 1540      31363036 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccPD3xk5.s 			page 34
+
+
+ 1541 03d2 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1541      20726576 
+ 1541      6973696F 
+ 1541      6E203233 
+ 1541      37373135 
+ 1542 0405 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1542      66756E63 
+ 1542      74696F6E 
+ 1542      2D736563 
+ 1542      74696F6E 
+ 1543              	.LASF28:
+ 1544 042d 72784275 		.ascii	"rxBuffer1\000"
+ 1544      66666572 
+ 1544      3100
+ 1545              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

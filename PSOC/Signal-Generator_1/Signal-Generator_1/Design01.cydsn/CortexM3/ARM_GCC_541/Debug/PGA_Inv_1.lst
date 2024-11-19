@@ -1,0 +1,1416 @@
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"PGA_Inv_1.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.PGA_Inv_1_Enable,"ax",%progbits
+  20              		.align	2
+  21              		.global	PGA_Inv_1_Enable
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	PGA_Inv_1_Enable, %function
+  25              	PGA_Inv_1_Enable:
+  26              	.LFB1:
+  27              		.file 1 "Generated_Source\\PSoC5\\PGA_Inv_1.c"
+   1:Generated_Source\PSoC5/PGA_Inv_1.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/PGA_Inv_1.c **** * File Name: PGA_Inv_1.c
+   3:Generated_Source\PSoC5/PGA_Inv_1.c **** * Version 2.0
+   4:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+   5:Generated_Source\PSoC5/PGA_Inv_1.c **** * Description:
+   6:Generated_Source\PSoC5/PGA_Inv_1.c **** *  This file provides the source code to the API for the inverting PGA 
+   7:Generated_Source\PSoC5/PGA_Inv_1.c **** *  Component.
+   8:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+   9:Generated_Source\PSoC5/PGA_Inv_1.c **** * Note:
+  10:Generated_Source\PSoC5/PGA_Inv_1.c **** *  None
+  11:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  12:Generated_Source\PSoC5/PGA_Inv_1.c **** ********************************************************************************
+  13:Generated_Source\PSoC5/PGA_Inv_1.c **** * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  14:Generated_Source\PSoC5/PGA_Inv_1.c **** * You may use this file only in accordance with the license, terms, conditions, 
+  15:Generated_Source\PSoC5/PGA_Inv_1.c **** * disclaimers, and limitations in the end user license agreement accompanying 
+  16:Generated_Source\PSoC5/PGA_Inv_1.c **** * the software package with which this file was provided.
+  17:Generated_Source\PSoC5/PGA_Inv_1.c **** *******************************************************************************/
+  18:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  19:Generated_Source\PSoC5/PGA_Inv_1.c **** #include "PGA_Inv_1.h"
+  20:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  21:Generated_Source\PSoC5/PGA_Inv_1.c **** #if (!CY_PSOC5A)
+  22:Generated_Source\PSoC5/PGA_Inv_1.c ****     #if (CYDEV_VARIABLE_VDDA == 1u)
+  23:Generated_Source\PSoC5/PGA_Inv_1.c ****         #include "CyScBoostClk.h"
+  24:Generated_Source\PSoC5/PGA_Inv_1.c ****     #endif /* (CYDEV_VARIABLE_VDDA == 1u) */
+  25:Generated_Source\PSoC5/PGA_Inv_1.c **** #endif /* (!CY_PSOC5A) */
+  26:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  27:Generated_Source\PSoC5/PGA_Inv_1.c **** #if (CY_PSOC5A)
+  28:Generated_Source\PSoC5/PGA_Inv_1.c ****     static PGA_Inv_1_BACKUP_STRUCT  PGA_Inv_1_P5backup;
+  29:Generated_Source\PSoC5/PGA_Inv_1.c **** #endif /* (CY_PSOC5A) */
+  30:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 2
+
+
+  31:Generated_Source\PSoC5/PGA_Inv_1.c **** uint8 PGA_Inv_1_initVar = 0u;
+  32:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  33:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  34:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  35:Generated_Source\PSoC5/PGA_Inv_1.c **** /*******************************************************************************   
+  36:Generated_Source\PSoC5/PGA_Inv_1.c **** * Function Name: PGA_Inv_1_Init
+  37:Generated_Source\PSoC5/PGA_Inv_1.c **** ********************************************************************************
+  38:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  39:Generated_Source\PSoC5/PGA_Inv_1.c **** * Summary:
+  40:Generated_Source\PSoC5/PGA_Inv_1.c **** *  Initialize component's parameters to the parameters set by user in the 
+  41:Generated_Source\PSoC5/PGA_Inv_1.c **** *  customizer of the component placed onto schematic. Usually called in 
+  42:Generated_Source\PSoC5/PGA_Inv_1.c **** *  PGA_Inv_1_Start().
+  43:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  44:Generated_Source\PSoC5/PGA_Inv_1.c **** * Parameters:
+  45:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void
+  46:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  47:Generated_Source\PSoC5/PGA_Inv_1.c **** * Return:
+  48:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void
+  49:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  50:Generated_Source\PSoC5/PGA_Inv_1.c **** *******************************************************************************/
+  51:Generated_Source\PSoC5/PGA_Inv_1.c **** void PGA_Inv_1_Init(void) 
+  52:Generated_Source\PSoC5/PGA_Inv_1.c **** {
+  53:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Set PGA mode */
+  54:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_CR0_REG = PGA_Inv_1_MODE_PGA;
+  55:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  56:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Set inverting PGA mode  and reference mode */
+  57:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_CR1_REG &= (uint8)(~PGA_Inv_1_PGA_INV);
+  58:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  59:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Set gain and compensation */
+  60:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_SetGain(PGA_Inv_1_DEFAULT_GAIN);
+  61:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  62:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Set power */
+  63:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_SetPower(PGA_Inv_1_DEFAULT_POWER);
+  64:Generated_Source\PSoC5/PGA_Inv_1.c **** }
+  65:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  66:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  67:Generated_Source\PSoC5/PGA_Inv_1.c **** /*******************************************************************************   
+  68:Generated_Source\PSoC5/PGA_Inv_1.c **** * Function Name: PGA_Inv_1_Enable
+  69:Generated_Source\PSoC5/PGA_Inv_1.c **** ********************************************************************************
+  70:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  71:Generated_Source\PSoC5/PGA_Inv_1.c **** * Summary:
+  72:Generated_Source\PSoC5/PGA_Inv_1.c **** *  Enables the inverting PGA block operation
+  73:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  74:Generated_Source\PSoC5/PGA_Inv_1.c **** * Parameters:
+  75:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void
+  76:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  77:Generated_Source\PSoC5/PGA_Inv_1.c **** * Return:
+  78:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void
+  79:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+  80:Generated_Source\PSoC5/PGA_Inv_1.c **** *******************************************************************************/
+  81:Generated_Source\PSoC5/PGA_Inv_1.c **** void PGA_Inv_1_Enable(void) 
+  82:Generated_Source\PSoC5/PGA_Inv_1.c **** {
+  28              		.loc 1 82 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 3
+
+
+  83:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* This is to restore the value of register CR1 and CR2 which is saved 
+  84:Generated_Source\PSoC5/PGA_Inv_1.c ****       in prior to the modifications in stop() API */
+  85:Generated_Source\PSoC5/PGA_Inv_1.c ****     #if (CY_PSOC5A)
+  86:Generated_Source\PSoC5/PGA_Inv_1.c ****         if(PGA_Inv_1_P5backup.enableState == 1u)
+  87:Generated_Source\PSoC5/PGA_Inv_1.c ****         {
+  88:Generated_Source\PSoC5/PGA_Inv_1.c ****             PGA_Inv_1_CR1_REG = PGA_Inv_1_P5backup.scCR1Reg;
+  89:Generated_Source\PSoC5/PGA_Inv_1.c ****             PGA_Inv_1_CR2_REG = PGA_Inv_1_P5backup.scCR2Reg;
+  90:Generated_Source\PSoC5/PGA_Inv_1.c ****             PGA_Inv_1_P5backup.enableState = 0u;
+  91:Generated_Source\PSoC5/PGA_Inv_1.c ****         }
+  92:Generated_Source\PSoC5/PGA_Inv_1.c ****     #endif /* CY_PSOC5A */
+  93:Generated_Source\PSoC5/PGA_Inv_1.c ****     
+  94:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Enable power to the Amp in Active mode */
+  95:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_PM_ACT_CFG_REG |= PGA_Inv_1_ACT_PWR_EN;
+  33              		.loc 1 95 0
+  34 0000 084A     		ldr	r2, .L2
+  35 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  36 0004 43F00203 		orr	r3, r3, #2
+  37 0008 1370     		strb	r3, [r2]
+  96:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+  97:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Enable power to the Amp in Alternative active mode  */
+  98:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_PM_STBY_CFG_REG |= PGA_Inv_1_STBY_PWR_EN;
+  38              		.loc 1 98 0
+  39 000a 1032     		adds	r2, r2, #16
+  40 000c 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  41 000e 43F00203 		orr	r3, r3, #2
+  42 0012 1370     		strb	r3, [r2]
+  99:Generated_Source\PSoC5/PGA_Inv_1.c ****     
+ 100:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_PUMP_CR1_REG |= PGA_Inv_1_PUMP_CR1_SC_CLKSEL;
+  43              		.loc 1 100 0
+  44 0014 02F5A552 		add	r2, r2, #5280
+  45 0018 1E32     		adds	r2, r2, #30
+  46 001a 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  47 001c 43F08003 		orr	r3, r3, #128
+  48 0020 1370     		strb	r3, [r2]
+  49 0022 7047     		bx	lr
+  50              	.L3:
+  51              		.align	2
+  52              	.L2:
+  53 0024 A9430040 		.word	1073759145
+  54              		.cfi_endproc
+  55              	.LFE1:
+  56              		.size	PGA_Inv_1_Enable, .-PGA_Inv_1_Enable
+  57              		.section	.text.PGA_Inv_1_Stop,"ax",%progbits
+  58              		.align	2
+  59              		.global	PGA_Inv_1_Stop
+  60              		.thumb
+  61              		.thumb_func
+  62              		.type	PGA_Inv_1_Stop, %function
+  63              	PGA_Inv_1_Stop:
+  64              	.LFB3:
+ 101:Generated_Source\PSoC5/PGA_Inv_1.c ****     
+ 102:Generated_Source\PSoC5/PGA_Inv_1.c ****     #if (!CY_PSOC5A)
+ 103:Generated_Source\PSoC5/PGA_Inv_1.c ****         #if (CYDEV_VARIABLE_VDDA == 1u)
+ 104:Generated_Source\PSoC5/PGA_Inv_1.c ****             if(CyScPumpEnabled == 1u)
+ 105:Generated_Source\PSoC5/PGA_Inv_1.c ****             {
+ 106:Generated_Source\PSoC5/PGA_Inv_1.c ****                 PGA_Inv_1_BSTCLK_REG &= (uint8)(~PGA_Inv_1_BST_CLK_INDEX_MASK);
+ 107:Generated_Source\PSoC5/PGA_Inv_1.c ****                 PGA_Inv_1_BSTCLK_REG |= PGA_Inv_1_BST_CLK_EN | CyScBoostClk__INDEX;
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 4
+
+
+ 108:Generated_Source\PSoC5/PGA_Inv_1.c ****                 PGA_Inv_1_SC_MISC_REG |= PGA_Inv_1_PUMP_FORCE;
+ 109:Generated_Source\PSoC5/PGA_Inv_1.c ****                 CyScBoostClk_Start();
+ 110:Generated_Source\PSoC5/PGA_Inv_1.c ****             }
+ 111:Generated_Source\PSoC5/PGA_Inv_1.c ****             else
+ 112:Generated_Source\PSoC5/PGA_Inv_1.c ****             {
+ 113:Generated_Source\PSoC5/PGA_Inv_1.c ****                 PGA_Inv_1_BSTCLK_REG &= (uint8)(~PGA_Inv_1_BST_CLK_EN);
+ 114:Generated_Source\PSoC5/PGA_Inv_1.c ****                 PGA_Inv_1_SC_MISC_REG &= (uint8)(~PGA_Inv_1_PUMP_FORCE);
+ 115:Generated_Source\PSoC5/PGA_Inv_1.c ****             }
+ 116:Generated_Source\PSoC5/PGA_Inv_1.c ****         #endif /* (CYDEV_VARIABLE_VDDA == 1u) */
+ 117:Generated_Source\PSoC5/PGA_Inv_1.c ****     #endif /* (!CY_PSOC5A) */
+ 118:Generated_Source\PSoC5/PGA_Inv_1.c **** }
+ 119:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 120:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 121:Generated_Source\PSoC5/PGA_Inv_1.c **** /*******************************************************************************
+ 122:Generated_Source\PSoC5/PGA_Inv_1.c **** * Function Name: PGA_Inv_1_Start
+ 123:Generated_Source\PSoC5/PGA_Inv_1.c **** ********************************************************************************
+ 124:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 125:Generated_Source\PSoC5/PGA_Inv_1.c **** * Summary:
+ 126:Generated_Source\PSoC5/PGA_Inv_1.c **** *  The start function initializes the inverting PGA with the default values,
+ 127:Generated_Source\PSoC5/PGA_Inv_1.c **** *  and sets the power to the given level.A power level of 0, is the same as
+ 128:Generated_Source\PSoC5/PGA_Inv_1.c **** *  executing the stop function.
+ 129:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 130:Generated_Source\PSoC5/PGA_Inv_1.c **** * Parameters:
+ 131:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void
+ 132:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 133:Generated_Source\PSoC5/PGA_Inv_1.c **** * Return:
+ 134:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void
+ 135:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 136:Generated_Source\PSoC5/PGA_Inv_1.c **** * Theory:
+ 137:Generated_Source\PSoC5/PGA_Inv_1.c **** *  This function modifies the global variable PGA_Inv_1_initVar: which 
+ 138:Generated_Source\PSoC5/PGA_Inv_1.c **** *  defines where component's configuration are taken from the customizer 
+ 139:Generated_Source\PSoC5/PGA_Inv_1.c **** *  (equals 0) or parameters changed by API will be used instead (equals 1).
+ 140:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 141:Generated_Source\PSoC5/PGA_Inv_1.c **** *******************************************************************************/
+ 142:Generated_Source\PSoC5/PGA_Inv_1.c **** void PGA_Inv_1_Start(void) 
+ 143:Generated_Source\PSoC5/PGA_Inv_1.c **** {
+ 144:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 145:Generated_Source\PSoC5/PGA_Inv_1.c ****     if(PGA_Inv_1_initVar == 0u)
+ 146:Generated_Source\PSoC5/PGA_Inv_1.c ****     {
+ 147:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_initVar = 1u;
+ 148:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_Init();
+ 149:Generated_Source\PSoC5/PGA_Inv_1.c ****     }
+ 150:Generated_Source\PSoC5/PGA_Inv_1.c ****     
+ 151:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_Enable();
+ 152:Generated_Source\PSoC5/PGA_Inv_1.c **** }
+ 153:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 154:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 155:Generated_Source\PSoC5/PGA_Inv_1.c **** /*******************************************************************************
+ 156:Generated_Source\PSoC5/PGA_Inv_1.c **** * Function Name: PGA_Inv_1_Stop
+ 157:Generated_Source\PSoC5/PGA_Inv_1.c **** ********************************************************************************
+ 158:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 159:Generated_Source\PSoC5/PGA_Inv_1.c **** * Summary:
+ 160:Generated_Source\PSoC5/PGA_Inv_1.c **** *  Powers down amplifier to lowest power state.
+ 161:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 162:Generated_Source\PSoC5/PGA_Inv_1.c **** * Parameters:
+ 163:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void
+ 164:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 5
+
+
+ 165:Generated_Source\PSoC5/PGA_Inv_1.c **** * Return:
+ 166:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void 
+ 167:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 168:Generated_Source\PSoC5/PGA_Inv_1.c **** *******************************************************************************/
+ 169:Generated_Source\PSoC5/PGA_Inv_1.c **** void PGA_Inv_1_Stop(void) 
+ 170:Generated_Source\PSoC5/PGA_Inv_1.c **** {
+  65              		.loc 1 170 0
+  66              		.cfi_startproc
+  67              		@ args = 0, pretend = 0, frame = 0
+  68              		@ frame_needed = 0, uses_anonymous_args = 0
+  69              		@ link register save eliminated.
+ 171:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Disble power to the Amp in Active mode*/
+ 172:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_PM_ACT_CFG_REG &= (uint8)(~PGA_Inv_1_ACT_PWR_EN);
+  70              		.loc 1 172 0
+  71 0000 054A     		ldr	r2, .L5
+  72 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  73 0004 03F0FD03 		and	r3, r3, #253
+  74 0008 1370     		strb	r3, [r2]
+ 173:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 174:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Disble power to the Amp in Alternative active mode*/
+ 175:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_PM_STBY_CFG_REG &= (uint8)(~PGA_Inv_1_STBY_PWR_EN);
+  75              		.loc 1 175 0
+  76 000a 1032     		adds	r2, r2, #16
+  77 000c 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  78 000e 03F0FD03 		and	r3, r3, #253
+  79 0012 1370     		strb	r3, [r2]
+  80 0014 7047     		bx	lr
+  81              	.L6:
+  82 0016 00BF     		.align	2
+  83              	.L5:
+  84 0018 A9430040 		.word	1073759145
+  85              		.cfi_endproc
+  86              	.LFE3:
+  87              		.size	PGA_Inv_1_Stop, .-PGA_Inv_1_Stop
+  88              		.section	.text.PGA_Inv_1_SetPower,"ax",%progbits
+  89              		.align	2
+  90              		.global	PGA_Inv_1_SetPower
+  91              		.thumb
+  92              		.thumb_func
+  93              		.type	PGA_Inv_1_SetPower, %function
+  94              	PGA_Inv_1_SetPower:
+  95              	.LFB4:
+ 176:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 177:Generated_Source\PSoC5/PGA_Inv_1.c ****     #if (!CY_PSOC5A)
+ 178:Generated_Source\PSoC5/PGA_Inv_1.c ****         #if (CYDEV_VARIABLE_VDDA == 1u)
+ 179:Generated_Source\PSoC5/PGA_Inv_1.c ****             PGA_Inv_1_BSTCLK_REG &= (uint8)(~PGA_Inv_1_BST_CLK_EN);
+ 180:Generated_Source\PSoC5/PGA_Inv_1.c ****             /* Disable pumps only if there aren't any SC block in use */
+ 181:Generated_Source\PSoC5/PGA_Inv_1.c ****             if ((PGA_Inv_1_PM_ACT_CFG_REG & PGA_Inv_1_PM_ACT_CFG_MASK) == 0u)
+ 182:Generated_Source\PSoC5/PGA_Inv_1.c ****             {
+ 183:Generated_Source\PSoC5/PGA_Inv_1.c ****                 PGA_Inv_1_SC_MISC_REG &= (uint8)(~PGA_Inv_1_PUMP_FORCE);
+ 184:Generated_Source\PSoC5/PGA_Inv_1.c ****                 PGA_Inv_1_PUMP_CR1_REG &= (uint8)(~PGA_Inv_1_PUMP_CR1_SC_CLKSEL);
+ 185:Generated_Source\PSoC5/PGA_Inv_1.c ****                 CyScBoostClk_Stop();
+ 186:Generated_Source\PSoC5/PGA_Inv_1.c ****             }
+ 187:Generated_Source\PSoC5/PGA_Inv_1.c ****         #endif /* CYDEV_VARIABLE_VDDA == 1u */
+ 188:Generated_Source\PSoC5/PGA_Inv_1.c ****     #endif /* (CY_PSOC3 || CY_PSOC5LP) */
+ 189:Generated_Source\PSoC5/PGA_Inv_1.c ****     
+ 190:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* This sets PGA in zero current mode and output routes are valid */
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 6
+
+
+ 191:Generated_Source\PSoC5/PGA_Inv_1.c ****     #if (CY_PSOC5A)
+ 192:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_P5backup.scCR1Reg = PGA_Inv_1_CR1_REG;
+ 193:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_P5backup.scCR2Reg = PGA_Inv_1_CR2_REG;
+ 194:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_CR1_REG = 0x00u;
+ 195:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_CR2_REG = 0x00u;
+ 196:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_P5backup.enableState = 1u;
+ 197:Generated_Source\PSoC5/PGA_Inv_1.c ****     #endif /* CY_PSOC5A */
+ 198:Generated_Source\PSoC5/PGA_Inv_1.c **** }
+ 199:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 200:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 201:Generated_Source\PSoC5/PGA_Inv_1.c **** /*******************************************************************************
+ 202:Generated_Source\PSoC5/PGA_Inv_1.c **** * Function Name: PGA_Inv_1_SetPower
+ 203:Generated_Source\PSoC5/PGA_Inv_1.c **** ********************************************************************************
+ 204:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 205:Generated_Source\PSoC5/PGA_Inv_1.c **** * Summary:
+ 206:Generated_Source\PSoC5/PGA_Inv_1.c **** *  Set the power of the inverting PGA
+ 207:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 208:Generated_Source\PSoC5/PGA_Inv_1.c **** * Parameters:
+ 209:Generated_Source\PSoC5/PGA_Inv_1.c **** *  power:  Sets power level between (0) and (3) high power
+ 210:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 211:Generated_Source\PSoC5/PGA_Inv_1.c **** * Return:
+ 212:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void 
+ 213:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 214:Generated_Source\PSoC5/PGA_Inv_1.c **** *******************************************************************************/
+ 215:Generated_Source\PSoC5/PGA_Inv_1.c **** void PGA_Inv_1_SetPower(uint8 power) 
+ 216:Generated_Source\PSoC5/PGA_Inv_1.c **** {
+  96              		.loc 1 216 0
+  97              		.cfi_startproc
+  98              		@ args = 0, pretend = 0, frame = 0
+  99              		@ frame_needed = 0, uses_anonymous_args = 0
+ 100              		@ link register save eliminated.
+ 101              	.LVL0:
+ 217:Generated_Source\PSoC5/PGA_Inv_1.c ****     uint8 tmpCR;
+ 218:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 219:Generated_Source\PSoC5/PGA_Inv_1.c ****     tmpCR = PGA_Inv_1_CR1_REG & (uint8)(~PGA_Inv_1_DRIVE_MASK);
+ 102              		.loc 1 219 0
+ 103 0000 044A     		ldr	r2, .L8
+ 104 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 105 0004 03F0FC03 		and	r3, r3, #252
+ 106              	.LVL1:
+ 220:Generated_Source\PSoC5/PGA_Inv_1.c ****     tmpCR |= (power & PGA_Inv_1_DRIVE_MASK);
+ 107              		.loc 1 220 0
+ 108 0008 00F00300 		and	r0, r0, #3
+ 109              	.LVL2:
+ 110 000c 1843     		orrs	r0, r0, r3
+ 111              	.LVL3:
+ 221:Generated_Source\PSoC5/PGA_Inv_1.c ****     PGA_Inv_1_CR1_REG = tmpCR;
+ 112              		.loc 1 221 0
+ 113 000e 1070     		strb	r0, [r2]
+ 114 0010 7047     		bx	lr
+ 115              	.L9:
+ 116 0012 00BF     		.align	2
+ 117              	.L8:
+ 118 0014 05580040 		.word	1073764357
+ 119              		.cfi_endproc
+ 120              	.LFE4:
+ 121              		.size	PGA_Inv_1_SetPower, .-PGA_Inv_1_SetPower
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 7
+
+
+ 122              		.section	.text.PGA_Inv_1_SetGain,"ax",%progbits
+ 123              		.align	2
+ 124              		.global	PGA_Inv_1_SetGain
+ 125              		.thumb
+ 126              		.thumb_func
+ 127              		.type	PGA_Inv_1_SetGain, %function
+ 128              	PGA_Inv_1_SetGain:
+ 129              	.LFB5:
+ 222:Generated_Source\PSoC5/PGA_Inv_1.c **** }
+ 223:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 224:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 225:Generated_Source\PSoC5/PGA_Inv_1.c **** /*******************************************************************************
+ 226:Generated_Source\PSoC5/PGA_Inv_1.c **** * Function Name: PGA_Inv_1_SetGain
+ 227:Generated_Source\PSoC5/PGA_Inv_1.c **** ********************************************************************************
+ 228:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 229:Generated_Source\PSoC5/PGA_Inv_1.c **** * Summary:
+ 230:Generated_Source\PSoC5/PGA_Inv_1.c **** *  This function sets values of the input and feedback resistors to set a 
+ 231:Generated_Source\PSoC5/PGA_Inv_1.c **** *  specific gain of the amplifier.
+ 232:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 233:Generated_Source\PSoC5/PGA_Inv_1.c **** * Parameters:
+ 234:Generated_Source\PSoC5/PGA_Inv_1.c **** *  gain: Sets gain of amplifier.
+ 235:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 236:Generated_Source\PSoC5/PGA_Inv_1.c **** * Return:
+ 237:Generated_Source\PSoC5/PGA_Inv_1.c **** *  void
+ 238:Generated_Source\PSoC5/PGA_Inv_1.c **** *
+ 239:Generated_Source\PSoC5/PGA_Inv_1.c **** *******************************************************************************/
+ 240:Generated_Source\PSoC5/PGA_Inv_1.c **** void PGA_Inv_1_SetGain(uint8 gain) 
+ 241:Generated_Source\PSoC5/PGA_Inv_1.c **** {
+ 130              		.loc 1 241 0
+ 131              		.cfi_startproc
+ 132              		@ args = 0, pretend = 0, frame = 24
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		@ link register save eliminated.
+ 135              	.LVL4:
+ 136 0000 10B4     		push	{r4}
+ 137              		.cfi_def_cfa_offset 4
+ 138              		.cfi_offset 4, -4
+ 139 0002 87B0     		sub	sp, sp, #28
+ 140              		.cfi_def_cfa_offset 32
+ 141 0004 0446     		mov	r4, r0
+ 242:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Constant array for gain settings */
+ 243:Generated_Source\PSoC5/PGA_Inv_1.c ****     const uint8 PGA_Inv_1_GainArray[9] = { 
+ 142              		.loc 1 243 0
+ 143 0006 194B     		ldr	r3, .L13
+ 144 0008 03AA     		add	r2, sp, #12
+ 145 000a 1868     		ldr	r0, [r3]	@ unaligned
+ 146              	.LVL5:
+ 147 000c 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 148 000e 03C2     		stmia	r2!, {r0, r1}
+ 149 0010 197A     		ldrb	r1, [r3, #8]	@ zero_extendqisi2
+ 150 0012 1170     		strb	r1, [r2]
+ 244:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_01 | PGA_Inv_1_BIAS_LOW), /* G=-1  */
+ 245:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_03 | PGA_Inv_1_BIAS_LOW), /* G=-3  */
+ 246:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_07 | PGA_Inv_1_BIAS_LOW), /* G=-7  */
+ 247:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_15 | PGA_Inv_1_BIAS_LOW), /* G=-15 */
+ 248:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_22 | PGA_Inv_1_BIAS_LOW), /* G=-22 */
+ 249:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_24 | PGA_Inv_1_BIAS_LOW), /* G=-24 */
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 8
+
+
+ 250:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_31 | PGA_Inv_1_BIAS_LOW), /* G=-31 */
+ 251:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_47 | PGA_Inv_1_BIAS_LOW), /* G=-47 */
+ 252:Generated_Source\PSoC5/PGA_Inv_1.c ****         (PGA_Inv_1_PGA_INV_GAIN_49 | PGA_Inv_1_BIAS_LOW)  /* G=-49 */
+ 253:Generated_Source\PSoC5/PGA_Inv_1.c ****     };
+ 254:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 255:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Constant array for gain compenstion settings */
+ 256:Generated_Source\PSoC5/PGA_Inv_1.c ****     const uint8 PGA_Inv_1_GainComp[9] = { 
+ 151              		.loc 1 256 0
+ 152 0014 6A46     		mov	r2, sp
+ 153 0016 53F80C0F 		ldr	r0, [r3, #12]!	@ unaligned
+ 154 001a 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 155 001c 03C2     		stmia	r2!, {r0, r1}
+ 156 001e 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 157 0020 1370     		strb	r3, [r2]
+ 257:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_4P35PF  | (uint8)( PGA_Inv_1_REDC_00 >> 2 )), /* G=-1  */
+ 258:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_4P35PF  | (uint8)( PGA_Inv_1_REDC_01 >> 2 )), /* G=-3  */
+ 259:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_3P0PF   | (uint8)( PGA_Inv_1_REDC_01 >> 2 )), /* G=-7  */
+ 260:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_3P0PF   | (uint8)( PGA_Inv_1_REDC_01 >> 2 )), /* G=-15 */
+ 261:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_3P6PF   | (uint8)( PGA_Inv_1_REDC_01 >> 2 )), /* G=-22 */
+ 262:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_3P0PF   | (uint8)( PGA_Inv_1_REDC_10 >> 2 )), /* G=-24 */
+ 263:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_3P6PF   | (uint8)( PGA_Inv_1_REDC_11 >> 2 )), /* G=-31 */
+ 264:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_3P6PF   | (uint8)( PGA_Inv_1_REDC_00 >> 2 )), /* G=-47 */
+ 265:Generated_Source\PSoC5/PGA_Inv_1.c ****         ( PGA_Inv_1_COMP_3P6PF   | (uint8)( PGA_Inv_1_REDC_00 >> 2 ))  /* G=-49 */
+ 266:Generated_Source\PSoC5/PGA_Inv_1.c ****     };
+ 267:Generated_Source\PSoC5/PGA_Inv_1.c ****     
+ 268:Generated_Source\PSoC5/PGA_Inv_1.c ****     
+ 269:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Only set new gain if it is a valid gain */
+ 270:Generated_Source\PSoC5/PGA_Inv_1.c ****     if( gain <= PGA_Inv_1_GAIN_MAX)
+ 158              		.loc 1 270 0
+ 159 0022 082C     		cmp	r4, #8
+ 160 0024 1ED8     		bhi	.L10
+ 271:Generated_Source\PSoC5/PGA_Inv_1.c ****     {
+ 272:Generated_Source\PSoC5/PGA_Inv_1.c ****         /* Clear resistors, redc, and bias */
+ 273:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_CR2_REG &= (uint8)(~(PGA_Inv_1_RVAL_MASK | PGA_Inv_1_R20_40B_MASK | 
+ 161              		.loc 1 273 0
+ 162 0026 1249     		ldr	r1, .L13+4
+ 163 0028 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+ 164 002a 03F08003 		and	r3, r3, #128
+ 165 002e DBB2     		uxtb	r3, r3
+ 166 0030 0B70     		strb	r3, [r1]
+ 274:Generated_Source\PSoC5/PGA_Inv_1.c ****                                       PGA_Inv_1_REDC_MASK | PGA_Inv_1_BIAS_MASK ));
+ 275:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 276:Generated_Source\PSoC5/PGA_Inv_1.c ****         /* Set gain value resistors, redc comp, and bias */
+ 277:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_CR2_REG |= (PGA_Inv_1_GainArray[gain] |
+ 167              		.loc 1 277 0
+ 168 0032 0878     		ldrb	r0, [r1]	@ zero_extendqisi2
+ 169 0034 06AB     		add	r3, sp, #24
+ 170 0036 1C44     		add	r4, r4, r3
+ 171 0038 14F80C3C 		ldrb	r3, [r4, #-12]	@ zero_extendqisi2
+ 278:Generated_Source\PSoC5/PGA_Inv_1.c ****                                 ( (uint8)(PGA_Inv_1_GainComp[gain] << 2 ) & PGA_Inv_1_REDC_MASK) );
+ 172              		.loc 1 278 0
+ 173 003c 14F8182C 		ldrb	r2, [r4, #-24]	@ zero_extendqisi2
+ 174 0040 9200     		lsls	r2, r2, #2
+ 277:Generated_Source\PSoC5/PGA_Inv_1.c ****                                 ( (uint8)(PGA_Inv_1_GainComp[gain] << 2 ) & PGA_Inv_1_REDC_MASK) );
+ 175              		.loc 1 277 0
+ 176 0042 02F00C02 		and	r2, r2, #12
+ 177 0046 1343     		orrs	r3, r3, r2
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 9
+
+
+ 178 0048 0343     		orrs	r3, r3, r0
+ 179 004a 0B70     		strb	r3, [r1]
+ 279:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 280:Generated_Source\PSoC5/PGA_Inv_1.c ****         /* Clear sc_comp  */
+ 281:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_CR1_REG &= (uint8)(~PGA_Inv_1_COMP_MASK);
+ 180              		.loc 1 281 0
+ 181 004c 094A     		ldr	r2, .L13+8
+ 182 004e 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 183 0050 03F0F303 		and	r3, r3, #243
+ 184 0054 1370     		strb	r3, [r2]
+ 282:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 283:Generated_Source\PSoC5/PGA_Inv_1.c ****         /* Set sc_comp  */
+ 284:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_CR1_REG |= ( PGA_Inv_1_GainComp[gain] | PGA_Inv_1_COMP_MASK );
+ 185              		.loc 1 284 0
+ 186 0056 1178     		ldrb	r1, [r2]	@ zero_extendqisi2
+ 187 0058 14F8183C 		ldrb	r3, [r4, #-24]	@ zero_extendqisi2
+ 188 005c 0B43     		orrs	r3, r3, r1
+ 189 005e 43F00C03 		orr	r3, r3, #12
+ 190 0062 1370     		strb	r3, [r2]
+ 191              	.L10:
+ 285:Generated_Source\PSoC5/PGA_Inv_1.c ****     }
+ 286:Generated_Source\PSoC5/PGA_Inv_1.c **** }
+ 192              		.loc 1 286 0
+ 193 0064 07B0     		add	sp, sp, #28
+ 194              		.cfi_def_cfa_offset 4
+ 195              		@ sp needed
+ 196 0066 10BC     		pop	{r4}
+ 197              		.cfi_restore 4
+ 198              		.cfi_def_cfa_offset 0
+ 199 0068 7047     		bx	lr
+ 200              	.L14:
+ 201 006a 00BF     		.align	2
+ 202              	.L13:
+ 203 006c 00000000 		.word	.LANCHOR0
+ 204 0070 06580040 		.word	1073764358
+ 205 0074 05580040 		.word	1073764357
+ 206              		.cfi_endproc
+ 207              	.LFE5:
+ 208              		.size	PGA_Inv_1_SetGain, .-PGA_Inv_1_SetGain
+ 209              		.section	.text.PGA_Inv_1_Init,"ax",%progbits
+ 210              		.align	2
+ 211              		.global	PGA_Inv_1_Init
+ 212              		.thumb
+ 213              		.thumb_func
+ 214              		.type	PGA_Inv_1_Init, %function
+ 215              	PGA_Inv_1_Init:
+ 216              	.LFB0:
+  52:Generated_Source\PSoC5/PGA_Inv_1.c ****     /* Set PGA mode */
+ 217              		.loc 1 52 0
+ 218              		.cfi_startproc
+ 219              		@ args = 0, pretend = 0, frame = 0
+ 220              		@ frame_needed = 0, uses_anonymous_args = 0
+ 221 0000 08B5     		push	{r3, lr}
+ 222              		.cfi_def_cfa_offset 8
+ 223              		.cfi_offset 3, -8
+ 224              		.cfi_offset 14, -4
+  54:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 10
+
+
+ 225              		.loc 1 54 0
+ 226 0002 0C22     		movs	r2, #12
+ 227 0004 064B     		ldr	r3, .L17
+ 228 0006 1A70     		strb	r2, [r3]
+  57:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 229              		.loc 1 57 0
+ 230 0008 064A     		ldr	r2, .L17+4
+ 231 000a 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 232 000c DBB2     		uxtb	r3, r3
+ 233 000e 1370     		strb	r3, [r2]
+  60:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 234              		.loc 1 60 0
+ 235 0010 0020     		movs	r0, #0
+ 236 0012 FFF7FEFF 		bl	PGA_Inv_1_SetGain
+ 237              	.LVL6:
+  63:Generated_Source\PSoC5/PGA_Inv_1.c **** }
+ 238              		.loc 1 63 0
+ 239 0016 0220     		movs	r0, #2
+ 240 0018 FFF7FEFF 		bl	PGA_Inv_1_SetPower
+ 241              	.LVL7:
+ 242 001c 08BD     		pop	{r3, pc}
+ 243              	.L18:
+ 244 001e 00BF     		.align	2
+ 245              	.L17:
+ 246 0020 04580040 		.word	1073764356
+ 247 0024 05580040 		.word	1073764357
+ 248              		.cfi_endproc
+ 249              	.LFE0:
+ 250              		.size	PGA_Inv_1_Init, .-PGA_Inv_1_Init
+ 251              		.section	.text.PGA_Inv_1_Start,"ax",%progbits
+ 252              		.align	2
+ 253              		.global	PGA_Inv_1_Start
+ 254              		.thumb
+ 255              		.thumb_func
+ 256              		.type	PGA_Inv_1_Start, %function
+ 257              	PGA_Inv_1_Start:
+ 258              	.LFB2:
+ 143:Generated_Source\PSoC5/PGA_Inv_1.c **** 
+ 259              		.loc 1 143 0
+ 260              		.cfi_startproc
+ 261              		@ args = 0, pretend = 0, frame = 0
+ 262              		@ frame_needed = 0, uses_anonymous_args = 0
+ 263 0000 08B5     		push	{r3, lr}
+ 264              		.cfi_def_cfa_offset 8
+ 265              		.cfi_offset 3, -8
+ 266              		.cfi_offset 14, -4
+ 145:Generated_Source\PSoC5/PGA_Inv_1.c ****     {
+ 267              		.loc 1 145 0
+ 268 0002 054B     		ldr	r3, .L22
+ 269 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 270 0006 23B9     		cbnz	r3, .L20
+ 147:Generated_Source\PSoC5/PGA_Inv_1.c ****         PGA_Inv_1_Init();
+ 271              		.loc 1 147 0
+ 272 0008 0122     		movs	r2, #1
+ 273 000a 034B     		ldr	r3, .L22
+ 274 000c 1A70     		strb	r2, [r3]
+ 148:Generated_Source\PSoC5/PGA_Inv_1.c ****     }
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 11
+
+
+ 275              		.loc 1 148 0
+ 276 000e FFF7FEFF 		bl	PGA_Inv_1_Init
+ 277              	.LVL8:
+ 278              	.L20:
+ 151:Generated_Source\PSoC5/PGA_Inv_1.c **** }
+ 279              		.loc 1 151 0
+ 280 0012 FFF7FEFF 		bl	PGA_Inv_1_Enable
+ 281              	.LVL9:
+ 282 0016 08BD     		pop	{r3, pc}
+ 283              	.L23:
+ 284              		.align	2
+ 285              	.L22:
+ 286 0018 00000000 		.word	.LANCHOR1
+ 287              		.cfi_endproc
+ 288              	.LFE2:
+ 289              		.size	PGA_Inv_1_Start, .-PGA_Inv_1_Start
+ 290              		.global	PGA_Inv_1_initVar
+ 291              		.section	.rodata
+ 292              		.align	2
+ 293              		.set	.LANCHOR0,. + 0
+ 294              	.LC0:
+ 295 0000 11       		.byte	17
+ 296 0001 21       		.byte	33
+ 297 0002 31       		.byte	49
+ 298 0003 41       		.byte	65
+ 299 0004 51       		.byte	81
+ 300 0005 71       		.byte	113
+ 301 0006 53       		.byte	83
+ 302 0007 63       		.byte	99
+ 303 0008 73       		.byte	115
+ 304 0009 000000   		.space	3
+ 305              	.LC1:
+ 306 000c 08       		.byte	8
+ 307 000d 09       		.byte	9
+ 308 000e 01       		.byte	1
+ 309 000f 01       		.byte	1
+ 310 0010 05       		.byte	5
+ 311 0011 02       		.byte	2
+ 312 0012 07       		.byte	7
+ 313 0013 04       		.byte	4
+ 314 0014 04       		.byte	4
+ 315              		.bss
+ 316              		.set	.LANCHOR1,. + 0
+ 317              		.type	PGA_Inv_1_initVar, %object
+ 318              		.size	PGA_Inv_1_initVar, 1
+ 319              	PGA_Inv_1_initVar:
+ 320 0000 00       		.space	1
+ 321              		.text
+ 322              	.Letext0:
+ 323              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 324              		.section	.debug_info,"",%progbits
+ 325              	.Ldebug_info0:
+ 326 0000 D0010000 		.4byte	0x1d0
+ 327 0004 0400     		.2byte	0x4
+ 328 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 329 000a 04       		.byte	0x4
+ 330 000b 01       		.uleb128 0x1
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 12
+
+
+ 331 000c 98000000 		.4byte	.LASF27
+ 332 0010 0C       		.byte	0xc
+ 333 0011 3B000000 		.4byte	.LASF28
+ 334 0015 B5010000 		.4byte	.LASF29
+ 335 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 336 001d 00000000 		.4byte	0
+ 337 0021 00000000 		.4byte	.Ldebug_line0
+ 338 0025 02       		.uleb128 0x2
+ 339 0026 01       		.byte	0x1
+ 340 0027 06       		.byte	0x6
+ 341 0028 37020000 		.4byte	.LASF0
+ 342 002c 02       		.uleb128 0x2
+ 343 002d 01       		.byte	0x1
+ 344 002e 08       		.byte	0x8
+ 345 002f 8A000000 		.4byte	.LASF1
+ 346 0033 02       		.uleb128 0x2
+ 347 0034 02       		.byte	0x2
+ 348 0035 05       		.byte	0x5
+ 349 0036 18020000 		.4byte	.LASF2
+ 350 003a 02       		.uleb128 0x2
+ 351 003b 02       		.byte	0x2
+ 352 003c 07       		.byte	0x7
+ 353 003d 28000000 		.4byte	.LASF3
+ 354 0041 02       		.uleb128 0x2
+ 355 0042 04       		.byte	0x4
+ 356 0043 05       		.byte	0x5
+ 357 0044 22020000 		.4byte	.LASF4
+ 358 0048 02       		.uleb128 0x2
+ 359 0049 04       		.byte	0x4
+ 360 004a 07       		.byte	0x7
+ 361 004b 2B010000 		.4byte	.LASF5
+ 362 004f 02       		.uleb128 0x2
+ 363 0050 08       		.byte	0x8
+ 364 0051 05       		.byte	0x5
+ 365 0052 A2010000 		.4byte	.LASF6
+ 366 0056 02       		.uleb128 0x2
+ 367 0057 08       		.byte	0x8
+ 368 0058 07       		.byte	0x7
+ 369 0059 7C010000 		.4byte	.LASF7
+ 370 005d 03       		.uleb128 0x3
+ 371 005e 04       		.byte	0x4
+ 372 005f 05       		.byte	0x5
+ 373 0060 696E7400 		.ascii	"int\000"
+ 374 0064 02       		.uleb128 0x2
+ 375 0065 04       		.byte	0x4
+ 376 0066 07       		.byte	0x7
+ 377 0067 6F010000 		.4byte	.LASF8
+ 378 006b 04       		.uleb128 0x4
+ 379 006c 3D010000 		.4byte	.LASF12
+ 380 0070 02       		.byte	0x2
+ 381 0071 E801     		.2byte	0x1e8
+ 382 0073 2C000000 		.4byte	0x2c
+ 383 0077 02       		.uleb128 0x2
+ 384 0078 04       		.byte	0x4
+ 385 0079 04       		.byte	0x4
+ 386 007a 72000000 		.4byte	.LASF9
+ 387 007e 02       		.uleb128 0x2
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 13
+
+
+ 388 007f 08       		.byte	0x8
+ 389 0080 04       		.byte	0x4
+ 390 0081 43010000 		.4byte	.LASF10
+ 391 0085 02       		.uleb128 0x2
+ 392 0086 01       		.byte	0x1
+ 393 0087 08       		.byte	0x8
+ 394 0088 B0010000 		.4byte	.LASF11
+ 395 008c 04       		.uleb128 0x4
+ 396 008d 26010000 		.4byte	.LASF13
+ 397 0091 02       		.byte	0x2
+ 398 0092 9202     		.2byte	0x292
+ 399 0094 98000000 		.4byte	0x98
+ 400 0098 05       		.uleb128 0x5
+ 401 0099 6B000000 		.4byte	0x6b
+ 402 009d 02       		.uleb128 0x2
+ 403 009e 08       		.byte	0x8
+ 404 009f 04       		.byte	0x4
+ 405 00a0 2B020000 		.4byte	.LASF14
+ 406 00a4 02       		.uleb128 0x2
+ 407 00a5 04       		.byte	0x4
+ 408 00a6 07       		.byte	0x7
+ 409 00a7 93010000 		.4byte	.LASF15
+ 410 00ab 06       		.uleb128 0x6
+ 411 00ac 4A010000 		.4byte	.LASF16
+ 412 00b0 01       		.byte	0x1
+ 413 00b1 51       		.byte	0x51
+ 414 00b2 00000000 		.4byte	.LFB1
+ 415 00b6 28000000 		.4byte	.LFE1-.LFB1
+ 416 00ba 01       		.uleb128 0x1
+ 417 00bb 9C       		.byte	0x9c
+ 418 00bc 06       		.uleb128 0x6
+ 419 00bd 06000000 		.4byte	.LASF17
+ 420 00c1 01       		.byte	0x1
+ 421 00c2 A9       		.byte	0xa9
+ 422 00c3 00000000 		.4byte	.LFB3
+ 423 00c7 1C000000 		.4byte	.LFE3-.LFB3
+ 424 00cb 01       		.uleb128 0x1
+ 425 00cc 9C       		.byte	0x9c
+ 426 00cd 07       		.uleb128 0x7
+ 427 00ce 15000000 		.4byte	.LASF18
+ 428 00d2 01       		.byte	0x1
+ 429 00d3 D7       		.byte	0xd7
+ 430 00d4 00000000 		.4byte	.LFB4
+ 431 00d8 18000000 		.4byte	.LFE4-.LFB4
+ 432 00dc 01       		.uleb128 0x1
+ 433 00dd 9C       		.byte	0x9c
+ 434 00de 01010000 		.4byte	0x101
+ 435 00e2 08       		.uleb128 0x8
+ 436 00e3 9C010000 		.4byte	.LASF20
+ 437 00e7 01       		.byte	0x1
+ 438 00e8 D7       		.byte	0xd7
+ 439 00e9 6B000000 		.4byte	0x6b
+ 440 00ed 00000000 		.4byte	.LLST0
+ 441 00f1 09       		.uleb128 0x9
+ 442 00f2 00000000 		.4byte	.LASF22
+ 443 00f6 01       		.byte	0x1
+ 444 00f7 D9       		.byte	0xd9
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 14
+
+
+ 445 00f8 6B000000 		.4byte	0x6b
+ 446 00fc 21000000 		.4byte	.LLST1
+ 447 0100 00       		.byte	0
+ 448 0101 07       		.uleb128 0x7
+ 449 0102 78000000 		.4byte	.LASF19
+ 450 0106 01       		.byte	0x1
+ 451 0107 F0       		.byte	0xf0
+ 452 0108 00000000 		.4byte	.LFB5
+ 453 010c 78000000 		.4byte	.LFE5-.LFB5
+ 454 0110 01       		.uleb128 0x1
+ 455 0111 9C       		.byte	0x9c
+ 456 0112 43010000 		.4byte	0x143
+ 457 0116 08       		.uleb128 0x8
+ 458 0117 5E000000 		.4byte	.LASF21
+ 459 011b 01       		.byte	0x1
+ 460 011c F0       		.byte	0xf0
+ 461 011d 6B000000 		.4byte	0x6b
+ 462 0121 3F000000 		.4byte	.LLST2
+ 463 0125 0A       		.uleb128 0xa
+ 464 0126 5B010000 		.4byte	.LASF23
+ 465 012a 01       		.byte	0x1
+ 466 012b F3       		.byte	0xf3
+ 467 012c 58010000 		.4byte	0x158
+ 468 0130 02       		.uleb128 0x2
+ 469 0131 91       		.byte	0x91
+ 470 0132 6C       		.sleb128 -20
+ 471 0133 0B       		.uleb128 0xb
+ 472 0134 65020000 		.4byte	.LASF24
+ 473 0138 01       		.byte	0x1
+ 474 0139 0001     		.2byte	0x100
+ 475 013b 5D010000 		.4byte	0x15d
+ 476 013f 02       		.uleb128 0x2
+ 477 0140 91       		.byte	0x91
+ 478 0141 60       		.sleb128 -32
+ 479 0142 00       		.byte	0
+ 480 0143 0C       		.uleb128 0xc
+ 481 0144 53010000 		.4byte	0x153
+ 482 0148 53010000 		.4byte	0x153
+ 483 014c 0D       		.uleb128 0xd
+ 484 014d A4000000 		.4byte	0xa4
+ 485 0151 08       		.byte	0x8
+ 486 0152 00       		.byte	0
+ 487 0153 0E       		.uleb128 0xe
+ 488 0154 6B000000 		.4byte	0x6b
+ 489 0158 0E       		.uleb128 0xe
+ 490 0159 43010000 		.4byte	0x143
+ 491 015d 0E       		.uleb128 0xe
+ 492 015e 43010000 		.4byte	0x143
+ 493 0162 07       		.uleb128 0x7
+ 494 0163 63000000 		.4byte	.LASF25
+ 495 0167 01       		.byte	0x1
+ 496 0168 33       		.byte	0x33
+ 497 0169 00000000 		.4byte	.LFB0
+ 498 016d 28000000 		.4byte	.LFE0-.LFB0
+ 499 0171 01       		.uleb128 0x1
+ 500 0172 9C       		.byte	0x9c
+ 501 0173 9A010000 		.4byte	0x19a
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 15
+
+
+ 502 0177 0F       		.uleb128 0xf
+ 503 0178 16000000 		.4byte	.LVL6
+ 504 017c 01010000 		.4byte	0x101
+ 505 0180 8A010000 		.4byte	0x18a
+ 506 0184 10       		.uleb128 0x10
+ 507 0185 01       		.uleb128 0x1
+ 508 0186 50       		.byte	0x50
+ 509 0187 01       		.uleb128 0x1
+ 510 0188 30       		.byte	0x30
+ 511 0189 00       		.byte	0
+ 512 018a 11       		.uleb128 0x11
+ 513 018b 1C000000 		.4byte	.LVL7
+ 514 018f CD000000 		.4byte	0xcd
+ 515 0193 10       		.uleb128 0x10
+ 516 0194 01       		.uleb128 0x1
+ 517 0195 50       		.byte	0x50
+ 518 0196 01       		.uleb128 0x1
+ 519 0197 32       		.byte	0x32
+ 520 0198 00       		.byte	0
+ 521 0199 00       		.byte	0
+ 522 019a 07       		.uleb128 0x7
+ 523 019b 43020000 		.4byte	.LASF26
+ 524 019f 01       		.byte	0x1
+ 525 01a0 8E       		.byte	0x8e
+ 526 01a1 00000000 		.4byte	.LFB2
+ 527 01a5 1C000000 		.4byte	.LFE2-.LFB2
+ 528 01a9 01       		.uleb128 0x1
+ 529 01aa 9C       		.byte	0x9c
+ 530 01ab C2010000 		.4byte	0x1c2
+ 531 01af 12       		.uleb128 0x12
+ 532 01b0 12000000 		.4byte	.LVL8
+ 533 01b4 62010000 		.4byte	0x162
+ 534 01b8 12       		.uleb128 0x12
+ 535 01b9 16000000 		.4byte	.LVL9
+ 536 01bd AB000000 		.4byte	0xab
+ 537 01c1 00       		.byte	0
+ 538 01c2 13       		.uleb128 0x13
+ 539 01c3 53020000 		.4byte	.LASF30
+ 540 01c7 01       		.byte	0x1
+ 541 01c8 1F       		.byte	0x1f
+ 542 01c9 6B000000 		.4byte	0x6b
+ 543 01cd 05       		.uleb128 0x5
+ 544 01ce 03       		.byte	0x3
+ 545 01cf 00000000 		.4byte	PGA_Inv_1_initVar
+ 546 01d3 00       		.byte	0
+ 547              		.section	.debug_abbrev,"",%progbits
+ 548              	.Ldebug_abbrev0:
+ 549 0000 01       		.uleb128 0x1
+ 550 0001 11       		.uleb128 0x11
+ 551 0002 01       		.byte	0x1
+ 552 0003 25       		.uleb128 0x25
+ 553 0004 0E       		.uleb128 0xe
+ 554 0005 13       		.uleb128 0x13
+ 555 0006 0B       		.uleb128 0xb
+ 556 0007 03       		.uleb128 0x3
+ 557 0008 0E       		.uleb128 0xe
+ 558 0009 1B       		.uleb128 0x1b
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 16
+
+
+ 559 000a 0E       		.uleb128 0xe
+ 560 000b 55       		.uleb128 0x55
+ 561 000c 17       		.uleb128 0x17
+ 562 000d 11       		.uleb128 0x11
+ 563 000e 01       		.uleb128 0x1
+ 564 000f 10       		.uleb128 0x10
+ 565 0010 17       		.uleb128 0x17
+ 566 0011 00       		.byte	0
+ 567 0012 00       		.byte	0
+ 568 0013 02       		.uleb128 0x2
+ 569 0014 24       		.uleb128 0x24
+ 570 0015 00       		.byte	0
+ 571 0016 0B       		.uleb128 0xb
+ 572 0017 0B       		.uleb128 0xb
+ 573 0018 3E       		.uleb128 0x3e
+ 574 0019 0B       		.uleb128 0xb
+ 575 001a 03       		.uleb128 0x3
+ 576 001b 0E       		.uleb128 0xe
+ 577 001c 00       		.byte	0
+ 578 001d 00       		.byte	0
+ 579 001e 03       		.uleb128 0x3
+ 580 001f 24       		.uleb128 0x24
+ 581 0020 00       		.byte	0
+ 582 0021 0B       		.uleb128 0xb
+ 583 0022 0B       		.uleb128 0xb
+ 584 0023 3E       		.uleb128 0x3e
+ 585 0024 0B       		.uleb128 0xb
+ 586 0025 03       		.uleb128 0x3
+ 587 0026 08       		.uleb128 0x8
+ 588 0027 00       		.byte	0
+ 589 0028 00       		.byte	0
+ 590 0029 04       		.uleb128 0x4
+ 591 002a 16       		.uleb128 0x16
+ 592 002b 00       		.byte	0
+ 593 002c 03       		.uleb128 0x3
+ 594 002d 0E       		.uleb128 0xe
+ 595 002e 3A       		.uleb128 0x3a
+ 596 002f 0B       		.uleb128 0xb
+ 597 0030 3B       		.uleb128 0x3b
+ 598 0031 05       		.uleb128 0x5
+ 599 0032 49       		.uleb128 0x49
+ 600 0033 13       		.uleb128 0x13
+ 601 0034 00       		.byte	0
+ 602 0035 00       		.byte	0
+ 603 0036 05       		.uleb128 0x5
+ 604 0037 35       		.uleb128 0x35
+ 605 0038 00       		.byte	0
+ 606 0039 49       		.uleb128 0x49
+ 607 003a 13       		.uleb128 0x13
+ 608 003b 00       		.byte	0
+ 609 003c 00       		.byte	0
+ 610 003d 06       		.uleb128 0x6
+ 611 003e 2E       		.uleb128 0x2e
+ 612 003f 00       		.byte	0
+ 613 0040 3F       		.uleb128 0x3f
+ 614 0041 19       		.uleb128 0x19
+ 615 0042 03       		.uleb128 0x3
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 17
+
+
+ 616 0043 0E       		.uleb128 0xe
+ 617 0044 3A       		.uleb128 0x3a
+ 618 0045 0B       		.uleb128 0xb
+ 619 0046 3B       		.uleb128 0x3b
+ 620 0047 0B       		.uleb128 0xb
+ 621 0048 27       		.uleb128 0x27
+ 622 0049 19       		.uleb128 0x19
+ 623 004a 11       		.uleb128 0x11
+ 624 004b 01       		.uleb128 0x1
+ 625 004c 12       		.uleb128 0x12
+ 626 004d 06       		.uleb128 0x6
+ 627 004e 40       		.uleb128 0x40
+ 628 004f 18       		.uleb128 0x18
+ 629 0050 9742     		.uleb128 0x2117
+ 630 0052 19       		.uleb128 0x19
+ 631 0053 00       		.byte	0
+ 632 0054 00       		.byte	0
+ 633 0055 07       		.uleb128 0x7
+ 634 0056 2E       		.uleb128 0x2e
+ 635 0057 01       		.byte	0x1
+ 636 0058 3F       		.uleb128 0x3f
+ 637 0059 19       		.uleb128 0x19
+ 638 005a 03       		.uleb128 0x3
+ 639 005b 0E       		.uleb128 0xe
+ 640 005c 3A       		.uleb128 0x3a
+ 641 005d 0B       		.uleb128 0xb
+ 642 005e 3B       		.uleb128 0x3b
+ 643 005f 0B       		.uleb128 0xb
+ 644 0060 27       		.uleb128 0x27
+ 645 0061 19       		.uleb128 0x19
+ 646 0062 11       		.uleb128 0x11
+ 647 0063 01       		.uleb128 0x1
+ 648 0064 12       		.uleb128 0x12
+ 649 0065 06       		.uleb128 0x6
+ 650 0066 40       		.uleb128 0x40
+ 651 0067 18       		.uleb128 0x18
+ 652 0068 9742     		.uleb128 0x2117
+ 653 006a 19       		.uleb128 0x19
+ 654 006b 01       		.uleb128 0x1
+ 655 006c 13       		.uleb128 0x13
+ 656 006d 00       		.byte	0
+ 657 006e 00       		.byte	0
+ 658 006f 08       		.uleb128 0x8
+ 659 0070 05       		.uleb128 0x5
+ 660 0071 00       		.byte	0
+ 661 0072 03       		.uleb128 0x3
+ 662 0073 0E       		.uleb128 0xe
+ 663 0074 3A       		.uleb128 0x3a
+ 664 0075 0B       		.uleb128 0xb
+ 665 0076 3B       		.uleb128 0x3b
+ 666 0077 0B       		.uleb128 0xb
+ 667 0078 49       		.uleb128 0x49
+ 668 0079 13       		.uleb128 0x13
+ 669 007a 02       		.uleb128 0x2
+ 670 007b 17       		.uleb128 0x17
+ 671 007c 00       		.byte	0
+ 672 007d 00       		.byte	0
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 18
+
+
+ 673 007e 09       		.uleb128 0x9
+ 674 007f 34       		.uleb128 0x34
+ 675 0080 00       		.byte	0
+ 676 0081 03       		.uleb128 0x3
+ 677 0082 0E       		.uleb128 0xe
+ 678 0083 3A       		.uleb128 0x3a
+ 679 0084 0B       		.uleb128 0xb
+ 680 0085 3B       		.uleb128 0x3b
+ 681 0086 0B       		.uleb128 0xb
+ 682 0087 49       		.uleb128 0x49
+ 683 0088 13       		.uleb128 0x13
+ 684 0089 02       		.uleb128 0x2
+ 685 008a 17       		.uleb128 0x17
+ 686 008b 00       		.byte	0
+ 687 008c 00       		.byte	0
+ 688 008d 0A       		.uleb128 0xa
+ 689 008e 34       		.uleb128 0x34
+ 690 008f 00       		.byte	0
+ 691 0090 03       		.uleb128 0x3
+ 692 0091 0E       		.uleb128 0xe
+ 693 0092 3A       		.uleb128 0x3a
+ 694 0093 0B       		.uleb128 0xb
+ 695 0094 3B       		.uleb128 0x3b
+ 696 0095 0B       		.uleb128 0xb
+ 697 0096 49       		.uleb128 0x49
+ 698 0097 13       		.uleb128 0x13
+ 699 0098 02       		.uleb128 0x2
+ 700 0099 18       		.uleb128 0x18
+ 701 009a 00       		.byte	0
+ 702 009b 00       		.byte	0
+ 703 009c 0B       		.uleb128 0xb
+ 704 009d 34       		.uleb128 0x34
+ 705 009e 00       		.byte	0
+ 706 009f 03       		.uleb128 0x3
+ 707 00a0 0E       		.uleb128 0xe
+ 708 00a1 3A       		.uleb128 0x3a
+ 709 00a2 0B       		.uleb128 0xb
+ 710 00a3 3B       		.uleb128 0x3b
+ 711 00a4 05       		.uleb128 0x5
+ 712 00a5 49       		.uleb128 0x49
+ 713 00a6 13       		.uleb128 0x13
+ 714 00a7 02       		.uleb128 0x2
+ 715 00a8 18       		.uleb128 0x18
+ 716 00a9 00       		.byte	0
+ 717 00aa 00       		.byte	0
+ 718 00ab 0C       		.uleb128 0xc
+ 719 00ac 01       		.uleb128 0x1
+ 720 00ad 01       		.byte	0x1
+ 721 00ae 49       		.uleb128 0x49
+ 722 00af 13       		.uleb128 0x13
+ 723 00b0 01       		.uleb128 0x1
+ 724 00b1 13       		.uleb128 0x13
+ 725 00b2 00       		.byte	0
+ 726 00b3 00       		.byte	0
+ 727 00b4 0D       		.uleb128 0xd
+ 728 00b5 21       		.uleb128 0x21
+ 729 00b6 00       		.byte	0
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 19
+
+
+ 730 00b7 49       		.uleb128 0x49
+ 731 00b8 13       		.uleb128 0x13
+ 732 00b9 2F       		.uleb128 0x2f
+ 733 00ba 0B       		.uleb128 0xb
+ 734 00bb 00       		.byte	0
+ 735 00bc 00       		.byte	0
+ 736 00bd 0E       		.uleb128 0xe
+ 737 00be 26       		.uleb128 0x26
+ 738 00bf 00       		.byte	0
+ 739 00c0 49       		.uleb128 0x49
+ 740 00c1 13       		.uleb128 0x13
+ 741 00c2 00       		.byte	0
+ 742 00c3 00       		.byte	0
+ 743 00c4 0F       		.uleb128 0xf
+ 744 00c5 898201   		.uleb128 0x4109
+ 745 00c8 01       		.byte	0x1
+ 746 00c9 11       		.uleb128 0x11
+ 747 00ca 01       		.uleb128 0x1
+ 748 00cb 31       		.uleb128 0x31
+ 749 00cc 13       		.uleb128 0x13
+ 750 00cd 01       		.uleb128 0x1
+ 751 00ce 13       		.uleb128 0x13
+ 752 00cf 00       		.byte	0
+ 753 00d0 00       		.byte	0
+ 754 00d1 10       		.uleb128 0x10
+ 755 00d2 8A8201   		.uleb128 0x410a
+ 756 00d5 00       		.byte	0
+ 757 00d6 02       		.uleb128 0x2
+ 758 00d7 18       		.uleb128 0x18
+ 759 00d8 9142     		.uleb128 0x2111
+ 760 00da 18       		.uleb128 0x18
+ 761 00db 00       		.byte	0
+ 762 00dc 00       		.byte	0
+ 763 00dd 11       		.uleb128 0x11
+ 764 00de 898201   		.uleb128 0x4109
+ 765 00e1 01       		.byte	0x1
+ 766 00e2 11       		.uleb128 0x11
+ 767 00e3 01       		.uleb128 0x1
+ 768 00e4 31       		.uleb128 0x31
+ 769 00e5 13       		.uleb128 0x13
+ 770 00e6 00       		.byte	0
+ 771 00e7 00       		.byte	0
+ 772 00e8 12       		.uleb128 0x12
+ 773 00e9 898201   		.uleb128 0x4109
+ 774 00ec 00       		.byte	0
+ 775 00ed 11       		.uleb128 0x11
+ 776 00ee 01       		.uleb128 0x1
+ 777 00ef 31       		.uleb128 0x31
+ 778 00f0 13       		.uleb128 0x13
+ 779 00f1 00       		.byte	0
+ 780 00f2 00       		.byte	0
+ 781 00f3 13       		.uleb128 0x13
+ 782 00f4 34       		.uleb128 0x34
+ 783 00f5 00       		.byte	0
+ 784 00f6 03       		.uleb128 0x3
+ 785 00f7 0E       		.uleb128 0xe
+ 786 00f8 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 20
+
+
+ 787 00f9 0B       		.uleb128 0xb
+ 788 00fa 3B       		.uleb128 0x3b
+ 789 00fb 0B       		.uleb128 0xb
+ 790 00fc 49       		.uleb128 0x49
+ 791 00fd 13       		.uleb128 0x13
+ 792 00fe 3F       		.uleb128 0x3f
+ 793 00ff 19       		.uleb128 0x19
+ 794 0100 02       		.uleb128 0x2
+ 795 0101 18       		.uleb128 0x18
+ 796 0102 00       		.byte	0
+ 797 0103 00       		.byte	0
+ 798 0104 00       		.byte	0
+ 799              		.section	.debug_loc,"",%progbits
+ 800              	.Ldebug_loc0:
+ 801              	.LLST0:
+ 802 0000 00000000 		.4byte	.LVL0
+ 803 0004 0C000000 		.4byte	.LVL2
+ 804 0008 0100     		.2byte	0x1
+ 805 000a 50       		.byte	0x50
+ 806 000b 0C000000 		.4byte	.LVL2
+ 807 000f 18000000 		.4byte	.LFE4
+ 808 0013 0400     		.2byte	0x4
+ 809 0015 F3       		.byte	0xf3
+ 810 0016 01       		.uleb128 0x1
+ 811 0017 50       		.byte	0x50
+ 812 0018 9F       		.byte	0x9f
+ 813 0019 00000000 		.4byte	0
+ 814 001d 00000000 		.4byte	0
+ 815              	.LLST1:
+ 816 0021 08000000 		.4byte	.LVL1
+ 817 0025 0E000000 		.4byte	.LVL3
+ 818 0029 0100     		.2byte	0x1
+ 819 002b 53       		.byte	0x53
+ 820 002c 0E000000 		.4byte	.LVL3
+ 821 0030 18000000 		.4byte	.LFE4
+ 822 0034 0100     		.2byte	0x1
+ 823 0036 50       		.byte	0x50
+ 824 0037 00000000 		.4byte	0
+ 825 003b 00000000 		.4byte	0
+ 826              	.LLST2:
+ 827 003f 00000000 		.4byte	.LVL4
+ 828 0043 0C000000 		.4byte	.LVL5
+ 829 0047 0100     		.2byte	0x1
+ 830 0049 50       		.byte	0x50
+ 831 004a 0C000000 		.4byte	.LVL5
+ 832 004e 78000000 		.4byte	.LFE5
+ 833 0052 0400     		.2byte	0x4
+ 834 0054 F3       		.byte	0xf3
+ 835 0055 01       		.uleb128 0x1
+ 836 0056 50       		.byte	0x50
+ 837 0057 9F       		.byte	0x9f
+ 838 0058 00000000 		.4byte	0
+ 839 005c 00000000 		.4byte	0
+ 840              		.section	.debug_aranges,"",%progbits
+ 841 0000 44000000 		.4byte	0x44
+ 842 0004 0200     		.2byte	0x2
+ 843 0006 00000000 		.4byte	.Ldebug_info0
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 21
+
+
+ 844 000a 04       		.byte	0x4
+ 845 000b 00       		.byte	0
+ 846 000c 0000     		.2byte	0
+ 847 000e 0000     		.2byte	0
+ 848 0010 00000000 		.4byte	.LFB1
+ 849 0014 28000000 		.4byte	.LFE1-.LFB1
+ 850 0018 00000000 		.4byte	.LFB3
+ 851 001c 1C000000 		.4byte	.LFE3-.LFB3
+ 852 0020 00000000 		.4byte	.LFB4
+ 853 0024 18000000 		.4byte	.LFE4-.LFB4
+ 854 0028 00000000 		.4byte	.LFB5
+ 855 002c 78000000 		.4byte	.LFE5-.LFB5
+ 856 0030 00000000 		.4byte	.LFB0
+ 857 0034 28000000 		.4byte	.LFE0-.LFB0
+ 858 0038 00000000 		.4byte	.LFB2
+ 859 003c 1C000000 		.4byte	.LFE2-.LFB2
+ 860 0040 00000000 		.4byte	0
+ 861 0044 00000000 		.4byte	0
+ 862              		.section	.debug_ranges,"",%progbits
+ 863              	.Ldebug_ranges0:
+ 864 0000 00000000 		.4byte	.LFB1
+ 865 0004 28000000 		.4byte	.LFE1
+ 866 0008 00000000 		.4byte	.LFB3
+ 867 000c 1C000000 		.4byte	.LFE3
+ 868 0010 00000000 		.4byte	.LFB4
+ 869 0014 18000000 		.4byte	.LFE4
+ 870 0018 00000000 		.4byte	.LFB5
+ 871 001c 78000000 		.4byte	.LFE5
+ 872 0020 00000000 		.4byte	.LFB0
+ 873 0024 28000000 		.4byte	.LFE0
+ 874 0028 00000000 		.4byte	.LFB2
+ 875 002c 1C000000 		.4byte	.LFE2
+ 876 0030 00000000 		.4byte	0
+ 877 0034 00000000 		.4byte	0
+ 878              		.section	.debug_line,"",%progbits
+ 879              	.Ldebug_line0:
+ 880 0000 CB000000 		.section	.debug_str,"MS",%progbits,1
+ 880      02004600 
+ 880      00000201 
+ 880      FB0E0D00 
+ 880      01010101 
+ 881              	.LASF22:
+ 882 0000 746D7043 		.ascii	"tmpCR\000"
+ 882      5200
+ 883              	.LASF17:
+ 884 0006 5047415F 		.ascii	"PGA_Inv_1_Stop\000"
+ 884      496E765F 
+ 884      315F5374 
+ 884      6F7000
+ 885              	.LASF18:
+ 886 0015 5047415F 		.ascii	"PGA_Inv_1_SetPower\000"
+ 886      496E765F 
+ 886      315F5365 
+ 886      74506F77 
+ 886      657200
+ 887              	.LASF3:
+ 888 0028 73686F72 		.ascii	"short unsigned int\000"
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 22
+
+
+ 888      7420756E 
+ 888      7369676E 
+ 888      65642069 
+ 888      6E7400
+ 889              	.LASF28:
+ 890 003b 47656E65 		.ascii	"Generated_Source\\PSoC5\\PGA_Inv_1.c\000"
+ 890      72617465 
+ 890      645F536F 
+ 890      75726365 
+ 890      5C50536F 
+ 891              	.LASF21:
+ 892 005e 6761696E 		.ascii	"gain\000"
+ 892      00
+ 893              	.LASF25:
+ 894 0063 5047415F 		.ascii	"PGA_Inv_1_Init\000"
+ 894      496E765F 
+ 894      315F496E 
+ 894      697400
+ 895              	.LASF9:
+ 896 0072 666C6F61 		.ascii	"float\000"
+ 896      7400
+ 897              	.LASF19:
+ 898 0078 5047415F 		.ascii	"PGA_Inv_1_SetGain\000"
+ 898      496E765F 
+ 898      315F5365 
+ 898      74476169 
+ 898      6E00
+ 899              	.LASF1:
+ 900 008a 756E7369 		.ascii	"unsigned char\000"
+ 900      676E6564 
+ 900      20636861 
+ 900      7200
+ 901              	.LASF27:
+ 902 0098 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 902      43313120 
+ 902      352E342E 
+ 902      31203230 
+ 902      31363036 
+ 903 00cb 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 903      20726576 
+ 903      6973696F 
+ 903      6E203233 
+ 903      37373135 
+ 904 00fe 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 904      66756E63 
+ 904      74696F6E 
+ 904      2D736563 
+ 904      74696F6E 
+ 905              	.LASF13:
+ 906 0126 72656738 		.ascii	"reg8\000"
+ 906      00
+ 907              	.LASF5:
+ 908 012b 6C6F6E67 		.ascii	"long unsigned int\000"
+ 908      20756E73 
+ 908      69676E65 
+ 908      6420696E 
+ 908      7400
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 23
+
+
+ 909              	.LASF12:
+ 910 013d 75696E74 		.ascii	"uint8\000"
+ 910      3800
+ 911              	.LASF10:
+ 912 0143 646F7562 		.ascii	"double\000"
+ 912      6C6500
+ 913              	.LASF16:
+ 914 014a 5047415F 		.ascii	"PGA_Inv_1_Enable\000"
+ 914      496E765F 
+ 914      315F456E 
+ 914      61626C65 
+ 914      00
+ 915              	.LASF23:
+ 916 015b 5047415F 		.ascii	"PGA_Inv_1_GainArray\000"
+ 916      496E765F 
+ 916      315F4761 
+ 916      696E4172 
+ 916      72617900 
+ 917              	.LASF8:
+ 918 016f 756E7369 		.ascii	"unsigned int\000"
+ 918      676E6564 
+ 918      20696E74 
+ 918      00
+ 919              	.LASF7:
+ 920 017c 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 920      206C6F6E 
+ 920      6720756E 
+ 920      7369676E 
+ 920      65642069 
+ 921              	.LASF15:
+ 922 0193 73697A65 		.ascii	"sizetype\000"
+ 922      74797065 
+ 922      00
+ 923              	.LASF20:
+ 924 019c 706F7765 		.ascii	"power\000"
+ 924      7200
+ 925              	.LASF6:
+ 926 01a2 6C6F6E67 		.ascii	"long long int\000"
+ 926      206C6F6E 
+ 926      6720696E 
+ 926      7400
+ 927              	.LASF11:
+ 928 01b0 63686172 		.ascii	"char\000"
+ 928      00
+ 929              	.LASF29:
+ 930 01b5 433A5C55 		.ascii	"C:\\Users\\DELL\\OneDrive\\Documents\\PSoC Creator\\"
+ 930      73657273 
+ 930      5C44454C 
+ 930      4C5C4F6E 
+ 930      65447269 
+ 931 01e3 5369676E 		.ascii	"Signal-Generator_1\\Signal-Generator_1\\Design01.cy"
+ 931      616C2D47 
+ 931      656E6572 
+ 931      61746F72 
+ 931      5F315C53 
+ 932 0214 64736E00 		.ascii	"dsn\000"
+ 933              	.LASF2:
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccY0DBt6.s 			page 24
+
+
+ 934 0218 73686F72 		.ascii	"short int\000"
+ 934      7420696E 
+ 934      7400
+ 935              	.LASF4:
+ 936 0222 6C6F6E67 		.ascii	"long int\000"
+ 936      20696E74 
+ 936      00
+ 937              	.LASF14:
+ 938 022b 6C6F6E67 		.ascii	"long double\000"
+ 938      20646F75 
+ 938      626C6500 
+ 939              	.LASF0:
+ 940 0237 7369676E 		.ascii	"signed char\000"
+ 940      65642063 
+ 940      68617200 
+ 941              	.LASF26:
+ 942 0243 5047415F 		.ascii	"PGA_Inv_1_Start\000"
+ 942      496E765F 
+ 942      315F5374 
+ 942      61727400 
+ 943              	.LASF30:
+ 944 0253 5047415F 		.ascii	"PGA_Inv_1_initVar\000"
+ 944      496E765F 
+ 944      315F696E 
+ 944      69745661 
+ 944      7200
+ 945              	.LASF24:
+ 946 0265 5047415F 		.ascii	"PGA_Inv_1_GainComp\000"
+ 946      496E765F 
+ 946      315F4761 
+ 946      696E436F 
+ 946      6D7000
+ 947              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
