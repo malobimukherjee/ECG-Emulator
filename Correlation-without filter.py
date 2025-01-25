@@ -1,12 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.signal import butter, filtfilt, correlate
-from sklearn.metrics import mean_squared_error
-from scipy.interpolate import interp1d
 import wfdb
+from scipy.signal import resample, correlate
 
-# --- Oscilloscope Data ---
+# Oscilloscope Data Loading
 oscilloscope_dir = "/home/"  # Update with your directory
 patient_scope = "04"  # Replace with the oscilloscope patient identifier or file name
 oscilloscope_file_path = f"{oscilloscope_dir}scope_0-{patient_scope}.csv"  # Updated file path
@@ -18,29 +16,19 @@ oscilloscope_data.columns = ["second", "Volt"]
 oscilloscope_data['second'] = pd.to_numeric(oscilloscope_data['second'], errors='coerce')
 oscilloscope_data['Volt'] = pd.to_numeric(oscilloscope_data['Volt'], errors='coerce')
 oscilloscope_data.dropna(inplace=True)
- 
+
 # Shift time to start at 0 seconds without removing any data
 time2 = oscilloscope_data['second'].to_numpy()
 time2 -= time2.min()  # Shift to start from 0 seconds
 voltage2 = oscilloscope_data['Volt'].to_numpy()
 
-# Resample oscilloscope data to 2.777 ms time interval
-time_interval = 0.002777  # 2.777 ms
-new_time2 = np.arange(time2[0], time2[-1], time_interval)  # New time array with 2.777 ms intervals
+# Resample the oscilloscope signal to 2.777 ms time interval
+target_interval = 2.77 / 1000  # 2.777 ms in seconds
+target_length = int((time2[-1] - time2[0]) / target_interval)  # Calculate the target number of samples
+time_resampled = np.linspace(time2[0], time2[-1], target_length)
+voltage_resampled = resample(voltage2, target_length)
 
-# Interpolate voltage data to match the new time array
-interpolator = interp1d(time2, voltage2, kind='linear', fill_value="extrapolate")
-voltage2_resampled = interpolator(new_time2)
-
-# Remove samples up to 0.4 seconds and shift the signal
-remove_time = 0.4  # Remove samples up to 0.35 seconds
-valid_indices = new_time2 >= remove_time  # Find indices of time >= 0.35 seconds
-
-# Keep only valid samples and shift the time array
-new_time2 = new_time2[valid_indices] - remove_time
-voltage2_resampled = voltage2_resampled[valid_indices]
-
-# --- MIT-BIH Patient Data ---
+# MIT-BIH Patient Data
 patient_mit = "104"  # Patient number
 record_path = f"mitdb/{patient_mit}"  # Path to the MIT-BIH record
 record = wfdb.rdrecord(record_path, channels=[0])
@@ -50,124 +38,90 @@ ecg_signal = record.p_signal[:, 0]
 sampling_rate = record.fs
 time = np.array([i / sampling_rate for i in range(len(ecg_signal))])
 
-# Limit both signals to 4 seconds
-max_time = 4  # 4 seconds limit
-ecg_limit_index = np.where(time >= max_time)[0][0]
-oscilloscope_limit_index = np.where(new_time2 >= max_time)[0][0]
+# Match the time range for both signals
+start_time = time_resampled[0]  # Start time for both signals
+end_time = time_resampled[-1]   # End time for both signals
 
-ecg_signal = ecg_signal[:ecg_limit_index]
-time = time[:ecg_limit_index]
-voltage2_resampled = voltage2_resampled[:oscilloscope_limit_index]
-new_time2 = new_time2[:oscilloscope_limit_index]
+# Extract the indices for the MIT-BIH signal that match the oscilloscope signal's time range
+mit_start_idx = np.where(time >= start_time)[0][0]
+mit_end_idx = np.where(time <= end_time)[0][-1]
 
-# Normalize both signals
-ecg_norm = (ecg_signal - np.mean(ecg_signal)) / np.std(ecg_signal)
-voltage2_norm = (voltage2_resampled - np.mean(voltage2_resampled)) / np.std(voltage2_resampled)
+# Extract the MIT-BIH signal and time for the matching range
+time_mit_matched = time[mit_start_idx:mit_end_idx + 1]
+ecg_signal_matched = ecg_signal[mit_start_idx:mit_end_idx + 1]
 
-# --- Bandpass Filter (0.5 Hz to 40 Hz) ---
-low_cutoff = 0.5  # 0.5 Hz
-high_cutoff = 40  # 40 Hz
-nyquist_freq = 0.5 * sampling_rate
-normalized_low_cutoff = low_cutoff / nyquist_freq
-normalized_high_cutoff = high_cutoff / nyquist_freq
+# Equalize the number of samples by slicing
+min_samples = min(len(voltage_resampled), len(ecg_signal_matched))
+time_resampled = time_resampled[:min_samples]
+voltage_resampled = voltage_resampled[:min_samples]
+time_mit_matched = time_mit_matched[:min_samples]
+ecg_signal_matched = ecg_signal_matched[:min_samples]
 
-# Design the bandpass filter
-b, a = butter(4, [normalized_low_cutoff, normalized_high_cutoff], btype='bandpass')
-voltage2_filtered = filtfilt(b, a, voltage2_norm)
+# Define the window for the oscilloscope signal (start and end points)
+oscilloscope_window_start = 462  # Set your start point for the oscilloscope window (in sample index)
+oscilloscope_window_end = 852   # Set your end point for the oscilloscope window (in sample index)
 
-# --- Adjust Signal Lengths ---
-min_length = min(len(ecg_norm), len(voltage2_filtered))
-ecg_trimmed = ecg_norm[:min_length]
-voltage2_trimmed = voltage2_filtered[:min_length]
+# Define the window for the ECG signal (start and end points)
+ecg_window_start = 410         # Set your start point for the ECG window (in sample index)
+ecg_window_end = 810         # Set your end point for the ECG window (in sample index)
 
-# --- Correlation and Alignment ---
-correlation = correlate(ecg_trimmed, voltage2_trimmed, mode="full")
-lag = np.argmax(correlation) - (len(ecg_trimmed) - 1)
+# Extract the subset of the oscilloscope signal based on the window
+oscilloscope_window = voltage_resampled[oscilloscope_window_start:oscilloscope_window_end]
+time_oscilloscope_window = time_resampled[oscilloscope_window_start:oscilloscope_window_end]
 
-# Align the oscilloscope signal
-if lag > 0:
-    aligned_ecg = ecg_trimmed[lag:]
-    aligned_voltage = voltage2_trimmed[:len(aligned_ecg)]
-else:
-    aligned_voltage = voltage2_trimmed[-lag:]
-    aligned_ecg = ecg_trimmed[:len(aligned_voltage)]
+# Extract the subset of the ECG signal based on the window
+ecg_window = ecg_signal_matched[ecg_window_start:ecg_window_end]
+time_ecg_window = time_mit_matched[ecg_window_start:ecg_window_end]
 
-# --- RMSE and Percentage Errors ---
-rmse_before = np.sqrt(mean_squared_error(ecg_trimmed, voltage2_trimmed))
-rmse_after = np.sqrt(mean_squared_error(aligned_ecg, aligned_voltage))
+# Calculate the time difference between the start of the oscilloscope and ECG windows
+time_shift = time_oscilloscope_window[0] - time_ecg_window[0]
 
-range_ecg = np.max(ecg_trimmed) - np.min(ecg_trimmed)
-error_before = (rmse_before / range_ecg) * 100
-error_after = (rmse_after / range_ecg) * 100
-percentage_reduction = error_before - error_after
+# Shift the time of the ECG window so that both start at the same time
+time_ecg_window_shifted = time_ecg_window + time_shift
 
-# --- Plotting ---
-plt.figure(figsize=(19, 5))
+# Normalize the oscilloscope signal window
+oscilloscope_window_normalized = (oscilloscope_window - np.min(oscilloscope_window)) / (np.max(oscilloscope_window) - np.min(oscilloscope_window))
 
-# Plot correlation
-plt.subplot(1, 3, 1)
-plt.plot(correlation, label="Correlation", color="purple")
-plt.title("Cross-Correlation", fontsize=12)
-plt.xlabel("Lag", fontsize=10)
-plt.ylabel("Correlation Coefficient", fontsize=10)
-plt.grid(True, linestyle='--', alpha=0.6)
-plt.legend(fontsize=9)
+# Normalize the ECG signal window
+ecg_window_normalized = (ecg_window - np.min(ecg_window)) / (np.max(ecg_window) - np.min(ecg_window))
 
-# Plot original and aligned signals
-plt.subplot(1, 3, 2)
-plt.plot(ecg_trimmed, label="MIT-BIH ECG (Trimmed)", color="blue", linewidth=1)
-plt.plot(voltage2_trimmed, label="Oscilloscope (Trimmed)", color="red", linestyle="--", linewidth=1)
-plt.title("Signals Before Alignment", fontsize=12)
-plt.legend(fontsize=9)
-plt.grid(True, linestyle='--', alpha=0.6)
+# Calculate the normalized cross-correlation
+cross_corr = correlate(oscilloscope_window_normalized - np.mean(oscilloscope_window_normalized),
+                       ecg_window_normalized - np.mean(ecg_window_normalized), mode='full')
+normalized_cross_corr = cross_corr / (np.std(oscilloscope_window_normalized) * np.std(ecg_window_normalized) * len(oscilloscope_window_normalized))
 
-plt.subplot(1, 3, 3)
-plt.plot(aligned_ecg, label="MIT-BIH ECG (Aligned)", color="blue", linewidth=1)
-plt.plot(aligned_voltage, label="Oscilloscope (Aligned)", color="green", linestyle="--", linewidth=1)
-plt.title("Signals After Alignment", fontsize=12)
-plt.legend(fontsize=9)
-plt.grid(True, linestyle='--', alpha=0.6)
+# Print the maximum normalized cross-correlation value
+print(f"Normalized cross-correlation value: {np.max(normalized_cross_corr):.6f}")
 
+# Plot the oscilloscope signal window
+plt.figure(figsize=(10, 5))
+plt.plot(time_oscilloscope_window, oscilloscope_window_normalized, label='Oscilloscope Signal (Windowed, Normalized)', color='red', linewidth=1.5)
+plt.title("Oscilloscope Signal (Windowed and Normalized)")
+plt.xlabel("Time (seconds)")
+plt.ylabel("Normalized Amplitude")
+plt.legend()
+plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-# Print RMSE and percentage errors
-print(f"RMSE Before Alignment: {rmse_before:.4f}")
-print(f"RMSE After Alignment: {rmse_after:.4f}")
-print(f"Percentage Error Before Alignment: {error_before:.2f}%")
-print(f"Percentage Error After Alignment: {error_after:.2f}%")
-print(f"Percentage Reduction in Error: {percentage_reduction:.2f}%")
+# Plot the matched MIT-BIH ECG signal window
+plt.figure(figsize=(10, 5))
+plt.plot(time_ecg_window_shifted, ecg_window_normalized, label='MIT-BIH ECG Signal (Windowed, Normalized)', color='blue', linewidth=1.5)
+plt.title("MIT-BIH ECG Signal (Windowed and Normalized)")
+plt.xlabel("Time (seconds)")
+plt.ylabel("Normalized Amplitude")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
 
-# --- Truncate Aligned Signals to First 550 Samples ---
-max_samples = 550
-aligned_ecg_550 = aligned_ecg[:max_samples]
-aligned_voltage_550 = aligned_voltage[:max_samples]
-
-# --- Recalculate RMSE and Percentage Errors ---
-rmse_after_550 = np.sqrt(mean_squared_error(aligned_ecg_550, aligned_voltage_550))
-
-# Range of the original ECG signal for percentage error calculation
-range_ecg = np.max(ecg_trimmed) - np.min(ecg_trimmed)
-
-# Percentage errors
-error_before = (rmse_before / range_ecg) * 100
-error_after_550 = (rmse_after_550 / range_ecg) * 100
-percentage_reduction_550 = error_before - error_after_550
-
-# --- Print Metrics ---
-print(f"RMSE Before Alignment: {rmse_before:.4f}")
-print(f"RMSE After Alignment (First 550 Samples): {rmse_after_550:.4f}")
-print(f"Percentage Error Before Alignment: {error_before:.2f}%")
-print(f"Percentage Error After Alignment (First 550 Samples): {error_after_550:.2f}%")
-print(f"Percentage Reduction in Error (First 550 Samples): {percentage_reduction_550:.2f}%")
-
-# --- Plot First 550 Samples of Aligned Signals ---
-plt.figure(figsize=(12, 6))
-plt.plot(np.arange(max_samples), aligned_ecg_550, label="ECG Signal (First 550 Samples)", color="blue")
-plt.plot(np.arange(max_samples), aligned_voltage_550, label="Aligned Oscilloscope Signal (First 550 Samples)", color="green")
-plt.title("First 550 Samples of Aligned Signals")
-plt.xlabel("Sample Number")
-plt.ylabel("Amplitude")
+# Plot the oscilloscope signal and MIT-BIH ECG signal together
+plt.figure(figsize=(10, 5))
+plt.plot(time_oscilloscope_window, oscilloscope_window_normalized, label='Oscilloscope Signal (Windowed, Normalized)', color='red', linewidth=1.5)
+plt.plot(time_ecg_window_shifted, ecg_window_normalized, label='MIT-BIH ECG Signal (Windowed, Normalized)', color='blue', linewidth=1.5)
+plt.title("Comparison of Oscilloscope Signal and MIT-BIH ECG Signal")
+plt.xlabel("Time (seconds)")
+plt.ylabel("Normalized Amplitude")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
