@@ -29,7 +29,7 @@ Normalization is not used here to match both signals amplitude. Original signals
 3. readings - "scope_100.csv", etc.
 4. Graph.pdf - output of the codes 
 
-ECG- Emulator project demonstration:
+ECG- Emulator Project demonstration:
 https://iiitbac-my.sharepoint.com/my?login_hint=malobi%2Emukherjee%40iiitb%2Eac%2Ein&id=%2Fpersonal%2Fmalobi%5Fmukherjee%5Fiiitb%5Fac%5Fin%2FDocuments%2FECG%2DEmulator%2DProject%2DFiles
 
 
