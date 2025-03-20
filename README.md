@@ -1,9 +1,33 @@
 # ECG-Emulator
 
-## Demonstration and PSOC Code Implementation
-This folder contains demonstration video:
+## Demonstration and PSOC/RPI Code Implementation
+
+Folder - PSOC contains 
+Signal-Generator_1.zip - PSOC code to receive continuous chunk and plot.
+Workspace02.zip - PSOC code to receive chunk and plot for signal quality evaluation.
 
 
-https://iiitbac-my.sharepoint.com/my?login_hint=malobi%2Emukherjee%40iiitb%2Eac%2Ein&id=%2Fpersonal%2Fmalobi%5Fmukherjee%5Fiiitb%5Fac%5Fin%2FDocuments%2FECG%2DEmulator%2DProject%2DFiles
+Folder - Forcontinuouswaveform- raspberrypi-PC-control contains (This is for continuous plotting of the whole signal:
+1. csv_code_final.py rpi code to transmit the whole waveform in chunks.
+3. one_byte_send.py - for PC side control. 
+
+Folder - Forsignalqualityevaluation-raspberrypi-PC-control (This is plotting only first two peaks of every signal - testing)
+1. csv_code_final.py rpi code to transmit the first two peaks of the waveform in chunks continuously.
+3. one_byte_send.py - for PC side control.
+
+Folder - readinginV (Emulator output in Volts)
+Normalization is used here to match both signals amplitude.
+1. 1-peak-correlation.py - For single peak correlation
+2. 2-peak-correlation.py - For two peaks correlation
+3. readings - "scope_0-100.csv", etc.
+4. Graph.pdf - output of the codes 
+
+Folder - readinginmV (Emulator output in milliVolts)
+Normalization is not used here to match both signals amplitude. Original signals are compared.
+1. 1-peak-correlation.py - For single peak correlation
+2. 2-peak-correlation.py - For two peaks correlation
+3. readings - "scope_100.csv", etc.
+4. Graph.pdf - output of the codes 
+
 
 
