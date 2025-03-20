@@ -2,18 +2,18 @@
 
 ## Demonstration and PSOC/RPI Code Implementation
 
-Folder - PSOC contains 
-Signal-Generator_1.zip - PSOC code to receive continuous chunk and plot.
-Workspace02.zip - PSOC code to receive chunk and plot for signal quality evaluation.
+Folder - PSOC contains: 
+1. Signal-Generator_1.zip - PSOC code to receive continuous chunk and plot.
+2. Workspace02.zip - PSOC code to receive chunk and plot for signal quality evaluation.
 
 
 Folder - Forcontinuouswaveform- raspberrypi-PC-control contains (This is for continuous plotting of the whole signal:
 1. csv_code_final.py rpi code to transmit the whole waveform in chunks.
-3. one_byte_send.py - for PC side control. 
+2. one_byte_send.py - for PC side control. 
 
 Folder - Forsignalqualityevaluation-raspberrypi-PC-control (This is plotting only first two peaks of every signal - testing)
 1. csv_code_final.py rpi code to transmit the first two peaks of the waveform in chunks continuously.
-3. one_byte_send.py - for PC side control.
+2. one_byte_send.py - for PC side control.
 
 Folder - readinginV (Emulator output in Volts)
 Normalization is used here to match both signals amplitude.
