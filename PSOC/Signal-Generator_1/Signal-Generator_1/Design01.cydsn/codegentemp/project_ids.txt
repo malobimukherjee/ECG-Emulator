@@ -1,6 +1,0 @@
-C:\Users\DELL\OneDrive\Documents\PSoC Creator\Signal-Generator_1\Signal-Generator_1\Design01.cydsn\Design01.cyprj|a4808429-38f9-4506-91d3-653ac4c6a08f
-C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|67985d53-c2ac-4b5e-9cdd-87f6174ce270
-C:\Users\DELL\OneDrive\Documents\PSoC Creator\4.4\Downloads ( 4.4).cylib\Downloads ( 4.4).cyprj|ba969ce0-bf35-4cd3-bee5-e278ca89e188
-C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|882004f7-e603-43fc-8f62-d9604551edec
-C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|f0e36e5f-9f5b-43ce-966b-aa92edb8b653
-C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|6bcb9211-a104-4aa6-b8b9-485fa8c2ca28

@@ -1,0 +1,1567 @@
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"IDAC_1.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.IDAC_1_Enable,"ax",%progbits
+  20              		.align	2
+  21              		.global	IDAC_1_Enable
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	IDAC_1_Enable, %function
+  25              	IDAC_1_Enable:
+  26              	.LFB1:
+  27              		.file 1 "Generated_Source\\PSoC5\\IDAC_1.c"
+   1:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/IDAC_1.c **** * File Name: IDAC_1.c
+   3:Generated_Source\PSoC5/IDAC_1.c **** * Version 2.0
+   4:Generated_Source\PSoC5/IDAC_1.c **** *
+   5:Generated_Source\PSoC5/IDAC_1.c **** * Description:
+   6:Generated_Source\PSoC5/IDAC_1.c **** *  This file provides the source code to the API for the 8-bit Current 
+   7:Generated_Source\PSoC5/IDAC_1.c **** *  DAC (IDAC8) User Module.
+   8:Generated_Source\PSoC5/IDAC_1.c **** *
+   9:Generated_Source\PSoC5/IDAC_1.c **** * Note:
+  10:Generated_Source\PSoC5/IDAC_1.c **** *  None
+  11:Generated_Source\PSoC5/IDAC_1.c **** *
+  12:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+  13:Generated_Source\PSoC5/IDAC_1.c **** * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  14:Generated_Source\PSoC5/IDAC_1.c **** * You may use this file only in accordance with the license, terms, conditions, 
+  15:Generated_Source\PSoC5/IDAC_1.c **** * disclaimers, and limitations in the end user license agreement accompanying 
+  16:Generated_Source\PSoC5/IDAC_1.c **** * the software package with which this file was provided.
+  17:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+  18:Generated_Source\PSoC5/IDAC_1.c **** 
+  19:Generated_Source\PSoC5/IDAC_1.c **** #include "cytypes.h"
+  20:Generated_Source\PSoC5/IDAC_1.c **** #include "IDAC_1.h"   
+  21:Generated_Source\PSoC5/IDAC_1.c **** 
+  22:Generated_Source\PSoC5/IDAC_1.c **** #if (CY_PSOC5A)
+  23:Generated_Source\PSoC5/IDAC_1.c ****     #include <CyLib.h>
+  24:Generated_Source\PSoC5/IDAC_1.c **** #endif /* CY_PSOC5A */
+  25:Generated_Source\PSoC5/IDAC_1.c **** 
+  26:Generated_Source\PSoC5/IDAC_1.c **** 
+  27:Generated_Source\PSoC5/IDAC_1.c **** uint8 IDAC_1_initVar = 0u;
+  28:Generated_Source\PSoC5/IDAC_1.c **** 
+  29:Generated_Source\PSoC5/IDAC_1.c **** 
+  30:Generated_Source\PSoC5/IDAC_1.c **** #if (CY_PSOC5A)
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 2
+
+
+  31:Generated_Source\PSoC5/IDAC_1.c ****     static IDAC_1_LOWPOWER_BACKUP_STRUCT  IDAC_1_lowPowerBackup;
+  32:Generated_Source\PSoC5/IDAC_1.c **** #endif /* CY_PSOC5A */
+  33:Generated_Source\PSoC5/IDAC_1.c **** 
+  34:Generated_Source\PSoC5/IDAC_1.c **** /* Variable to decide whether or not to restore control register in Enable()
+  35:Generated_Source\PSoC5/IDAC_1.c ****    API. This valid only for PSoC5A */
+  36:Generated_Source\PSoC5/IDAC_1.c **** #if (CY_PSOC5A)
+  37:Generated_Source\PSoC5/IDAC_1.c ****     static uint8 IDAC_1_restoreReg = 0u;
+  38:Generated_Source\PSoC5/IDAC_1.c **** #endif /* CY_PSOC5A */
+  39:Generated_Source\PSoC5/IDAC_1.c **** 
+  40:Generated_Source\PSoC5/IDAC_1.c **** 
+  41:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+  42:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_Init
+  43:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+  44:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+  45:Generated_Source\PSoC5/IDAC_1.c **** *  Initialize to the schematic state.
+  46:Generated_Source\PSoC5/IDAC_1.c **** * 
+  47:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:
+  48:Generated_Source\PSoC5/IDAC_1.c **** *  void:
+  49:Generated_Source\PSoC5/IDAC_1.c **** *
+  50:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+  51:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+  52:Generated_Source\PSoC5/IDAC_1.c **** *
+  53:Generated_Source\PSoC5/IDAC_1.c **** * Theory:
+  54:Generated_Source\PSoC5/IDAC_1.c **** *
+  55:Generated_Source\PSoC5/IDAC_1.c **** * Side Effects:
+  56:Generated_Source\PSoC5/IDAC_1.c **** *
+  57:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+  58:Generated_Source\PSoC5/IDAC_1.c **** void IDAC_1_Init(void) 
+  59:Generated_Source\PSoC5/IDAC_1.c **** {
+  60:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_CR0 = (IDAC_1_MODE_I | IDAC_1_DEFAULT_RANGE );
+  61:Generated_Source\PSoC5/IDAC_1.c **** 
+  62:Generated_Source\PSoC5/IDAC_1.c ****     /* Set default data source */
+  63:Generated_Source\PSoC5/IDAC_1.c ****     #if(IDAC_1_DEFAULT_DATA_SRC != 0u )    
+  64:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 = (IDAC_1_DEFAULT_CNTL | IDAC_1_DACBUS_ENABLE);
+  65:Generated_Source\PSoC5/IDAC_1.c ****     #else
+  66:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 = (IDAC_1_DEFAULT_CNTL | IDAC_1_DACBUS_DISABLE);
+  67:Generated_Source\PSoC5/IDAC_1.c ****     #endif /* (IDAC_1_DEFAULT_DATA_SRC != 0u ) */
+  68:Generated_Source\PSoC5/IDAC_1.c ****     
+  69:Generated_Source\PSoC5/IDAC_1.c ****     /*Controls polarity from UDB Control*/
+  70:Generated_Source\PSoC5/IDAC_1.c ****     #if(IDAC_1_DEFAULT_POLARITY == IDAC_1_HARDWARE_CONTROLLED)
+  71:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 |= IDAC_1_IDIR_SRC_UDB;
+  72:Generated_Source\PSoC5/IDAC_1.c ****     #else
+  73:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 |= IDAC_1_DEFAULT_POLARITY;
+  74:Generated_Source\PSoC5/IDAC_1.c ****     #endif/* (IDAC_1_DEFAULT_POLARITY == IDAC_1_HARDWARE_CONTROLLED) */
+  75:Generated_Source\PSoC5/IDAC_1.c ****     /*Controls Current Source from UDB Control*/
+  76:Generated_Source\PSoC5/IDAC_1.c ****     #if(IDAC_1_HARDWARE_ENABLE != 0u ) 
+  77:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 |= IDAC_1_IDIR_CTL_UDB;
+  78:Generated_Source\PSoC5/IDAC_1.c ****     #endif /* (IDAC_1_HARDWARE_ENABLE != 0u ) */ 
+  79:Generated_Source\PSoC5/IDAC_1.c ****     
+  80:Generated_Source\PSoC5/IDAC_1.c ****     /* Set default strobe mode */
+  81:Generated_Source\PSoC5/IDAC_1.c ****     #if(IDAC_1_DEFAULT_STRB != 0u)
+  82:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_Strobe |= IDAC_1_STRB_EN;
+  83:Generated_Source\PSoC5/IDAC_1.c ****     #endif /* (IDAC_1_DEFAULT_STRB != 0u) */
+  84:Generated_Source\PSoC5/IDAC_1.c ****     
+  85:Generated_Source\PSoC5/IDAC_1.c ****     /* Set default speed */
+  86:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_SetSpeed(IDAC_1_DEFAULT_SPEED);
+  87:Generated_Source\PSoC5/IDAC_1.c ****     
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 3
+
+
+  88:Generated_Source\PSoC5/IDAC_1.c ****     /* Set proper DAC trim */
+  89:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_DacTrim();
+  90:Generated_Source\PSoC5/IDAC_1.c ****     
+  91:Generated_Source\PSoC5/IDAC_1.c **** }
+  92:Generated_Source\PSoC5/IDAC_1.c **** 
+  93:Generated_Source\PSoC5/IDAC_1.c **** 
+  94:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+  95:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_Enable
+  96:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+  97:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+  98:Generated_Source\PSoC5/IDAC_1.c **** *  Enable the IDAC8
+  99:Generated_Source\PSoC5/IDAC_1.c **** * 
+ 100:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:
+ 101:Generated_Source\PSoC5/IDAC_1.c **** *  void:
+ 102:Generated_Source\PSoC5/IDAC_1.c **** *
+ 103:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+ 104:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+ 105:Generated_Source\PSoC5/IDAC_1.c **** *
+ 106:Generated_Source\PSoC5/IDAC_1.c **** * Theory:
+ 107:Generated_Source\PSoC5/IDAC_1.c **** *
+ 108:Generated_Source\PSoC5/IDAC_1.c **** * Side Effects:
+ 109:Generated_Source\PSoC5/IDAC_1.c **** *
+ 110:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+ 111:Generated_Source\PSoC5/IDAC_1.c **** void IDAC_1_Enable(void) 
+ 112:Generated_Source\PSoC5/IDAC_1.c **** {
+  28              		.loc 1 112 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ 113:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_PWRMGR |= IDAC_1_ACT_PWR_EN;
+  33              		.loc 1 113 0
+  34 0000 054A     		ldr	r2, .L2
+  35 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  36 0004 43F00403 		orr	r3, r3, #4
+  37 0008 1370     		strb	r3, [r2]
+ 114:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_STBY_PWRMGR |= IDAC_1_STBY_PWR_EN;
+  38              		.loc 1 114 0
+  39 000a 1032     		adds	r2, r2, #16
+  40 000c 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  41 000e 43F00403 		orr	r3, r3, #4
+  42 0012 1370     		strb	r3, [r2]
+  43 0014 7047     		bx	lr
+  44              	.L3:
+  45 0016 00BF     		.align	2
+  46              	.L2:
+  47 0018 A8430040 		.word	1073759144
+  48              		.cfi_endproc
+  49              	.LFE1:
+  50              		.size	IDAC_1_Enable, .-IDAC_1_Enable
+  51              		.section	.text.IDAC_1_Stop,"ax",%progbits
+  52              		.align	2
+  53              		.global	IDAC_1_Stop
+  54              		.thumb
+  55              		.thumb_func
+  56              		.type	IDAC_1_Stop, %function
+  57              	IDAC_1_Stop:
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 4
+
+
+  58              	.LFB3:
+ 115:Generated_Source\PSoC5/IDAC_1.c **** 
+ 116:Generated_Source\PSoC5/IDAC_1.c ****     /* This is to restore the value of register CR0 which is saved 
+ 117:Generated_Source\PSoC5/IDAC_1.c ****       in prior to the modification in stop() API */
+ 118:Generated_Source\PSoC5/IDAC_1.c ****     #if (CY_PSOC5A)
+ 119:Generated_Source\PSoC5/IDAC_1.c ****         if(IDAC_1_restoreReg == 1u)
+ 120:Generated_Source\PSoC5/IDAC_1.c ****         {
+ 121:Generated_Source\PSoC5/IDAC_1.c ****             IDAC_1_CR0 = IDAC_1_lowPowerBackup.DACCR0Reg;
+ 122:Generated_Source\PSoC5/IDAC_1.c **** 
+ 123:Generated_Source\PSoC5/IDAC_1.c ****             /* Clear the flag */
+ 124:Generated_Source\PSoC5/IDAC_1.c ****             IDAC_1_restoreReg = 0u;
+ 125:Generated_Source\PSoC5/IDAC_1.c ****         }
+ 126:Generated_Source\PSoC5/IDAC_1.c ****     #endif /* CY_PSOC5A */
+ 127:Generated_Source\PSoC5/IDAC_1.c **** }
+ 128:Generated_Source\PSoC5/IDAC_1.c **** 
+ 129:Generated_Source\PSoC5/IDAC_1.c **** 
+ 130:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+ 131:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_Start
+ 132:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+ 133:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+ 134:Generated_Source\PSoC5/IDAC_1.c **** *  Set power level then turn on IDAC8.
+ 135:Generated_Source\PSoC5/IDAC_1.c **** *
+ 136:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:  
+ 137:Generated_Source\PSoC5/IDAC_1.c **** *  power: Sets power level between off (0) and (3) high power
+ 138:Generated_Source\PSoC5/IDAC_1.c **** *
+ 139:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+ 140:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+ 141:Generated_Source\PSoC5/IDAC_1.c **** *
+ 142:Generated_Source\PSoC5/IDAC_1.c **** * Global variables:
+ 143:Generated_Source\PSoC5/IDAC_1.c **** *  IDAC_1_initVar: Is modified when this function is called for 
+ 144:Generated_Source\PSoC5/IDAC_1.c **** *   the first time. Is used to ensure that initialization happens only once.
+ 145:Generated_Source\PSoC5/IDAC_1.c **** *
+ 146:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+ 147:Generated_Source\PSoC5/IDAC_1.c **** void IDAC_1_Start(void) 
+ 148:Generated_Source\PSoC5/IDAC_1.c **** {
+ 149:Generated_Source\PSoC5/IDAC_1.c ****     /* Hardware initiazation only needs to occur the first time */
+ 150:Generated_Source\PSoC5/IDAC_1.c ****     if ( IDAC_1_initVar == 0u)  
+ 151:Generated_Source\PSoC5/IDAC_1.c ****     {
+ 152:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_Init();
+ 153:Generated_Source\PSoC5/IDAC_1.c ****         
+ 154:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_initVar = 1u;
+ 155:Generated_Source\PSoC5/IDAC_1.c ****     }
+ 156:Generated_Source\PSoC5/IDAC_1.c ****    
+ 157:Generated_Source\PSoC5/IDAC_1.c ****     /* Enable power to DAC */
+ 158:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_Enable();
+ 159:Generated_Source\PSoC5/IDAC_1.c **** 
+ 160:Generated_Source\PSoC5/IDAC_1.c ****     /* Set default value */
+ 161:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_SetValue(IDAC_1_DEFAULT_DATA);
+ 162:Generated_Source\PSoC5/IDAC_1.c **** 
+ 163:Generated_Source\PSoC5/IDAC_1.c **** }
+ 164:Generated_Source\PSoC5/IDAC_1.c **** 
+ 165:Generated_Source\PSoC5/IDAC_1.c **** 
+ 166:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+ 167:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_Stop
+ 168:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+ 169:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+ 170:Generated_Source\PSoC5/IDAC_1.c **** *  Powers down IDAC8 to lowest power state.
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 5
+
+
+ 171:Generated_Source\PSoC5/IDAC_1.c **** *
+ 172:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:
+ 173:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+ 174:Generated_Source\PSoC5/IDAC_1.c **** *
+ 175:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+ 176:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+ 177:Generated_Source\PSoC5/IDAC_1.c **** *
+ 178:Generated_Source\PSoC5/IDAC_1.c **** * Theory:
+ 179:Generated_Source\PSoC5/IDAC_1.c **** *
+ 180:Generated_Source\PSoC5/IDAC_1.c **** * Side Effects:
+ 181:Generated_Source\PSoC5/IDAC_1.c **** *
+ 182:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+ 183:Generated_Source\PSoC5/IDAC_1.c **** void IDAC_1_Stop(void) 
+ 184:Generated_Source\PSoC5/IDAC_1.c **** {
+  59              		.loc 1 184 0
+  60              		.cfi_startproc
+  61              		@ args = 0, pretend = 0, frame = 0
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63              		@ link register save eliminated.
+ 185:Generated_Source\PSoC5/IDAC_1.c ****     /* Disble power to DAC */
+ 186:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_PWRMGR &= (uint8)(~IDAC_1_ACT_PWR_EN);
+  64              		.loc 1 186 0
+  65 0000 054A     		ldr	r2, .L5
+  66 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  67 0004 03F0FB03 		and	r3, r3, #251
+  68 0008 1370     		strb	r3, [r2]
+ 187:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_STBY_PWRMGR &= (uint8)(~IDAC_1_STBY_PWR_EN);
+  69              		.loc 1 187 0
+  70 000a 1032     		adds	r2, r2, #16
+  71 000c 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  72 000e 03F0FB03 		and	r3, r3, #251
+  73 0012 1370     		strb	r3, [r2]
+  74 0014 7047     		bx	lr
+  75              	.L6:
+  76 0016 00BF     		.align	2
+  77              	.L5:
+  78 0018 A8430040 		.word	1073759144
+  79              		.cfi_endproc
+  80              	.LFE3:
+  81              		.size	IDAC_1_Stop, .-IDAC_1_Stop
+  82              		.section	.text.IDAC_1_SetSpeed,"ax",%progbits
+  83              		.align	2
+  84              		.global	IDAC_1_SetSpeed
+  85              		.thumb
+  86              		.thumb_func
+  87              		.type	IDAC_1_SetSpeed, %function
+  88              	IDAC_1_SetSpeed:
+  89              	.LFB4:
+ 188:Generated_Source\PSoC5/IDAC_1.c ****     
+ 189:Generated_Source\PSoC5/IDAC_1.c ****     #if (CY_PSOC5A)
+ 190:Generated_Source\PSoC5/IDAC_1.c ****     
+ 191:Generated_Source\PSoC5/IDAC_1.c ****         /* Set the global variable  */
+ 192:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_restoreReg = 1u;
+ 193:Generated_Source\PSoC5/IDAC_1.c **** 
+ 194:Generated_Source\PSoC5/IDAC_1.c ****         /* Save the control register and then Clear it. */
+ 195:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_lowPowerBackup.DACCR0Reg = IDAC_1_CR0;
+ 196:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR0 = (IDAC_1_MODE_I | IDAC_1_RANGE_3 | IDAC_1_HS_HIGHSPEED);
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 6
+
+
+ 197:Generated_Source\PSoC5/IDAC_1.c ****     #endif /* CY_PSOC5A */
+ 198:Generated_Source\PSoC5/IDAC_1.c **** }
+ 199:Generated_Source\PSoC5/IDAC_1.c **** 
+ 200:Generated_Source\PSoC5/IDAC_1.c **** 
+ 201:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+ 202:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_SetSpeed
+ 203:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+ 204:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+ 205:Generated_Source\PSoC5/IDAC_1.c **** *  Set DAC speed
+ 206:Generated_Source\PSoC5/IDAC_1.c **** *
+ 207:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:
+ 208:Generated_Source\PSoC5/IDAC_1.c **** *  power: Sets speed value
+ 209:Generated_Source\PSoC5/IDAC_1.c **** *
+ 210:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+ 211:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+ 212:Generated_Source\PSoC5/IDAC_1.c **** *
+ 213:Generated_Source\PSoC5/IDAC_1.c **** * Theory:
+ 214:Generated_Source\PSoC5/IDAC_1.c **** *
+ 215:Generated_Source\PSoC5/IDAC_1.c **** * Side Effects:
+ 216:Generated_Source\PSoC5/IDAC_1.c **** *
+ 217:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+ 218:Generated_Source\PSoC5/IDAC_1.c **** void IDAC_1_SetSpeed(uint8 speed) 
+ 219:Generated_Source\PSoC5/IDAC_1.c **** {
+  90              		.loc 1 219 0
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 0
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  94              		@ link register save eliminated.
+  95              	.LVL0:
+ 220:Generated_Source\PSoC5/IDAC_1.c ****     /* Clear power mask then write in new value */
+ 221:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_CR0 &= (uint8)(~IDAC_1_HS_MASK);
+  96              		.loc 1 221 0
+  97 0000 054B     		ldr	r3, .L8
+  98 0002 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+  99 0004 02F0FD02 		and	r2, r2, #253
+ 100 0008 1A70     		strb	r2, [r3]
+ 222:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_CR0 |=  ( speed & IDAC_1_HS_MASK);
+ 101              		.loc 1 222 0
+ 102 000a 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 103 000c 00F00200 		and	r0, r0, #2
+ 104              	.LVL1:
+ 105 0010 1043     		orrs	r0, r0, r2
+ 106 0012 1870     		strb	r0, [r3]
+ 107 0014 7047     		bx	lr
+ 108              	.L9:
+ 109 0016 00BF     		.align	2
+ 110              	.L8:
+ 111 0018 28580040 		.word	1073764392
+ 112              		.cfi_endproc
+ 113              	.LFE4:
+ 114              		.size	IDAC_1_SetSpeed, .-IDAC_1_SetSpeed
+ 115              		.section	.text.IDAC_1_SetValue,"ax",%progbits
+ 116              		.align	2
+ 117              		.global	IDAC_1_SetValue
+ 118              		.thumb
+ 119              		.thumb_func
+ 120              		.type	IDAC_1_SetValue, %function
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 7
+
+
+ 121              	IDAC_1_SetValue:
+ 122              	.LFB7:
+ 223:Generated_Source\PSoC5/IDAC_1.c **** }
+ 224:Generated_Source\PSoC5/IDAC_1.c **** 
+ 225:Generated_Source\PSoC5/IDAC_1.c **** 
+ 226:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+ 227:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_SetPolarity
+ 228:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+ 229:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+ 230:Generated_Source\PSoC5/IDAC_1.c **** *  Sets IDAC to Sink or Source current.
+ 231:Generated_Source\PSoC5/IDAC_1.c **** *  
+ 232:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:
+ 233:Generated_Source\PSoC5/IDAC_1.c **** *  Polarity: Sets the IDAC to Sink or Source 
+ 234:Generated_Source\PSoC5/IDAC_1.c **** *  0x00 - Source
+ 235:Generated_Source\PSoC5/IDAC_1.c **** *  0x04 - Sink
+ 236:Generated_Source\PSoC5/IDAC_1.c **** *
+ 237:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+ 238:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+ 239:Generated_Source\PSoC5/IDAC_1.c **** *
+ 240:Generated_Source\PSoC5/IDAC_1.c **** * Theory:
+ 241:Generated_Source\PSoC5/IDAC_1.c **** *
+ 242:Generated_Source\PSoC5/IDAC_1.c **** * Side Effects:
+ 243:Generated_Source\PSoC5/IDAC_1.c **** *
+ 244:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+ 245:Generated_Source\PSoC5/IDAC_1.c **** #if(IDAC_1_DEFAULT_POLARITY != IDAC_1_HARDWARE_CONTROLLED)
+ 246:Generated_Source\PSoC5/IDAC_1.c ****     void IDAC_1_SetPolarity(uint8 polarity) 
+ 247:Generated_Source\PSoC5/IDAC_1.c ****     {
+ 248:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 &= (uint8)(~IDAC_1_IDIR_MASK);                /* clear polarity bit */
+ 249:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 |= (polarity & IDAC_1_IDIR_MASK);             /* set new value */
+ 250:Generated_Source\PSoC5/IDAC_1.c ****     
+ 251:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_DacTrim();
+ 252:Generated_Source\PSoC5/IDAC_1.c ****     }
+ 253:Generated_Source\PSoC5/IDAC_1.c **** #endif/*(IDAC_1_DEFAULT_POLARITY != IDAC_1_HARDWARE_CONTROLLED)*/
+ 254:Generated_Source\PSoC5/IDAC_1.c **** 
+ 255:Generated_Source\PSoC5/IDAC_1.c **** 
+ 256:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+ 257:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_SetRange
+ 258:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+ 259:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+ 260:Generated_Source\PSoC5/IDAC_1.c **** *  Set current range
+ 261:Generated_Source\PSoC5/IDAC_1.c **** *
+ 262:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:
+ 263:Generated_Source\PSoC5/IDAC_1.c **** *  Range: Sets on of four valid ranges.
+ 264:Generated_Source\PSoC5/IDAC_1.c **** *
+ 265:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+ 266:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+ 267:Generated_Source\PSoC5/IDAC_1.c **** *
+ 268:Generated_Source\PSoC5/IDAC_1.c **** * Theory:
+ 269:Generated_Source\PSoC5/IDAC_1.c **** *
+ 270:Generated_Source\PSoC5/IDAC_1.c **** * Side Effects:
+ 271:Generated_Source\PSoC5/IDAC_1.c **** *
+ 272:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+ 273:Generated_Source\PSoC5/IDAC_1.c **** void IDAC_1_SetRange(uint8 range) 
+ 274:Generated_Source\PSoC5/IDAC_1.c **** {
+ 275:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_CR0 &= (uint8)(~IDAC_1_RANGE_MASK);       /* Clear existing mode */
+ 276:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_CR0 |= ( range & IDAC_1_RANGE_MASK );     /*  Set Range  */
+ 277:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_DacTrim();
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 8
+
+
+ 278:Generated_Source\PSoC5/IDAC_1.c **** }
+ 279:Generated_Source\PSoC5/IDAC_1.c **** 
+ 280:Generated_Source\PSoC5/IDAC_1.c **** 
+ 281:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+ 282:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_SetValue
+ 283:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+ 284:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+ 285:Generated_Source\PSoC5/IDAC_1.c **** *  Set DAC value
+ 286:Generated_Source\PSoC5/IDAC_1.c **** *
+ 287:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:
+ 288:Generated_Source\PSoC5/IDAC_1.c **** *  value: Sets DAC value between 0 and 255.
+ 289:Generated_Source\PSoC5/IDAC_1.c **** *
+ 290:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+ 291:Generated_Source\PSoC5/IDAC_1.c **** *  (void)
+ 292:Generated_Source\PSoC5/IDAC_1.c **** *
+ 293:Generated_Source\PSoC5/IDAC_1.c **** * Theory:
+ 294:Generated_Source\PSoC5/IDAC_1.c **** *
+ 295:Generated_Source\PSoC5/IDAC_1.c **** * Side Effects:
+ 296:Generated_Source\PSoC5/IDAC_1.c **** *
+ 297:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+ 298:Generated_Source\PSoC5/IDAC_1.c **** void IDAC_1_SetValue(uint8 value) 
+ 299:Generated_Source\PSoC5/IDAC_1.c **** {
+ 123              		.loc 1 299 0
+ 124              		.cfi_startproc
+ 125              		@ args = 0, pretend = 0, frame = 0
+ 126              		@ frame_needed = 0, uses_anonymous_args = 0
+ 127              		@ link register save eliminated.
+ 128              	.LVL2:
+ 300:Generated_Source\PSoC5/IDAC_1.c **** 
+ 301:Generated_Source\PSoC5/IDAC_1.c ****     #if (CY_PSOC5A)
+ 302:Generated_Source\PSoC5/IDAC_1.c ****         uint8 IDAC_1_intrStatus = CyEnterCriticalSection();
+ 303:Generated_Source\PSoC5/IDAC_1.c ****     #endif /* CY_PSOC5A */
+ 304:Generated_Source\PSoC5/IDAC_1.c **** 
+ 305:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_Data = value;         /*  Set Value  */
+ 129              		.loc 1 305 0
+ 130 0000 014B     		ldr	r3, .L11
+ 131 0002 1870     		strb	r0, [r3]
+ 132 0004 7047     		bx	lr
+ 133              	.L12:
+ 134 0006 00BF     		.align	2
+ 135              	.L11:
+ 136 0008 825B0040 		.word	1073765250
+ 137              		.cfi_endproc
+ 138              	.LFE7:
+ 139              		.size	IDAC_1_SetValue, .-IDAC_1_SetValue
+ 140              		.section	.text.IDAC_1_DacTrim,"ax",%progbits
+ 141              		.align	2
+ 142              		.global	IDAC_1_DacTrim
+ 143              		.thumb
+ 144              		.thumb_func
+ 145              		.type	IDAC_1_DacTrim, %function
+ 146              	IDAC_1_DacTrim:
+ 147              	.LFB8:
+ 306:Generated_Source\PSoC5/IDAC_1.c ****     
+ 307:Generated_Source\PSoC5/IDAC_1.c ****     /* PSOC5A silicons require a double write */
+ 308:Generated_Source\PSoC5/IDAC_1.c ****     #if (CY_PSOC5A)
+ 309:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_Data = value;
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 9
+
+
+ 310:Generated_Source\PSoC5/IDAC_1.c ****         CyExitCriticalSection(IDAC_1_intrStatus);
+ 311:Generated_Source\PSoC5/IDAC_1.c ****     #endif /* CY_PSOC5A */
+ 312:Generated_Source\PSoC5/IDAC_1.c **** }
+ 313:Generated_Source\PSoC5/IDAC_1.c **** 
+ 314:Generated_Source\PSoC5/IDAC_1.c **** 
+ 315:Generated_Source\PSoC5/IDAC_1.c **** /*******************************************************************************
+ 316:Generated_Source\PSoC5/IDAC_1.c **** * Function Name: IDAC_1_DacTrim
+ 317:Generated_Source\PSoC5/IDAC_1.c **** ********************************************************************************
+ 318:Generated_Source\PSoC5/IDAC_1.c **** * Summary:
+ 319:Generated_Source\PSoC5/IDAC_1.c **** *  Set the trim value for the given range.
+ 320:Generated_Source\PSoC5/IDAC_1.c **** *
+ 321:Generated_Source\PSoC5/IDAC_1.c **** * Parameters:
+ 322:Generated_Source\PSoC5/IDAC_1.c **** *  None
+ 323:Generated_Source\PSoC5/IDAC_1.c **** *
+ 324:Generated_Source\PSoC5/IDAC_1.c **** * Return:
+ 325:Generated_Source\PSoC5/IDAC_1.c **** *  (void) 
+ 326:Generated_Source\PSoC5/IDAC_1.c **** *
+ 327:Generated_Source\PSoC5/IDAC_1.c **** * Theory:
+ 328:Generated_Source\PSoC5/IDAC_1.c **** *  Trim values for the IDAC blocks are stored in the "Customer Table" area in 
+ 329:Generated_Source\PSoC5/IDAC_1.c **** *  Row 1 of the Hidden Flash.  There are 8 bytes of trim data for each 
+ 330:Generated_Source\PSoC5/IDAC_1.c **** *  IDAC block.
+ 331:Generated_Source\PSoC5/IDAC_1.c **** *  The values are:
+ 332:Generated_Source\PSoC5/IDAC_1.c **** *       I Gain offset, min range, Sourcing
+ 333:Generated_Source\PSoC5/IDAC_1.c **** *       I Gain offset, min range, Sinking
+ 334:Generated_Source\PSoC5/IDAC_1.c **** *       I Gain offset, med range, Sourcing
+ 335:Generated_Source\PSoC5/IDAC_1.c **** *       I Gain offset, med range, Sinking
+ 336:Generated_Source\PSoC5/IDAC_1.c **** *       I Gain offset, max range, Sourcing
+ 337:Generated_Source\PSoC5/IDAC_1.c **** *       I Gain offset, max range, Sinking
+ 338:Generated_Source\PSoC5/IDAC_1.c **** *       V Gain offset, 1V range
+ 339:Generated_Source\PSoC5/IDAC_1.c **** *       V Gain offset, 4V range
+ 340:Generated_Source\PSoC5/IDAC_1.c **** *
+ 341:Generated_Source\PSoC5/IDAC_1.c **** * Side Effects:
+ 342:Generated_Source\PSoC5/IDAC_1.c **** *
+ 343:Generated_Source\PSoC5/IDAC_1.c **** *******************************************************************************/
+ 344:Generated_Source\PSoC5/IDAC_1.c **** void IDAC_1_DacTrim(void) 
+ 345:Generated_Source\PSoC5/IDAC_1.c **** {
+ 148              		.loc 1 345 0
+ 149              		.cfi_startproc
+ 150              		@ args = 0, pretend = 0, frame = 0
+ 151              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152              		@ link register save eliminated.
+ 346:Generated_Source\PSoC5/IDAC_1.c ****     uint8 mode;
+ 347:Generated_Source\PSoC5/IDAC_1.c **** 
+ 348:Generated_Source\PSoC5/IDAC_1.c ****     mode = ((IDAC_1_CR0 & IDAC_1_RANGE_MASK) >> 1u);
+ 153              		.loc 1 348 0
+ 154 0000 094B     		ldr	r3, .L15
+ 155 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 156 0004 03F00C03 		and	r3, r3, #12
+ 157 0008 5B08     		lsrs	r3, r3, #1
+ 158              	.LVL3:
+ 349:Generated_Source\PSoC5/IDAC_1.c ****     
+ 350:Generated_Source\PSoC5/IDAC_1.c ****     if((IDAC_1_IDIR_MASK & IDAC_1_CR1) == IDAC_1_IDIR_SINK)
+ 159              		.loc 1 350 0
+ 160 000a 084A     		ldr	r2, .L15+4
+ 161 000c 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 162 000e 12F0040F 		tst	r2, #4
+ 163 0012 00D0     		beq	.L14
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 10
+
+
+ 351:Generated_Source\PSoC5/IDAC_1.c ****     {
+ 352:Generated_Source\PSoC5/IDAC_1.c ****         mode++;
+ 164              		.loc 1 352 0
+ 165 0014 0133     		adds	r3, r3, #1
+ 166              	.LVL4:
+ 167              	.L14:
+ 353:Generated_Source\PSoC5/IDAC_1.c ****     }
+ 354:Generated_Source\PSoC5/IDAC_1.c **** 
+ 355:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_TR = CY_GET_XTND_REG8((uint8 *)(IDAC_1_DAC_TRIM_BASE + mode));
+ 168              		.loc 1 355 0
+ 169 0016 03F19243 		add	r3, r3, #1224736768
+ 170              	.LVL5:
+ 171 001a 93F82831 		ldrb	r3, [r3, #296]	@ zero_extendqisi2
+ 172 001e DBB2     		uxtb	r3, r3
+ 173 0020 034A     		ldr	r2, .L15+8
+ 174 0022 1370     		strb	r3, [r2]
+ 175 0024 7047     		bx	lr
+ 176              	.L16:
+ 177 0026 00BF     		.align	2
+ 178              	.L15:
+ 179 0028 28580040 		.word	1073764392
+ 180 002c 29580040 		.word	1073764393
+ 181 0030 0A460040 		.word	1073759754
+ 182              		.cfi_endproc
+ 183              	.LFE8:
+ 184              		.size	IDAC_1_DacTrim, .-IDAC_1_DacTrim
+ 185              		.section	.text.IDAC_1_Init,"ax",%progbits
+ 186              		.align	2
+ 187              		.global	IDAC_1_Init
+ 188              		.thumb
+ 189              		.thumb_func
+ 190              		.type	IDAC_1_Init, %function
+ 191              	IDAC_1_Init:
+ 192              	.LFB0:
+  59:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_CR0 = (IDAC_1_MODE_I | IDAC_1_DEFAULT_RANGE );
+ 193              		.loc 1 59 0
+ 194              		.cfi_startproc
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 197 0000 08B5     		push	{r3, lr}
+ 198              		.cfi_def_cfa_offset 8
+ 199              		.cfi_offset 3, -8
+ 200              		.cfi_offset 14, -4
+  60:Generated_Source\PSoC5/IDAC_1.c **** 
+ 201              		.loc 1 60 0
+ 202 0002 1022     		movs	r2, #16
+ 203 0004 064B     		ldr	r3, .L19
+ 204 0006 1A70     		strb	r2, [r3]
+  66:Generated_Source\PSoC5/IDAC_1.c ****     #endif /* (IDAC_1_DEFAULT_DATA_SRC != 0u ) */
+ 205              		.loc 1 66 0
+ 206 0008 0133     		adds	r3, r3, #1
+ 207 000a 0020     		movs	r0, #0
+ 208 000c 1870     		strb	r0, [r3]
+  73:Generated_Source\PSoC5/IDAC_1.c ****     #endif/* (IDAC_1_DEFAULT_POLARITY == IDAC_1_HARDWARE_CONTROLLED) */
+ 209              		.loc 1 73 0
+ 210 000e 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 211 0010 D2B2     		uxtb	r2, r2
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 11
+
+
+ 212 0012 1A70     		strb	r2, [r3]
+  86:Generated_Source\PSoC5/IDAC_1.c ****     
+ 213              		.loc 1 86 0
+ 214 0014 FFF7FEFF 		bl	IDAC_1_SetSpeed
+ 215              	.LVL6:
+  89:Generated_Source\PSoC5/IDAC_1.c ****     
+ 216              		.loc 1 89 0
+ 217 0018 FFF7FEFF 		bl	IDAC_1_DacTrim
+ 218              	.LVL7:
+ 219 001c 08BD     		pop	{r3, pc}
+ 220              	.L20:
+ 221 001e 00BF     		.align	2
+ 222              	.L19:
+ 223 0020 28580040 		.word	1073764392
+ 224              		.cfi_endproc
+ 225              	.LFE0:
+ 226              		.size	IDAC_1_Init, .-IDAC_1_Init
+ 227              		.section	.text.IDAC_1_Start,"ax",%progbits
+ 228              		.align	2
+ 229              		.global	IDAC_1_Start
+ 230              		.thumb
+ 231              		.thumb_func
+ 232              		.type	IDAC_1_Start, %function
+ 233              	IDAC_1_Start:
+ 234              	.LFB2:
+ 148:Generated_Source\PSoC5/IDAC_1.c ****     /* Hardware initiazation only needs to occur the first time */
+ 235              		.loc 1 148 0
+ 236              		.cfi_startproc
+ 237              		@ args = 0, pretend = 0, frame = 0
+ 238              		@ frame_needed = 0, uses_anonymous_args = 0
+ 239 0000 08B5     		push	{r3, lr}
+ 240              		.cfi_def_cfa_offset 8
+ 241              		.cfi_offset 3, -8
+ 242              		.cfi_offset 14, -4
+ 150:Generated_Source\PSoC5/IDAC_1.c ****     {
+ 243              		.loc 1 150 0
+ 244 0002 074B     		ldr	r3, .L24
+ 245 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 246 0006 23B9     		cbnz	r3, .L22
+ 152:Generated_Source\PSoC5/IDAC_1.c ****         
+ 247              		.loc 1 152 0
+ 248 0008 FFF7FEFF 		bl	IDAC_1_Init
+ 249              	.LVL8:
+ 154:Generated_Source\PSoC5/IDAC_1.c ****     }
+ 250              		.loc 1 154 0
+ 251 000c 0122     		movs	r2, #1
+ 252 000e 044B     		ldr	r3, .L24
+ 253 0010 1A70     		strb	r2, [r3]
+ 254              	.L22:
+ 158:Generated_Source\PSoC5/IDAC_1.c **** 
+ 255              		.loc 1 158 0
+ 256 0012 FFF7FEFF 		bl	IDAC_1_Enable
+ 257              	.LVL9:
+ 161:Generated_Source\PSoC5/IDAC_1.c **** 
+ 258              		.loc 1 161 0
+ 259 0016 0F20     		movs	r0, #15
+ 260 0018 FFF7FEFF 		bl	IDAC_1_SetValue
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 12
+
+
+ 261              	.LVL10:
+ 262 001c 08BD     		pop	{r3, pc}
+ 263              	.L25:
+ 264 001e 00BF     		.align	2
+ 265              	.L24:
+ 266 0020 00000000 		.word	.LANCHOR0
+ 267              		.cfi_endproc
+ 268              	.LFE2:
+ 269              		.size	IDAC_1_Start, .-IDAC_1_Start
+ 270              		.section	.text.IDAC_1_SetPolarity,"ax",%progbits
+ 271              		.align	2
+ 272              		.global	IDAC_1_SetPolarity
+ 273              		.thumb
+ 274              		.thumb_func
+ 275              		.type	IDAC_1_SetPolarity, %function
+ 276              	IDAC_1_SetPolarity:
+ 277              	.LFB5:
+ 247:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 &= (uint8)(~IDAC_1_IDIR_MASK);                /* clear polarity bit */
+ 278              		.loc 1 247 0
+ 279              		.cfi_startproc
+ 280              		@ args = 0, pretend = 0, frame = 0
+ 281              		@ frame_needed = 0, uses_anonymous_args = 0
+ 282              	.LVL11:
+ 283 0000 08B5     		push	{r3, lr}
+ 284              		.cfi_def_cfa_offset 8
+ 285              		.cfi_offset 3, -8
+ 286              		.cfi_offset 14, -4
+ 248:Generated_Source\PSoC5/IDAC_1.c ****         IDAC_1_CR1 |= (polarity & IDAC_1_IDIR_MASK);             /* set new value */
+ 287              		.loc 1 248 0
+ 288 0002 064B     		ldr	r3, .L28
+ 289 0004 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 290 0006 02F0FB02 		and	r2, r2, #251
+ 291 000a 1A70     		strb	r2, [r3]
+ 249:Generated_Source\PSoC5/IDAC_1.c ****     
+ 292              		.loc 1 249 0
+ 293 000c 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 294 000e 00F00400 		and	r0, r0, #4
+ 295              	.LVL12:
+ 296 0012 1043     		orrs	r0, r0, r2
+ 297 0014 1870     		strb	r0, [r3]
+ 251:Generated_Source\PSoC5/IDAC_1.c ****     }
+ 298              		.loc 1 251 0
+ 299 0016 FFF7FEFF 		bl	IDAC_1_DacTrim
+ 300              	.LVL13:
+ 301 001a 08BD     		pop	{r3, pc}
+ 302              	.L29:
+ 303              		.align	2
+ 304              	.L28:
+ 305 001c 29580040 		.word	1073764393
+ 306              		.cfi_endproc
+ 307              	.LFE5:
+ 308              		.size	IDAC_1_SetPolarity, .-IDAC_1_SetPolarity
+ 309              		.section	.text.IDAC_1_SetRange,"ax",%progbits
+ 310              		.align	2
+ 311              		.global	IDAC_1_SetRange
+ 312              		.thumb
+ 313              		.thumb_func
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 13
+
+
+ 314              		.type	IDAC_1_SetRange, %function
+ 315              	IDAC_1_SetRange:
+ 316              	.LFB6:
+ 274:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_CR0 &= (uint8)(~IDAC_1_RANGE_MASK);       /* Clear existing mode */
+ 317              		.loc 1 274 0
+ 318              		.cfi_startproc
+ 319              		@ args = 0, pretend = 0, frame = 0
+ 320              		@ frame_needed = 0, uses_anonymous_args = 0
+ 321              	.LVL14:
+ 322 0000 08B5     		push	{r3, lr}
+ 323              		.cfi_def_cfa_offset 8
+ 324              		.cfi_offset 3, -8
+ 325              		.cfi_offset 14, -4
+ 275:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_CR0 |= ( range & IDAC_1_RANGE_MASK );     /*  Set Range  */
+ 326              		.loc 1 275 0
+ 327 0002 064B     		ldr	r3, .L32
+ 328 0004 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 329 0006 02F0F302 		and	r2, r2, #243
+ 330 000a 1A70     		strb	r2, [r3]
+ 276:Generated_Source\PSoC5/IDAC_1.c ****     IDAC_1_DacTrim();
+ 331              		.loc 1 276 0
+ 332 000c 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 333 000e 00F00C00 		and	r0, r0, #12
+ 334              	.LVL15:
+ 335 0012 1043     		orrs	r0, r0, r2
+ 336 0014 1870     		strb	r0, [r3]
+ 277:Generated_Source\PSoC5/IDAC_1.c **** }
+ 337              		.loc 1 277 0
+ 338 0016 FFF7FEFF 		bl	IDAC_1_DacTrim
+ 339              	.LVL16:
+ 340 001a 08BD     		pop	{r3, pc}
+ 341              	.L33:
+ 342              		.align	2
+ 343              	.L32:
+ 344 001c 28580040 		.word	1073764392
+ 345              		.cfi_endproc
+ 346              	.LFE6:
+ 347              		.size	IDAC_1_SetRange, .-IDAC_1_SetRange
+ 348              		.global	IDAC_1_initVar
+ 349              		.bss
+ 350              		.set	.LANCHOR0,. + 0
+ 351              		.type	IDAC_1_initVar, %object
+ 352              		.size	IDAC_1_initVar, 1
+ 353              	IDAC_1_initVar:
+ 354 0000 00       		.space	1
+ 355              		.text
+ 356              	.Letext0:
+ 357              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 358              		.section	.debug_info,"",%progbits
+ 359              	.Ldebug_info0:
+ 360 0000 05020000 		.4byte	0x205
+ 361 0004 0400     		.2byte	0x4
+ 362 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 363 000a 04       		.byte	0x4
+ 364 000b 01       		.uleb128 0x1
+ 365 000c 9C010000 		.4byte	.LASF27
+ 366 0010 0C       		.byte	0xc
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 14
+
+
+ 367 0011 66010000 		.4byte	.LASF28
+ 368 0015 00000000 		.4byte	.LASF29
+ 369 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 370 001d 00000000 		.4byte	0
+ 371 0021 00000000 		.4byte	.Ldebug_line0
+ 372 0025 02       		.uleb128 0x2
+ 373 0026 01       		.byte	0x1
+ 374 0027 06       		.byte	0x6
+ 375 0028 DD000000 		.4byte	.LASF0
+ 376 002c 02       		.uleb128 0x2
+ 377 002d 01       		.byte	0x1
+ 378 002e 08       		.byte	0x8
+ 379 002f B8000000 		.4byte	.LASF1
+ 380 0033 02       		.uleb128 0x2
+ 381 0034 02       		.byte	0x2
+ 382 0035 05       		.byte	0x5
+ 383 0036 33000000 		.4byte	.LASF2
+ 384 003a 02       		.uleb128 0x2
+ 385 003b 02       		.byte	0x2
+ 386 003c 07       		.byte	0x7
+ 387 003d 23010000 		.4byte	.LASF3
+ 388 0041 02       		.uleb128 0x2
+ 389 0042 04       		.byte	0x4
+ 390 0043 05       		.byte	0x5
+ 391 0044 85000000 		.4byte	.LASF4
+ 392 0048 02       		.uleb128 0x2
+ 393 0049 04       		.byte	0x4
+ 394 004a 07       		.byte	0x7
+ 395 004b 4D010000 		.4byte	.LASF5
+ 396 004f 02       		.uleb128 0x2
+ 397 0050 08       		.byte	0x8
+ 398 0051 05       		.byte	0x5
+ 399 0052 77000000 		.4byte	.LASF6
+ 400 0056 02       		.uleb128 0x2
+ 401 0057 08       		.byte	0x8
+ 402 0058 07       		.byte	0x7
+ 403 0059 F9000000 		.4byte	.LASF7
+ 404 005d 03       		.uleb128 0x3
+ 405 005e 04       		.byte	0x4
+ 406 005f 05       		.byte	0x5
+ 407 0060 696E7400 		.ascii	"int\000"
+ 408 0064 02       		.uleb128 0x2
+ 409 0065 04       		.byte	0x4
+ 410 0066 07       		.byte	0x7
+ 411 0067 10010000 		.4byte	.LASF8
+ 412 006b 04       		.uleb128 0x4
+ 413 006c 6B000000 		.4byte	.LASF12
+ 414 0070 02       		.byte	0x2
+ 415 0071 E801     		.2byte	0x1e8
+ 416 0073 2C000000 		.4byte	0x2c
+ 417 0077 02       		.uleb128 0x2
+ 418 0078 04       		.byte	0x4
+ 419 0079 04       		.byte	0x4
+ 420 007a 71000000 		.4byte	.LASF9
+ 421 007e 02       		.uleb128 0x2
+ 422 007f 08       		.byte	0x8
+ 423 0080 04       		.byte	0x4
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 15
+
+
+ 424 0081 5F010000 		.4byte	.LASF10
+ 425 0085 02       		.uleb128 0x2
+ 426 0086 01       		.byte	0x1
+ 427 0087 08       		.byte	0x8
+ 428 0088 36010000 		.4byte	.LASF11
+ 429 008c 04       		.uleb128 0x4
+ 430 008d 48010000 		.4byte	.LASF13
+ 431 0091 02       		.byte	0x2
+ 432 0092 9202     		.2byte	0x292
+ 433 0094 98000000 		.4byte	0x98
+ 434 0098 05       		.uleb128 0x5
+ 435 0099 6B000000 		.4byte	0x6b
+ 436 009d 06       		.uleb128 0x6
+ 437 009e CF000000 		.4byte	.LASF14
+ 438 00a2 01       		.byte	0x1
+ 439 00a3 6F       		.byte	0x6f
+ 440 00a4 00000000 		.4byte	.LFB1
+ 441 00a8 1C000000 		.4byte	.LFE1-.LFB1
+ 442 00ac 01       		.uleb128 0x1
+ 443 00ad 9C       		.byte	0x9c
+ 444 00ae 06       		.uleb128 0x6
+ 445 00af 2A020000 		.4byte	.LASF15
+ 446 00b3 01       		.byte	0x1
+ 447 00b4 B7       		.byte	0xb7
+ 448 00b5 00000000 		.4byte	.LFB3
+ 449 00b9 1C000000 		.4byte	.LFE3-.LFB3
+ 450 00bd 01       		.uleb128 0x1
+ 451 00be 9C       		.byte	0x9c
+ 452 00bf 07       		.uleb128 0x7
+ 453 00c0 8C010000 		.4byte	.LASF16
+ 454 00c4 01       		.byte	0x1
+ 455 00c5 DA       		.byte	0xda
+ 456 00c6 00000000 		.4byte	.LFB4
+ 457 00ca 1C000000 		.4byte	.LFE4-.LFB4
+ 458 00ce 01       		.uleb128 0x1
+ 459 00cf 9C       		.byte	0x9c
+ 460 00d0 E4000000 		.4byte	0xe4
+ 461 00d4 08       		.uleb128 0x8
+ 462 00d5 1D010000 		.4byte	.LASF18
+ 463 00d9 01       		.byte	0x1
+ 464 00da DA       		.byte	0xda
+ 465 00db 6B000000 		.4byte	0x6b
+ 466 00df 00000000 		.4byte	.LLST0
+ 467 00e3 00       		.byte	0
+ 468 00e4 09       		.uleb128 0x9
+ 469 00e5 E9000000 		.4byte	.LASF17
+ 470 00e9 01       		.byte	0x1
+ 471 00ea 2A01     		.2byte	0x12a
+ 472 00ec 00000000 		.4byte	.LFB7
+ 473 00f0 0C000000 		.4byte	.LFE7-.LFB7
+ 474 00f4 01       		.uleb128 0x1
+ 475 00f5 9C       		.byte	0x9c
+ 476 00f6 09010000 		.4byte	0x109
+ 477 00fa 0A       		.uleb128 0xa
+ 478 00fb 65000000 		.4byte	.LASF19
+ 479 00ff 01       		.byte	0x1
+ 480 0100 2A01     		.2byte	0x12a
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 16
+
+
+ 481 0102 6B000000 		.4byte	0x6b
+ 482 0106 01       		.uleb128 0x1
+ 483 0107 50       		.byte	0x50
+ 484 0108 00       		.byte	0
+ 485 0109 09       		.uleb128 0x9
+ 486 010a 9D000000 		.4byte	.LASF20
+ 487 010e 01       		.byte	0x1
+ 488 010f 5801     		.2byte	0x158
+ 489 0111 00000000 		.4byte	.LFB8
+ 490 0115 34000000 		.4byte	.LFE8-.LFB8
+ 491 0119 01       		.uleb128 0x1
+ 492 011a 9C       		.byte	0x9c
+ 493 011b 30010000 		.4byte	0x130
+ 494 011f 0B       		.uleb128 0xb
+ 495 0120 60000000 		.4byte	.LASF30
+ 496 0124 01       		.byte	0x1
+ 497 0125 5A01     		.2byte	0x15a
+ 498 0127 6B000000 		.4byte	0x6b
+ 499 012b 21000000 		.4byte	.LLST1
+ 500 012f 00       		.byte	0
+ 501 0130 07       		.uleb128 0x7
+ 502 0131 AC000000 		.4byte	.LASF21
+ 503 0135 01       		.byte	0x1
+ 504 0136 3A       		.byte	0x3a
+ 505 0137 00000000 		.4byte	.LFB0
+ 506 013b 24000000 		.4byte	.LFE0-.LFB0
+ 507 013f 01       		.uleb128 0x1
+ 508 0140 9C       		.byte	0x9c
+ 509 0141 62010000 		.4byte	0x162
+ 510 0145 0C       		.uleb128 0xc
+ 511 0146 18000000 		.4byte	.LVL6
+ 512 014a BF000000 		.4byte	0xbf
+ 513 014e 58010000 		.4byte	0x158
+ 514 0152 0D       		.uleb128 0xd
+ 515 0153 01       		.uleb128 0x1
+ 516 0154 50       		.byte	0x50
+ 517 0155 01       		.uleb128 0x1
+ 518 0156 30       		.byte	0x30
+ 519 0157 00       		.byte	0
+ 520 0158 0E       		.uleb128 0xe
+ 521 0159 1C000000 		.4byte	.LVL7
+ 522 015d 09010000 		.4byte	0x109
+ 523 0161 00       		.byte	0
+ 524 0162 07       		.uleb128 0x7
+ 525 0163 3B010000 		.4byte	.LASF22
+ 526 0167 01       		.byte	0x1
+ 527 0168 93       		.byte	0x93
+ 528 0169 00000000 		.4byte	.LFB2
+ 529 016d 24000000 		.4byte	.LFE2-.LFB2
+ 530 0171 01       		.uleb128 0x1
+ 531 0172 9C       		.byte	0x9c
+ 532 0173 99010000 		.4byte	0x199
+ 533 0177 0E       		.uleb128 0xe
+ 534 0178 0C000000 		.4byte	.LVL8
+ 535 017c 30010000 		.4byte	0x130
+ 536 0180 0E       		.uleb128 0xe
+ 537 0181 16000000 		.4byte	.LVL9
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 17
+
+
+ 538 0185 9D000000 		.4byte	0x9d
+ 539 0189 0F       		.uleb128 0xf
+ 540 018a 1C000000 		.4byte	.LVL10
+ 541 018e E4000000 		.4byte	0xe4
+ 542 0192 0D       		.uleb128 0xd
+ 543 0193 01       		.uleb128 0x1
+ 544 0194 50       		.byte	0x50
+ 545 0195 01       		.uleb128 0x1
+ 546 0196 3F       		.byte	0x3f
+ 547 0197 00       		.byte	0
+ 548 0198 00       		.byte	0
+ 549 0199 07       		.uleb128 0x7
+ 550 019a 3D000000 		.4byte	.LASF23
+ 551 019e 01       		.byte	0x1
+ 552 019f F6       		.byte	0xf6
+ 553 01a0 00000000 		.4byte	.LFB5
+ 554 01a4 20000000 		.4byte	.LFE5-.LFB5
+ 555 01a8 01       		.uleb128 0x1
+ 556 01a9 9C       		.byte	0x9c
+ 557 01aa C7010000 		.4byte	0x1c7
+ 558 01ae 08       		.uleb128 0x8
+ 559 01af C6000000 		.4byte	.LASF24
+ 560 01b3 01       		.byte	0x1
+ 561 01b4 F6       		.byte	0xf6
+ 562 01b5 6B000000 		.4byte	0x6b
+ 563 01b9 34000000 		.4byte	.LLST2
+ 564 01bd 0E       		.uleb128 0xe
+ 565 01be 1A000000 		.4byte	.LVL13
+ 566 01c2 09010000 		.4byte	0x109
+ 567 01c6 00       		.byte	0
+ 568 01c7 09       		.uleb128 0x9
+ 569 01c8 50000000 		.4byte	.LASF25
+ 570 01cc 01       		.byte	0x1
+ 571 01cd 1101     		.2byte	0x111
+ 572 01cf 00000000 		.4byte	.LFB6
+ 573 01d3 20000000 		.4byte	.LFE6-.LFB6
+ 574 01d7 01       		.uleb128 0x1
+ 575 01d8 9C       		.byte	0x9c
+ 576 01d9 F7010000 		.4byte	0x1f7
+ 577 01dd 10       		.uleb128 0x10
+ 578 01de 86010000 		.4byte	.LASF26
+ 579 01e2 01       		.byte	0x1
+ 580 01e3 1101     		.2byte	0x111
+ 581 01e5 6B000000 		.4byte	0x6b
+ 582 01e9 55000000 		.4byte	.LLST3
+ 583 01ed 0E       		.uleb128 0xe
+ 584 01ee 1A000000 		.4byte	.LVL16
+ 585 01f2 09010000 		.4byte	0x109
+ 586 01f6 00       		.byte	0
+ 587 01f7 11       		.uleb128 0x11
+ 588 01f8 8E000000 		.4byte	.LASF31
+ 589 01fc 01       		.byte	0x1
+ 590 01fd 1B       		.byte	0x1b
+ 591 01fe 6B000000 		.4byte	0x6b
+ 592 0202 05       		.uleb128 0x5
+ 593 0203 03       		.byte	0x3
+ 594 0204 00000000 		.4byte	IDAC_1_initVar
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 18
+
+
+ 595 0208 00       		.byte	0
+ 596              		.section	.debug_abbrev,"",%progbits
+ 597              	.Ldebug_abbrev0:
+ 598 0000 01       		.uleb128 0x1
+ 599 0001 11       		.uleb128 0x11
+ 600 0002 01       		.byte	0x1
+ 601 0003 25       		.uleb128 0x25
+ 602 0004 0E       		.uleb128 0xe
+ 603 0005 13       		.uleb128 0x13
+ 604 0006 0B       		.uleb128 0xb
+ 605 0007 03       		.uleb128 0x3
+ 606 0008 0E       		.uleb128 0xe
+ 607 0009 1B       		.uleb128 0x1b
+ 608 000a 0E       		.uleb128 0xe
+ 609 000b 55       		.uleb128 0x55
+ 610 000c 17       		.uleb128 0x17
+ 611 000d 11       		.uleb128 0x11
+ 612 000e 01       		.uleb128 0x1
+ 613 000f 10       		.uleb128 0x10
+ 614 0010 17       		.uleb128 0x17
+ 615 0011 00       		.byte	0
+ 616 0012 00       		.byte	0
+ 617 0013 02       		.uleb128 0x2
+ 618 0014 24       		.uleb128 0x24
+ 619 0015 00       		.byte	0
+ 620 0016 0B       		.uleb128 0xb
+ 621 0017 0B       		.uleb128 0xb
+ 622 0018 3E       		.uleb128 0x3e
+ 623 0019 0B       		.uleb128 0xb
+ 624 001a 03       		.uleb128 0x3
+ 625 001b 0E       		.uleb128 0xe
+ 626 001c 00       		.byte	0
+ 627 001d 00       		.byte	0
+ 628 001e 03       		.uleb128 0x3
+ 629 001f 24       		.uleb128 0x24
+ 630 0020 00       		.byte	0
+ 631 0021 0B       		.uleb128 0xb
+ 632 0022 0B       		.uleb128 0xb
+ 633 0023 3E       		.uleb128 0x3e
+ 634 0024 0B       		.uleb128 0xb
+ 635 0025 03       		.uleb128 0x3
+ 636 0026 08       		.uleb128 0x8
+ 637 0027 00       		.byte	0
+ 638 0028 00       		.byte	0
+ 639 0029 04       		.uleb128 0x4
+ 640 002a 16       		.uleb128 0x16
+ 641 002b 00       		.byte	0
+ 642 002c 03       		.uleb128 0x3
+ 643 002d 0E       		.uleb128 0xe
+ 644 002e 3A       		.uleb128 0x3a
+ 645 002f 0B       		.uleb128 0xb
+ 646 0030 3B       		.uleb128 0x3b
+ 647 0031 05       		.uleb128 0x5
+ 648 0032 49       		.uleb128 0x49
+ 649 0033 13       		.uleb128 0x13
+ 650 0034 00       		.byte	0
+ 651 0035 00       		.byte	0
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 19
+
+
+ 652 0036 05       		.uleb128 0x5
+ 653 0037 35       		.uleb128 0x35
+ 654 0038 00       		.byte	0
+ 655 0039 49       		.uleb128 0x49
+ 656 003a 13       		.uleb128 0x13
+ 657 003b 00       		.byte	0
+ 658 003c 00       		.byte	0
+ 659 003d 06       		.uleb128 0x6
+ 660 003e 2E       		.uleb128 0x2e
+ 661 003f 00       		.byte	0
+ 662 0040 3F       		.uleb128 0x3f
+ 663 0041 19       		.uleb128 0x19
+ 664 0042 03       		.uleb128 0x3
+ 665 0043 0E       		.uleb128 0xe
+ 666 0044 3A       		.uleb128 0x3a
+ 667 0045 0B       		.uleb128 0xb
+ 668 0046 3B       		.uleb128 0x3b
+ 669 0047 0B       		.uleb128 0xb
+ 670 0048 27       		.uleb128 0x27
+ 671 0049 19       		.uleb128 0x19
+ 672 004a 11       		.uleb128 0x11
+ 673 004b 01       		.uleb128 0x1
+ 674 004c 12       		.uleb128 0x12
+ 675 004d 06       		.uleb128 0x6
+ 676 004e 40       		.uleb128 0x40
+ 677 004f 18       		.uleb128 0x18
+ 678 0050 9742     		.uleb128 0x2117
+ 679 0052 19       		.uleb128 0x19
+ 680 0053 00       		.byte	0
+ 681 0054 00       		.byte	0
+ 682 0055 07       		.uleb128 0x7
+ 683 0056 2E       		.uleb128 0x2e
+ 684 0057 01       		.byte	0x1
+ 685 0058 3F       		.uleb128 0x3f
+ 686 0059 19       		.uleb128 0x19
+ 687 005a 03       		.uleb128 0x3
+ 688 005b 0E       		.uleb128 0xe
+ 689 005c 3A       		.uleb128 0x3a
+ 690 005d 0B       		.uleb128 0xb
+ 691 005e 3B       		.uleb128 0x3b
+ 692 005f 0B       		.uleb128 0xb
+ 693 0060 27       		.uleb128 0x27
+ 694 0061 19       		.uleb128 0x19
+ 695 0062 11       		.uleb128 0x11
+ 696 0063 01       		.uleb128 0x1
+ 697 0064 12       		.uleb128 0x12
+ 698 0065 06       		.uleb128 0x6
+ 699 0066 40       		.uleb128 0x40
+ 700 0067 18       		.uleb128 0x18
+ 701 0068 9742     		.uleb128 0x2117
+ 702 006a 19       		.uleb128 0x19
+ 703 006b 01       		.uleb128 0x1
+ 704 006c 13       		.uleb128 0x13
+ 705 006d 00       		.byte	0
+ 706 006e 00       		.byte	0
+ 707 006f 08       		.uleb128 0x8
+ 708 0070 05       		.uleb128 0x5
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 20
+
+
+ 709 0071 00       		.byte	0
+ 710 0072 03       		.uleb128 0x3
+ 711 0073 0E       		.uleb128 0xe
+ 712 0074 3A       		.uleb128 0x3a
+ 713 0075 0B       		.uleb128 0xb
+ 714 0076 3B       		.uleb128 0x3b
+ 715 0077 0B       		.uleb128 0xb
+ 716 0078 49       		.uleb128 0x49
+ 717 0079 13       		.uleb128 0x13
+ 718 007a 02       		.uleb128 0x2
+ 719 007b 17       		.uleb128 0x17
+ 720 007c 00       		.byte	0
+ 721 007d 00       		.byte	0
+ 722 007e 09       		.uleb128 0x9
+ 723 007f 2E       		.uleb128 0x2e
+ 724 0080 01       		.byte	0x1
+ 725 0081 3F       		.uleb128 0x3f
+ 726 0082 19       		.uleb128 0x19
+ 727 0083 03       		.uleb128 0x3
+ 728 0084 0E       		.uleb128 0xe
+ 729 0085 3A       		.uleb128 0x3a
+ 730 0086 0B       		.uleb128 0xb
+ 731 0087 3B       		.uleb128 0x3b
+ 732 0088 05       		.uleb128 0x5
+ 733 0089 27       		.uleb128 0x27
+ 734 008a 19       		.uleb128 0x19
+ 735 008b 11       		.uleb128 0x11
+ 736 008c 01       		.uleb128 0x1
+ 737 008d 12       		.uleb128 0x12
+ 738 008e 06       		.uleb128 0x6
+ 739 008f 40       		.uleb128 0x40
+ 740 0090 18       		.uleb128 0x18
+ 741 0091 9742     		.uleb128 0x2117
+ 742 0093 19       		.uleb128 0x19
+ 743 0094 01       		.uleb128 0x1
+ 744 0095 13       		.uleb128 0x13
+ 745 0096 00       		.byte	0
+ 746 0097 00       		.byte	0
+ 747 0098 0A       		.uleb128 0xa
+ 748 0099 05       		.uleb128 0x5
+ 749 009a 00       		.byte	0
+ 750 009b 03       		.uleb128 0x3
+ 751 009c 0E       		.uleb128 0xe
+ 752 009d 3A       		.uleb128 0x3a
+ 753 009e 0B       		.uleb128 0xb
+ 754 009f 3B       		.uleb128 0x3b
+ 755 00a0 05       		.uleb128 0x5
+ 756 00a1 49       		.uleb128 0x49
+ 757 00a2 13       		.uleb128 0x13
+ 758 00a3 02       		.uleb128 0x2
+ 759 00a4 18       		.uleb128 0x18
+ 760 00a5 00       		.byte	0
+ 761 00a6 00       		.byte	0
+ 762 00a7 0B       		.uleb128 0xb
+ 763 00a8 34       		.uleb128 0x34
+ 764 00a9 00       		.byte	0
+ 765 00aa 03       		.uleb128 0x3
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 21
+
+
+ 766 00ab 0E       		.uleb128 0xe
+ 767 00ac 3A       		.uleb128 0x3a
+ 768 00ad 0B       		.uleb128 0xb
+ 769 00ae 3B       		.uleb128 0x3b
+ 770 00af 05       		.uleb128 0x5
+ 771 00b0 49       		.uleb128 0x49
+ 772 00b1 13       		.uleb128 0x13
+ 773 00b2 02       		.uleb128 0x2
+ 774 00b3 17       		.uleb128 0x17
+ 775 00b4 00       		.byte	0
+ 776 00b5 00       		.byte	0
+ 777 00b6 0C       		.uleb128 0xc
+ 778 00b7 898201   		.uleb128 0x4109
+ 779 00ba 01       		.byte	0x1
+ 780 00bb 11       		.uleb128 0x11
+ 781 00bc 01       		.uleb128 0x1
+ 782 00bd 31       		.uleb128 0x31
+ 783 00be 13       		.uleb128 0x13
+ 784 00bf 01       		.uleb128 0x1
+ 785 00c0 13       		.uleb128 0x13
+ 786 00c1 00       		.byte	0
+ 787 00c2 00       		.byte	0
+ 788 00c3 0D       		.uleb128 0xd
+ 789 00c4 8A8201   		.uleb128 0x410a
+ 790 00c7 00       		.byte	0
+ 791 00c8 02       		.uleb128 0x2
+ 792 00c9 18       		.uleb128 0x18
+ 793 00ca 9142     		.uleb128 0x2111
+ 794 00cc 18       		.uleb128 0x18
+ 795 00cd 00       		.byte	0
+ 796 00ce 00       		.byte	0
+ 797 00cf 0E       		.uleb128 0xe
+ 798 00d0 898201   		.uleb128 0x4109
+ 799 00d3 00       		.byte	0
+ 800 00d4 11       		.uleb128 0x11
+ 801 00d5 01       		.uleb128 0x1
+ 802 00d6 31       		.uleb128 0x31
+ 803 00d7 13       		.uleb128 0x13
+ 804 00d8 00       		.byte	0
+ 805 00d9 00       		.byte	0
+ 806 00da 0F       		.uleb128 0xf
+ 807 00db 898201   		.uleb128 0x4109
+ 808 00de 01       		.byte	0x1
+ 809 00df 11       		.uleb128 0x11
+ 810 00e0 01       		.uleb128 0x1
+ 811 00e1 31       		.uleb128 0x31
+ 812 00e2 13       		.uleb128 0x13
+ 813 00e3 00       		.byte	0
+ 814 00e4 00       		.byte	0
+ 815 00e5 10       		.uleb128 0x10
+ 816 00e6 05       		.uleb128 0x5
+ 817 00e7 00       		.byte	0
+ 818 00e8 03       		.uleb128 0x3
+ 819 00e9 0E       		.uleb128 0xe
+ 820 00ea 3A       		.uleb128 0x3a
+ 821 00eb 0B       		.uleb128 0xb
+ 822 00ec 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 22
+
+
+ 823 00ed 05       		.uleb128 0x5
+ 824 00ee 49       		.uleb128 0x49
+ 825 00ef 13       		.uleb128 0x13
+ 826 00f0 02       		.uleb128 0x2
+ 827 00f1 17       		.uleb128 0x17
+ 828 00f2 00       		.byte	0
+ 829 00f3 00       		.byte	0
+ 830 00f4 11       		.uleb128 0x11
+ 831 00f5 34       		.uleb128 0x34
+ 832 00f6 00       		.byte	0
+ 833 00f7 03       		.uleb128 0x3
+ 834 00f8 0E       		.uleb128 0xe
+ 835 00f9 3A       		.uleb128 0x3a
+ 836 00fa 0B       		.uleb128 0xb
+ 837 00fb 3B       		.uleb128 0x3b
+ 838 00fc 0B       		.uleb128 0xb
+ 839 00fd 49       		.uleb128 0x49
+ 840 00fe 13       		.uleb128 0x13
+ 841 00ff 3F       		.uleb128 0x3f
+ 842 0100 19       		.uleb128 0x19
+ 843 0101 02       		.uleb128 0x2
+ 844 0102 18       		.uleb128 0x18
+ 845 0103 00       		.byte	0
+ 846 0104 00       		.byte	0
+ 847 0105 00       		.byte	0
+ 848              		.section	.debug_loc,"",%progbits
+ 849              	.Ldebug_loc0:
+ 850              	.LLST0:
+ 851 0000 00000000 		.4byte	.LVL0
+ 852 0004 10000000 		.4byte	.LVL1
+ 853 0008 0100     		.2byte	0x1
+ 854 000a 50       		.byte	0x50
+ 855 000b 10000000 		.4byte	.LVL1
+ 856 000f 1C000000 		.4byte	.LFE4
+ 857 0013 0400     		.2byte	0x4
+ 858 0015 F3       		.byte	0xf3
+ 859 0016 01       		.uleb128 0x1
+ 860 0017 50       		.byte	0x50
+ 861 0018 9F       		.byte	0x9f
+ 862 0019 00000000 		.4byte	0
+ 863 001d 00000000 		.4byte	0
+ 864              	.LLST1:
+ 865 0021 0A000000 		.4byte	.LVL3
+ 866 0025 1A000000 		.4byte	.LVL5
+ 867 0029 0100     		.2byte	0x1
+ 868 002b 53       		.byte	0x53
+ 869 002c 00000000 		.4byte	0
+ 870 0030 00000000 		.4byte	0
+ 871              	.LLST2:
+ 872 0034 00000000 		.4byte	.LVL11
+ 873 0038 12000000 		.4byte	.LVL12
+ 874 003c 0100     		.2byte	0x1
+ 875 003e 50       		.byte	0x50
+ 876 003f 12000000 		.4byte	.LVL12
+ 877 0043 20000000 		.4byte	.LFE5
+ 878 0047 0400     		.2byte	0x4
+ 879 0049 F3       		.byte	0xf3
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 23
+
+
+ 880 004a 01       		.uleb128 0x1
+ 881 004b 50       		.byte	0x50
+ 882 004c 9F       		.byte	0x9f
+ 883 004d 00000000 		.4byte	0
+ 884 0051 00000000 		.4byte	0
+ 885              	.LLST3:
+ 886 0055 00000000 		.4byte	.LVL14
+ 887 0059 12000000 		.4byte	.LVL15
+ 888 005d 0100     		.2byte	0x1
+ 889 005f 50       		.byte	0x50
+ 890 0060 12000000 		.4byte	.LVL15
+ 891 0064 20000000 		.4byte	.LFE6
+ 892 0068 0400     		.2byte	0x4
+ 893 006a F3       		.byte	0xf3
+ 894 006b 01       		.uleb128 0x1
+ 895 006c 50       		.byte	0x50
+ 896 006d 9F       		.byte	0x9f
+ 897 006e 00000000 		.4byte	0
+ 898 0072 00000000 		.4byte	0
+ 899              		.section	.debug_aranges,"",%progbits
+ 900 0000 5C000000 		.4byte	0x5c
+ 901 0004 0200     		.2byte	0x2
+ 902 0006 00000000 		.4byte	.Ldebug_info0
+ 903 000a 04       		.byte	0x4
+ 904 000b 00       		.byte	0
+ 905 000c 0000     		.2byte	0
+ 906 000e 0000     		.2byte	0
+ 907 0010 00000000 		.4byte	.LFB1
+ 908 0014 1C000000 		.4byte	.LFE1-.LFB1
+ 909 0018 00000000 		.4byte	.LFB3
+ 910 001c 1C000000 		.4byte	.LFE3-.LFB3
+ 911 0020 00000000 		.4byte	.LFB4
+ 912 0024 1C000000 		.4byte	.LFE4-.LFB4
+ 913 0028 00000000 		.4byte	.LFB7
+ 914 002c 0C000000 		.4byte	.LFE7-.LFB7
+ 915 0030 00000000 		.4byte	.LFB8
+ 916 0034 34000000 		.4byte	.LFE8-.LFB8
+ 917 0038 00000000 		.4byte	.LFB0
+ 918 003c 24000000 		.4byte	.LFE0-.LFB0
+ 919 0040 00000000 		.4byte	.LFB2
+ 920 0044 24000000 		.4byte	.LFE2-.LFB2
+ 921 0048 00000000 		.4byte	.LFB5
+ 922 004c 20000000 		.4byte	.LFE5-.LFB5
+ 923 0050 00000000 		.4byte	.LFB6
+ 924 0054 20000000 		.4byte	.LFE6-.LFB6
+ 925 0058 00000000 		.4byte	0
+ 926 005c 00000000 		.4byte	0
+ 927              		.section	.debug_ranges,"",%progbits
+ 928              	.Ldebug_ranges0:
+ 929 0000 00000000 		.4byte	.LFB1
+ 930 0004 1C000000 		.4byte	.LFE1
+ 931 0008 00000000 		.4byte	.LFB3
+ 932 000c 1C000000 		.4byte	.LFE3
+ 933 0010 00000000 		.4byte	.LFB4
+ 934 0014 1C000000 		.4byte	.LFE4
+ 935 0018 00000000 		.4byte	.LFB7
+ 936 001c 0C000000 		.4byte	.LFE7
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 24
+
+
+ 937 0020 00000000 		.4byte	.LFB8
+ 938 0024 34000000 		.4byte	.LFE8
+ 939 0028 00000000 		.4byte	.LFB0
+ 940 002c 24000000 		.4byte	.LFE0
+ 941 0030 00000000 		.4byte	.LFB2
+ 942 0034 24000000 		.4byte	.LFE2
+ 943 0038 00000000 		.4byte	.LFB5
+ 944 003c 20000000 		.4byte	.LFE5
+ 945 0040 00000000 		.4byte	.LFB6
+ 946 0044 20000000 		.4byte	.LFE6
+ 947 0048 00000000 		.4byte	0
+ 948 004c 00000000 		.4byte	0
+ 949              		.section	.debug_line,"",%progbits
+ 950              	.Ldebug_line0:
+ 951 0000 F5000000 		.section	.debug_str,"MS",%progbits,1
+ 951      02004300 
+ 951      00000201 
+ 951      FB0E0D00 
+ 951      01010101 
+ 952              	.LASF29:
+ 953 0000 433A5C55 		.ascii	"C:\\Users\\DELL\\Downloads\\Workspace02\\Design01.c"
+ 953      73657273 
+ 953      5C44454C 
+ 953      4C5C446F 
+ 953      776E6C6F 
+ 954 002e 7964736E 		.ascii	"ydsn\000"
+ 954      00
+ 955              	.LASF2:
+ 956 0033 73686F72 		.ascii	"short int\000"
+ 956      7420696E 
+ 956      7400
+ 957              	.LASF23:
+ 958 003d 49444143 		.ascii	"IDAC_1_SetPolarity\000"
+ 958      5F315F53 
+ 958      6574506F 
+ 958      6C617269 
+ 958      747900
+ 959              	.LASF25:
+ 960 0050 49444143 		.ascii	"IDAC_1_SetRange\000"
+ 960      5F315F53 
+ 960      65745261 
+ 960      6E676500 
+ 961              	.LASF30:
+ 962 0060 6D6F6465 		.ascii	"mode\000"
+ 962      00
+ 963              	.LASF19:
+ 964 0065 76616C75 		.ascii	"value\000"
+ 964      6500
+ 965              	.LASF12:
+ 966 006b 75696E74 		.ascii	"uint8\000"
+ 966      3800
+ 967              	.LASF9:
+ 968 0071 666C6F61 		.ascii	"float\000"
+ 968      7400
+ 969              	.LASF6:
+ 970 0077 6C6F6E67 		.ascii	"long long int\000"
+ 970      206C6F6E 
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 25
+
+
+ 970      6720696E 
+ 970      7400
+ 971              	.LASF4:
+ 972 0085 6C6F6E67 		.ascii	"long int\000"
+ 972      20696E74 
+ 972      00
+ 973              	.LASF31:
+ 974 008e 49444143 		.ascii	"IDAC_1_initVar\000"
+ 974      5F315F69 
+ 974      6E697456 
+ 974      617200
+ 975              	.LASF20:
+ 976 009d 49444143 		.ascii	"IDAC_1_DacTrim\000"
+ 976      5F315F44 
+ 976      61635472 
+ 976      696D00
+ 977              	.LASF21:
+ 978 00ac 49444143 		.ascii	"IDAC_1_Init\000"
+ 978      5F315F49 
+ 978      6E697400 
+ 979              	.LASF1:
+ 980 00b8 756E7369 		.ascii	"unsigned char\000"
+ 980      676E6564 
+ 980      20636861 
+ 980      7200
+ 981              	.LASF24:
+ 982 00c6 706F6C61 		.ascii	"polarity\000"
+ 982      72697479 
+ 982      00
+ 983              	.LASF14:
+ 984 00cf 49444143 		.ascii	"IDAC_1_Enable\000"
+ 984      5F315F45 
+ 984      6E61626C 
+ 984      6500
+ 985              	.LASF0:
+ 986 00dd 7369676E 		.ascii	"signed char\000"
+ 986      65642063 
+ 986      68617200 
+ 987              	.LASF17:
+ 988 00e9 49444143 		.ascii	"IDAC_1_SetValue\000"
+ 988      5F315F53 
+ 988      65745661 
+ 988      6C756500 
+ 989              	.LASF7:
+ 990 00f9 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 990      206C6F6E 
+ 990      6720756E 
+ 990      7369676E 
+ 990      65642069 
+ 991              	.LASF8:
+ 992 0110 756E7369 		.ascii	"unsigned int\000"
+ 992      676E6564 
+ 992      20696E74 
+ 992      00
+ 993              	.LASF18:
+ 994 011d 73706565 		.ascii	"speed\000"
+ 994      6400
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 26
+
+
+ 995              	.LASF3:
+ 996 0123 73686F72 		.ascii	"short unsigned int\000"
+ 996      7420756E 
+ 996      7369676E 
+ 996      65642069 
+ 996      6E7400
+ 997              	.LASF11:
+ 998 0136 63686172 		.ascii	"char\000"
+ 998      00
+ 999              	.LASF22:
+ 1000 013b 49444143 		.ascii	"IDAC_1_Start\000"
+ 1000      5F315F53 
+ 1000      74617274 
+ 1000      00
+ 1001              	.LASF13:
+ 1002 0148 72656738 		.ascii	"reg8\000"
+ 1002      00
+ 1003              	.LASF5:
+ 1004 014d 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1004      20756E73 
+ 1004      69676E65 
+ 1004      6420696E 
+ 1004      7400
+ 1005              	.LASF10:
+ 1006 015f 646F7562 		.ascii	"double\000"
+ 1006      6C6500
+ 1007              	.LASF28:
+ 1008 0166 47656E65 		.ascii	"Generated_Source\\PSoC5\\IDAC_1.c\000"
+ 1008      72617465 
+ 1008      645F536F 
+ 1008      75726365 
+ 1008      5C50536F 
+ 1009              	.LASF26:
+ 1010 0186 72616E67 		.ascii	"range\000"
+ 1010      6500
+ 1011              	.LASF16:
+ 1012 018c 49444143 		.ascii	"IDAC_1_SetSpeed\000"
+ 1012      5F315F53 
+ 1012      65745370 
+ 1012      65656400 
+ 1013              	.LASF27:
+ 1014 019c 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1014      43313120 
+ 1014      352E342E 
+ 1014      31203230 
+ 1014      31363036 
+ 1015 01cf 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1015      20726576 
+ 1015      6973696F 
+ 1015      6E203233 
+ 1015      37373135 
+ 1016 0202 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1016      66756E63 
+ 1016      74696F6E 
+ 1016      2D736563 
+ 1016      74696F6E 
+ 1017              	.LASF15:
+ARM GAS  C:\Users\DELL\AppData\Local\Temp\ccdFjc9N.s 			page 27
+
+
+ 1018 022a 49444143 		.ascii	"IDAC_1_Stop\000"
+ 1018      5F315F53 
+ 1018      746F7000 
+ 1019              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

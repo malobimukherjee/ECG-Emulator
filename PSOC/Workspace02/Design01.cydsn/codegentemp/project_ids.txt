@@ -1,0 +1,6 @@
+C:\Users\DELL\Downloads\Workspace02\Design01.cydsn\Design01.cyprj|62c99cc9-d34d-4ff6-ac46-d830d36aaeff
+C:\PSoC Creator\4.4\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|42457c3a-8858-4073-96da-01b64ad1d5b7
+C:\Users\DELL\OneDrive\Documents\PSoC Creator\4.4\Downloads ( 4.4).cylib\Downloads ( 4.4).cyprj|0cbe6e1d-75d8-4761-9dce-9fe15e9c0cd9
+C:\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|0cd86a69-cf1a-4cb6-b4c2-6f512097edde
+C:\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|519d32f1-a3dc-4c20-ba04-406e6c70e646
+C:\PSoC Creator\4.4\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|ae13e8d3-cfb6-4447-bfe2-ebc947d37ffc
